@@ -49,11 +49,11 @@ const AppHeaderDropdown = () => {
           </CBadge>
         </CDropdownItem>
         <CDropdownHeader className="bg-light fw-semibold py-2">Settings</CDropdownHeader>
-        <CDropdownItem href="#">
+        <CDropdownItem href="/profile">
           <CIcon name="cil-user" className="me-2" />
-          <Link to="/user/profile">Profile</Link>
+          Profile
         </CDropdownItem>
-        <CDropdownItem href="#">
+        <CDropdownItem href="/profile/settings">
           <CIcon name="cil-settings" className="me-2" />
           Settings
         </CDropdownItem>

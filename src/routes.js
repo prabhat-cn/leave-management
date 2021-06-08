@@ -54,12 +54,18 @@ const Widgets = React.lazy(() => import('./views/components/widgets/Widgets'))
 
 const Charts = React.lazy(() => import('./views/components/charts/Charts'))
 const Dashboard = React.lazy(() => import('./views/dashboard/Dashboard'))
-const UserProfile = React.lazy(() => import('./views/pages/userprofile/UserProfile'))
+
+// profile
+const User = React.lazy(() => import('./views/pages/profile/User'))
+const Settings = React.lazy(() => import('./views/pages/profile/Settings'))
+const ChangePassword = React.lazy(() => import('./views/pages/profile/ChangePassword'))
 
 const routes = [
   { path: '/', exact: true, name: 'Home' },
   { path: '/dashboard', name: 'Dashboard', component: Dashboard },
-  { path: '/user/profile', name: 'User Profile', component: UserProfile },
+  { path: '/profile', name: 'User', component: User, exact: true },
+  { path: '/profile/settings', name: 'Settings', component: Settings },
+  { path: '/profile/change-password', name: 'Change Password', component: ChangePassword },
   { path: '/theme', name: 'Theme', component: Colors, exact: true },
   { path: '/theme/colors', name: 'Colors', component: Colors },
   { path: '/theme/typography', name: 'Typography', component: Typography },
