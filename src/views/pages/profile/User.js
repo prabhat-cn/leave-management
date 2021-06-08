@@ -13,11 +13,12 @@ import {
 } from '@coreui/react'
 import { DocsCallout, Example } from 'src/reusable'
 
-const UserProfile = () => {
+const User = () => {
   return (
     <CRow>
       <CCol xs={12}>
         <DocsCallout name="Form Control" href="forms/form-control" />
+        <CButton color="link" href="/profile/change-password">Change Password</CButton>
       </CCol>
       <CCol xs={12}>
         <CCard className="mb-4">
@@ -252,4 +253,4 @@ const UserProfile = () => {
   )
 }
 
-export default UserProfile
+export default User
