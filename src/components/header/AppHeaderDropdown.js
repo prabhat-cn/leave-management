@@ -53,7 +53,7 @@ const AppHeaderDropdown = () => {
           <CIcon name="cil-user" className="me-2" />
           Profile
         </CDropdownItem>
-        <CDropdownItem href="/profile/settings">
+        <CDropdownItem href="/settings">
           <CIcon name="cil-settings" className="me-2" />
           Settings
         </CDropdownItem>

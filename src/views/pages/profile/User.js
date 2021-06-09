@@ -19,6 +19,7 @@ import {
 } from '@coreui/react'
 import DatePicker from 'react-date-picker'
 import CreatableSelect from 'react-select/creatable'
+import makeAnimated from 'react-select/animated'
 import { Formik, Form, Field, ErrorMessage, useFormik } from 'formik'
 import * as Yup from 'yup'
 
@@ -53,12 +54,6 @@ const User = () => {
     cv: '',
     skill: '',
   }
-  const skillOptions = [
-    { label: 'Node', value: 'Node' },
-    { label: 'React', value: 'React' },
-    { label: 'Angular', value: 'Angular' },
-    { label: 'Vue', value: 'Vue' },
-  ]
 
   const userProfileSchema = Yup.object().shape({
     firstName: Yup.string()
@@ -115,6 +110,15 @@ const User = () => {
     setSubmitted(true)
     submitProps.resetForm()
   }
+
+  const animatedComponents = makeAnimated()
+  const skillOptions = [
+    { label: 'Node', value: 'Node' },
+    { label: 'React', value: 'React' },
+    { label: 'Angular', value: 'Angular' },
+    { label: 'Vue', value: 'Vue' },
+  ]
+
   return (
     <>
       <Formik
@@ -536,8 +540,9 @@ const User = () => {
                           </CRow>
                           <div className="mb-3">
                             <CFormLabel htmlFor="skill">Your Skill</CFormLabel>
-                            {/* <Field
+                            <Field
                               component={CreatableSelect}
+                              components={animatedComponents}
                               isMulti
                               placeholder="Add your skill"
                               id="skill"
@@ -551,28 +556,25 @@ const User = () => {
                               style={{ color: 'red', marginBottom: '4px' }}
                               component="div"
                               className="error"
-                            /> */}
+                            />
                           </div>
 
                           <CRow className="mt-3">
                             <CCol lg="9">
-                              {/* <CButton color="primary">Primary</CButton> */}
-                              <button type="submit">Submit</button>
-                              {/* <button className="btn btn-primary">Submit</button> */}
-                              {/* <button
-                                color="success"
+                              <button
+                                type="submit"
                                 className={
                                   'btn btn-primary' + ' ' + (!(dirty && isValid) ? 'disabled' : '')
                                 }
                                 disabled={!(dirty && isValid)}
                               >
                                 Submit
-                              </button> */}
+                              </button>
                             </CCol>
                             <CCol lg="3">
                               <CButton
                                 color="link"
-                                href="/profile/change-password"
+                                href="/change-password"
                                 className="px-0 text-right"
                               >
                                 Change Password

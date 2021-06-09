@@ -85,8 +85,8 @@ const Register = () => {
                             )}
                             <h1>Register</h1>
                             <p className="text-medium-emphasis">Create your account</p>
-                            <div className="row g-3">
-                              <div className="col-auto">
+                            <CRow xs={{ gutterX: 6 }}>
+                              <CCol>
                                 <CInputGroup className="mb-3">
                                   <CInputGroupText>
                                     <CIcon name="cil-user" />
@@ -110,8 +110,8 @@ const Register = () => {
                                   component="div"
                                   className="error"
                                 />
-                              </div>
-                              <div className="col-auto">
+                              </CCol>
+                              <CCol>
                                 <CInputGroup className="mb-3">
                                   <CInputGroupText>
                                     <CIcon name="cil-user" />
@@ -135,8 +135,8 @@ const Register = () => {
                                   component="div"
                                   className="error"
                                 />
-                              </div>
-                            </div>
+                              </CCol>
+                            </CRow>
                             <CInputGroup className="mb-3 mt-2">
                               <CInputGroupText>@</CInputGroupText>
                               <Field
