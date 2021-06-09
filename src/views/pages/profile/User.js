@@ -7,6 +7,7 @@ import {
   CCardHeader,
   CCol,
   CForm,
+  CAlert,
   CFormControl,
   CFormLabel,
   CRow,
@@ -100,7 +101,8 @@ const User = () => {
 
     emargencyContact: Yup.string()
       .required('Emargency contact required')
-      .matches(/^[0-9]{10}$/, 'Should be 10 digit number'),
+      .min(10, 'Should be 10 digit number')
+      .matches(/^([+]\d{2})?\d{10}$/, 'Invalid contact'),
 
     cv: Yup.string().required('Cv required'),
 
@@ -135,6 +137,8 @@ const User = () => {
                       </CCardHeader>
                       <CCardBody>
                         <Form id="userProfile" name="userProfile">
+                          {submitted && <CAlert color="success">Profile seved</CAlert>}
+
                           <CRow xs={{ gutterX: 6 }}>
                             <CCol>
                               <div className="mb-3">
@@ -281,7 +285,6 @@ const User = () => {
                             <CCol>
                               <div className="mb-3">
                                 <CFormLabel htmlFor="dob">Date of Birth</CFormLabel>
-                                {/* <CFormControl type="text" name="dob" id="dob" placeholder="Date of Birth" /> */}
                                 <Field
                                   type="date"
                                   name="dob"
@@ -533,21 +536,38 @@ const User = () => {
                           </CRow>
                           <div className="mb-3">
                             <CFormLabel htmlFor="skill">Your Skill</CFormLabel>
-                            <CreatableSelect
+                            {/* <Field
+                              component={CreatableSelect}
                               isMulti
                               placeholder="Add your skill"
                               id="skill"
                               name="skill"
                               onChange={handleChange}
                               options={skillOptions}
-                              value={formik.values.skill}
-                              onChange={formik.handleChange}
+                              className={errors.skill && touched.skill ? 'input-error' : null}
                             />
+                            <ErrorMessage
+                              name="skill"
+                              style={{ color: 'red', marginBottom: '4px' }}
+                              component="div"
+                              className="error"
+                            /> */}
                           </div>
 
                           <CRow className="mt-3">
                             <CCol lg="9">
-                              <CButton color="primary">Primary</CButton>
+                              {/* <CButton color="primary">Primary</CButton> */}
+                              <button type="submit">Submit</button>
+                              {/* <button className="btn btn-primary">Submit</button> */}
+                              {/* <button
+                                color="success"
+                                className={
+                                  'btn btn-primary' + ' ' + (!(dirty && isValid) ? 'disabled' : '')
+                                }
+                                disabled={!(dirty && isValid)}
+                              >
+                                Submit
+                              </button> */}
                             </CCol>
                             <CCol lg="3">
                               <CButton
