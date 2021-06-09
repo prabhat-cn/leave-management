@@ -1,4 +1,3 @@
-/* eslint-disable jsx-a11y/alt-text */
 import React, { useState } from 'react'
 import { Link } from 'react-router-dom'
 import showPwdImg from '../../../assets/icons/eye-slash-solid.svg'
@@ -26,17 +25,24 @@ const Register = () => {
   const [isRevealCPwd, setIsRevealCPwd] = useState(false)
   const [submitted, setSubmitted] = useState(false)
   const initialValues = {
-    username: '',
+    firstname: '',
+    lastname: '',
     email: '',
     password: '',
     repeatPassword: '',
   }
   const registerSchema = Yup.object().shape({
-    username: Yup.string()
-      .required('Username required')
+    firstname: Yup.string()
+      .required('Firstname required')
       .min(3, 'Must be 3 letters')
       .max(20, 'Can be 20 letters or less')
-      .matches(/^[A-Za-z]+$/i, 'Username should be letter'),
+      .matches(/^[A-Za-z]+$/i, 'Firstname should be letter'),
+
+    lastname: Yup.string()
+      .required('Lastname required')
+      .min(3, 'Must be 3 letters')
+      .max(20, 'Can be 20 letters or less')
+      .matches(/^[A-Za-z]+$/i, 'Lastname should be letter'),
 
     email: Yup.string().required('Email is required').email('Email is invalid'),
 
@@ -79,29 +85,58 @@ const Register = () => {
                             )}
                             <h1>Register</h1>
                             <p className="text-medium-emphasis">Create your account</p>
-                            <CInputGroup className="mb-3">
-                              <CInputGroupText>
-                                <CIcon name="cil-user" />
-                              </CInputGroupText>
-                              <Field
-                                type="text"
-                                name="username"
-                                id="username"
-                                placeholder="Username"
-                                autoComplete="on"
-                                className={
-                                  'form-control' +
-                                  ' ' +
-                                  (errors.username && touched.username ? 'input-error' : null)
-                                }
-                              />
-                            </CInputGroup>
-                            <ErrorMessage
-                              name="username"
-                              style={{ color: 'red', marginBottom: '4px' }}
-                              component="div"
-                              className="error"
-                            />
+                            <div className="row g-3">
+                              <div className="col-auto">
+                                <CInputGroup className="mb-3">
+                                  <CInputGroupText>
+                                    <CIcon name="cil-user" />
+                                  </CInputGroupText>
+                                  <Field
+                                    type="text"
+                                    name="firstname"
+                                    id="firstname"
+                                    placeholder="Firstname"
+                                    autoComplete="on"
+                                    className={
+                                      'form-control' +
+                                      ' ' +
+                                      (errors.firstname && touched.firstname ? 'input-error' : null)
+                                    }
+                                  />
+                                </CInputGroup>
+                                <ErrorMessage
+                                  name="firstname"
+                                  style={{ color: 'red', marginBottom: '4px' }}
+                                  component="div"
+                                  className="error"
+                                />
+                              </div>
+                              <div className="col-auto">
+                                <CInputGroup className="mb-3">
+                                  <CInputGroupText>
+                                    <CIcon name="cil-user" />
+                                  </CInputGroupText>
+                                  <Field
+                                    type="text"
+                                    name="lastname"
+                                    id="lastname"
+                                    placeholder="Lastname"
+                                    autoComplete="on"
+                                    className={
+                                      'form-control' +
+                                      ' ' +
+                                      (errors.lastname && touched.lastname ? 'input-error' : null)
+                                    }
+                                  />
+                                </CInputGroup>
+                                <ErrorMessage
+                                  name="lastname"
+                                  style={{ color: 'red', marginBottom: '4px' }}
+                                  component="div"
+                                  className="error"
+                                />
+                              </div>
+                            </div>
                             <CInputGroup className="mb-3 mt-2">
                               <CInputGroupText>@</CInputGroupText>
                               <Field
