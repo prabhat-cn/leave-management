@@ -14,28 +14,28 @@ const _nav = [
       text: 'NEW',
     },
   },
-  {
-    _component: 'CNavTitle',
-    anchor: 'Theme',
-  },
-  {
-    _component: 'CNavItem',
-    as: NavLink,
-    anchor: 'Colors',
-    to: '/theme/colors',
-    icon: <CIcon name="cil-drop" customClasses="nav-icon" />,
-  },
-  {
-    _component: 'CNavItem',
-    as: NavLink,
-    anchor: 'Typography',
-    to: '/theme/typography',
-    icon: <CIcon name="cil-pencil" customClasses="nav-icon" />,
-  },
-  {
-    _component: 'CNavTitle',
-    anchor: 'Components',
-  },
+  // {
+  //   _component: 'CNavTitle',
+  //   anchor: 'Theme',
+  // },
+  // {
+  //   _component: 'CNavItem',
+  //   as: NavLink,
+  //   anchor: 'Colors',
+  //   to: '/theme/colors',
+  //   icon: <CIcon name="cil-drop" customClasses="nav-icon" />,
+  // },
+  // {
+  //   _component: 'CNavItem',
+  //   as: NavLink,
+  //   anchor: 'Typography',
+  //   to: '/theme/typography',
+  //   icon: <CIcon name="cil-pencil" customClasses="nav-icon" />,
+  // },
+  // {
+  //   _component: 'CNavTitle',
+  //   anchor: 'Components',
+  // },
   {
     _component: 'CNavGroup',
     as: NavLink,
@@ -162,12 +162,6 @@ const _nav = [
       {
         _component: 'CNavItem',
         as: NavLink,
-        anchor: 'User Profile',
-        to: '/user/profile',
-      },
-      {
-        _component: 'CNavItem',
-        as: NavLink,
         anchor: 'Select',
         to: '/forms/select',
       },
@@ -287,41 +281,41 @@ const _nav = [
       text: 'NEW',
     },
   },
-  {
-    _component: 'CNavTitle',
-    anchor: 'Extras',
-  },
-  {
-    _component: 'CNavGroup',
-    anchor: 'Pages',
-    icon: <CIcon name="cil-star" customClasses="nav-icon" />,
-    items: [
-      {
-        _component: 'CNavItem',
-        as: NavLink,
-        anchor: 'Login',
-        to: '/login',
-      },
-      {
-        _component: 'CNavItem',
-        as: NavLink,
-        anchor: 'Register',
-        to: '/register',
-      },
-      {
-        _component: 'CNavItem',
-        as: NavLink,
-        anchor: 'Error 404',
-        to: '/404',
-      },
-      {
-        _component: 'CNavItem',
-        as: NavLink,
-        anchor: 'Error 500',
-        to: '/500',
-      },
-    ],
-  },
+  // {
+  //   _component: 'CNavTitle',
+  //   anchor: 'Extras',
+  // },
+  // {
+  //   _component: 'CNavGroup',
+  //   anchor: 'Pages',
+  //   icon: <CIcon name="cil-star" customClasses="nav-icon" />,
+  //   items: [
+  //     {
+  //       _component: 'CNavItem',
+  //       as: NavLink,
+  //       anchor: 'Login',
+  //       to: '/login',
+  //     },
+  //     {
+  //       _component: 'CNavItem',
+  //       as: NavLink,
+  //       anchor: 'Register',
+  //       to: '/register',
+  //     },
+  //     {
+  //       _component: 'CNavItem',
+  //       as: NavLink,
+  //       anchor: 'Error 404',
+  //       to: '/404',
+  //     },
+  //     {
+  //       _component: 'CNavItem',
+  //       as: NavLink,
+  //       anchor: 'Error 500',
+  //       to: '/500',
+  //     },
+  //   ],
+  // },
 ]
 
 export default _nav
