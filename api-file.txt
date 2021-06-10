@@ -1,0 +1,5 @@
+// REGISTER
+http://dev107.developer24x7.com/test_project/wp-json/wp-jwt/v1/create-new-user
+
+// Login
+http://dev107.developer24x7.com/test_project/wp-json/jwt-auth/v1/token
