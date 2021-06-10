@@ -20,18 +20,22 @@ import {
   CRow,
 } from '@coreui/react'
 import CIcon from '@coreui/icons-react'
+import API from '../../../api'
 
 const sleep = (ms) => new Promise((r) => setTimeout(r, ms))
 const Login = () => {
   const [isRevealPwd, setIsRevealPwd] = useState(false)
   const [submitted, setSubmitted] = useState(false)
+  const [error, setError] = useState('')
+
   const initialValues = {
-    email: '',
+    username: '',
     password: '',
   }
 
   const loginSchema = Yup.object().shape({
-    email: Yup.string().required('Email is required').email('Email is invalid'),
+    // email: Yup.string().required('Email is required').email('Email is invalid'),
+    username: Yup.string().required('Username required'),
 
     password: Yup.string()
       .min(8, 'Password must be at least 8 characters')
@@ -41,13 +45,27 @@ const Login = () => {
         'One Uppercase, One Lowercase, One Number and one special case Character',
       ),
   })
-  const onSubmit = async (values, submitProps) => {
-    console.log('form-values', JSON.stringify(values, null, 2))
-    console.log('submitProps', submitProps)
+
+  const loginSubmit = (loginData) => {
+    API.post('/jwt-auth/v1/token', loginData)
+      .then((response) => {
+        setError('')
+        setSubmitted(true)
+        const userData = response.data.token
+        console.log('userData', userData)
+
+        localStorage.setItem('userToken', JSON.stringify(userData))
+        window.location.reload()
+      })
+      .catch((err) => {
+        console.log(err.response)
+        setSubmitted(false)
+      })
+  }
+  const onSubmit = async (data, submitProps) => {
+    loginSubmit(data)
     await sleep(500)
-    setSubmitted(true)
     submitProps.resetForm()
-    // alert(JSON.stringify(values, null, 2));
   }
   return (
     <>
@@ -69,6 +87,7 @@ const Login = () => {
                               {submitted && (
                                 <CAlert color="success">Success! Login Successfully</CAlert>
                               )}
+                              {error !== '' && <CAlert color="danger">Error! Login failed</CAlert>}
                               <h1>Login</h1>
                               <p className="text-medium-emphasis">Sign In to your account</p>
                               <CInputGroup className="mb-2">
@@ -77,19 +96,19 @@ const Login = () => {
                                 </CInputGroupText>
                                 <Field
                                   type="text"
-                                  name="email"
+                                  name="username"
                                   id="email"
-                                  placeholder="Enter email"
+                                  placeholder="Enter username"
                                   autoComplete="on"
                                   className={
                                     'form-control' +
                                     ' ' +
-                                    (errors.email && touched.email ? 'input-error' : null)
+                                    (errors.username && touched.username ? 'input-error' : null)
                                   }
                                 />
                               </CInputGroup>
                               <ErrorMessage
-                                name="email"
+                                name="username"
                                 style={{ color: 'red', marginBottom: '4px' }}
                                 component="div"
                                 className="error"
@@ -127,6 +146,7 @@ const Login = () => {
                               <CRow className="mt-3">
                                 <CCol xs="6">
                                   <button
+                                    type="submit"
                                     color="primary"
                                     className={
                                       'btn btn-primary px-4' +

@@ -9,4 +9,14 @@ const API = axios.create({
 
 axiosRetry(API, { retries: 3 })
 
-export { API as default }
+// Add a request interceptor
+API.interceptors.request.use((config) => {
+
+  const userData = localStorage.getItem('userToken');
+
+  config.headers.Authorization =  userData ? `bearer ${JSON.parse(userData).token}` : '';
+
+  return config;
+});
+
+export { API as default };

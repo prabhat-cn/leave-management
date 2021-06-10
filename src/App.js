@@ -1,5 +1,7 @@
+/* eslint-disable react/prop-types */
+/* eslint-disable react/jsx-no-undef */
 import React, { Component } from 'react'
-import { HashRouter, Route, Switch, BrowserRouter as Router } from 'react-router-dom'
+import { HashRouter, Route, Switch, BrowserRouter as Router, Redirect } from 'react-router-dom'
 import './scss/style.scss'
 
 const loading = (
@@ -18,29 +20,58 @@ const ForgetPassword = React.lazy(() => import('./views/pages/forgetpassword/For
 const Page404 = React.lazy(() => import('./views/pages/page404/Page404'))
 const Page500 = React.lazy(() => import('./views/pages/page500/Page500'))
 
+const PrivateRoute = ({ component: Component, auth, name, ...rest }) => (
+  <Route
+    {...rest}
+    render={(props) =>
+      auth === true ? <Component {...props} name={name} /> : <Redirect to="/login" />
+    }
+  />
+)
+
+const PublicRoute = ({ component: Component, auth, ...rest }) => (
+  <Route
+    {...rest}
+    render={(props) => (auth !== true ? <Component {...props} /> : <Redirect to="/" />)}
+  />
+)
+
 const App = () => {
+  const userData = localStorage.getItem('userToken')
+  const authState = userData ? true : false
   return (
     <React.Fragment>
       <Router>
         <React.Suspense fallback={loading}>
           <Switch>
-            <Route exact path="/" name="Login" render={(props) => <Login {...props} />} />
-            <Route exact path="/login" name="Login" render={(props) => <Login {...props} />} />
-            <Route
+            {/* <Route exact path="/" name="Login" component={Login} /> */}
+            {/* Public */}
+            <PublicRoute exact auth={authState} path="/login" name="Login" component={Login} />
+            <PublicRoute
               exact
+              auth={authState}
               path="/register"
               name="Register"
-              render={(props) => <Register {...props} />}
+              component={Register}
             />
-            <Route
+            <PublicRoute
               exact
+              auth={authState}
               path="/forgetpassword"
               name="Forget Password"
-              render={(props) => <ForgetPassword {...props} />}
+              component={ForgetPassword}
             />
-            <Route exact path="/404" name="Page 404" render={(props) => <Page404 {...props} />} />
-            <Route exact path="/500" name="Page 500" render={(props) => <Page500 {...props} />} />
-            <Route path="/" name="Home" render={(props) => <DefaultLayout {...props} />} />
+            {/* Private */}
+            <PrivateRoute exact auth={authState} path="/404" name="Page 404" component={Page404} />
+            <PrivateRoute exact auth={authState} path="/500" name="Page 500" component={Page500} />
+            <PrivateRoute path="/" auth={authState} name="Home" component={DefaultLayout} />
+            <PrivateRoute path="/admin" auth={authState} name="Home" component={DefaultLayout} />
+            {/* condonation */}
+            {authState ? (
+              <Redirect exact from="/" to="/admin" />
+            ) : (
+              <Redirect from="/" to="/login" />
+            )}
           </Switch>
         </React.Suspense>
       </Router>
