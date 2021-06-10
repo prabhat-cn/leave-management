@@ -549,13 +549,6 @@ const User = () => {
                               name="skill"
                               onChange={handleChange}
                               options={skillOptions}
-                              className={errors.skill && touched.skill ? 'input-error' : null}
-                            />
-                            <ErrorMessage
-                              name="skill"
-                              style={{ color: 'red', marginBottom: '4px' }}
-                              component="div"
-                              className="error"
                             />
                           </div>
 
