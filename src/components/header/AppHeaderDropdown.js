@@ -1,5 +1,6 @@
 /* eslint-disable no-undef */
 import React, { useState, useEffect } from 'react'
+import Avatar from 'react-avatar'
 import {
   CAvatar,
   CBadge,
@@ -17,11 +18,12 @@ const AppHeaderDropdown = () => {
 
   const makeLogout = (e) => {
     e.preventDefault()
-    localStorage.removeItem('userToken')
+    localStorage.removeItem('lMuserDataToken')
     window.location.reload()
   }
+  // Data show after login
   useEffect(() => {
-    const loggedInUser = localStorage.getItem('userToken')
+    const loggedInUser = localStorage.getItem('lMuserDataToken')
     console.log('loggedInUser', loggedInUser)
     if (loggedInUser) {
       const foundUser = JSON.parse(loggedInUser)
@@ -33,7 +35,7 @@ const AppHeaderDropdown = () => {
     <CDropdown variant="nav-item">
       <CDropdownToggle placement="bottom-end" className="py-0" caret={false}>
         {/* <CAvatar src="avatars/8.jpg" size="md" /> */}
-        <h5>{user && user.user_nicename}</h5>
+        <Avatar className="mr-2" name={user && user.user_nicename} size="45" round={true} />
       </CDropdownToggle>
       <CDropdownMenu className="pt-0" placement="bottom-end">
         <CDropdownHeader className="bg-light fw-semibold py-2">Account</CDropdownHeader>
@@ -93,10 +95,6 @@ const AppHeaderDropdown = () => {
           <CIcon name="cil-lock-locked" className="me-2" />
           Logout
         </CDropdownItem>
-        {/* <CDropdownItem href="#">
-          <CIcon name="cil-lock-locked" className="me-2" />
-          Lock Account
-        </CDropdownItem> */}
       </CDropdownMenu>
     </CDropdown>
   )

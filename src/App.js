@@ -37,7 +37,7 @@ const PublicRoute = ({ component: Component, auth, ...rest }) => (
 )
 
 const App = () => {
-  const userData = localStorage.getItem('userToken')
+  const userData = localStorage.getItem('lMuserDataToken')
   const authState = userData ? true : false
   return (
     <React.Fragment>

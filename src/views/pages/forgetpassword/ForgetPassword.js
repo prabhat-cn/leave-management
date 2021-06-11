@@ -24,13 +24,27 @@ import CIcon from '@coreui/icons-react'
 const sleep = (ms) => new Promise((r) => setTimeout(r, ms))
 const ForgetPassword = () => {
   const [isRevealPwd, setIsRevealPwd] = useState(false)
+  const [isRevealCPwd, setIsRevealCPwd] = useState(false)
   const [submitted, setSubmitted] = useState(false)
   const initialValues = {
-    email: '',
+    username: '',
+    newPassword: '',
+    repeatPassword: '',
   }
 
   const loginSchema = Yup.object().shape({
-    email: Yup.string().required('Email is required').email('Email is invalid'),
+    username: Yup.string().required('Username required'),
+
+    newPassword: Yup.string()
+      .min(8, 'Password must be at least 8 characters')
+      .required('New password is required')
+      .matches(
+        '^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#$%^&*])(?=.{8,})',
+        'One Uppercase, One Lowercase, One Number and one special case Character',
+      ),
+    repeatPassword: Yup.string()
+      .oneOf([Yup.ref('password'), null], 'Passwords must match')
+      .required('Repeat Password is required'),
   })
   const onSubmit = async (values, submitProps) => {
     console.log('form-values', JSON.stringify(values, null, 2))
@@ -65,21 +79,83 @@ const ForgetPassword = () => {
                                 </CInputGroupText>
                                 <Field
                                   type="text"
-                                  name="email"
-                                  id="email"
-                                  placeholder="Enter email"
+                                  name="username"
+                                  id="username"
+                                  placeholder="Enter username or email"
                                   autoComplete="on"
                                   className={
                                     'form-control' +
                                     ' ' +
-                                    (errors.email && touched.email ? 'input-error' : null)
+                                    (errors.username && touched.username ? 'input-error' : null)
                                   }
                                 />
                               </CInputGroup>
                               <ErrorMessage
-                                name="email"
+                                name="username"
                                 style={{ color: 'red', marginBottom: '4px' }}
                                 component="div"
+                                className="error"
+                              />
+                              <CInputGroup className="mb-3 mt-2 pwd-container">
+                                <CInputGroupText>
+                                  <CIcon name="cil-lock-locked" />
+                                </CInputGroupText>
+                                <Field
+                                  type={isRevealPwd ? 'text' : 'password'}
+                                  name="newPassword"
+                                  id="newPassword"
+                                  placeholder="Enter new password"
+                                  autoComplete="on"
+                                  className={
+                                    'form-control' +
+                                    ' ' +
+                                    (errors.newPassword && touched.newPassword
+                                      ? 'input-error'
+                                      : null)
+                                  }
+                                />
+                                <img
+                                  className="toggle-image"
+                                  title={isRevealPwd ? 'Hide password' : 'Show password'}
+                                  src={isRevealPwd ? hidePwdImg : showPwdImg}
+                                  onClick={() => setIsRevealPwd((prevState) => !prevState)}
+                                />
+                              </CInputGroup>
+                              <ErrorMessage
+                                name="newPassword"
+                                style={{ color: 'red', marginBottom: '6px' }}
+                                component="span"
+                                className="error"
+                              />
+                              <CInputGroup className="mb-4 mt-2 pwd-container">
+                                <CInputGroupText>
+                                  <CIcon name="cil-lock-locked" />
+                                </CInputGroupText>
+                                <Field
+                                  type={isRevealCPwd ? 'text' : 'password'}
+                                  name="repeatPassword"
+                                  id="repeatPassword"
+                                  placeholder="Repeat password"
+                                  autoComplete="on"
+                                  className={
+                                    'form-control' +
+                                    ' ' +
+                                    (errors.repeatPassword && touched.repeatPassword
+                                      ? 'input-error'
+                                      : null)
+                                  }
+                                />
+                                <img
+                                  className="toggle-image"
+                                  title={isRevealCPwd ? 'Hide password' : 'Show password'}
+                                  src={isRevealCPwd ? hidePwdImg : showPwdImg}
+                                  onClick={() => setIsRevealCPwd((prevState) => !prevState)}
+                                />
+                              </CInputGroup>
+                              <ErrorMessage
+                                name="repeatPassword"
+                                style={{ color: 'red', marginBottom: '4px' }}
+                                component="span"
                                 className="error"
                               />
                               <CRow className="mt-3">

@@ -58,8 +58,8 @@ const Login = () => {
         console.log('userData', userData)
         // set the state of the user
         setUser(userData)
-        localStorage.setItem('userToken', JSON.stringify(userData))
-        // sessionStorage.setItem('accessJWT', userData.token)
+        localStorage.setItem('lMuserDataToken', JSON.stringify(userData))
+        // sessionStorage.setItem('accessDataToken', userData.token)
         window.location.reload()
       })
       .catch((err) => {
@@ -81,7 +81,7 @@ const Login = () => {
   //   //     const userData = response.data
   //   //     console.log('userData', userData)
   //   //     dispatch(loginSuccess())
-  //   //     // localStorage.setItem('userToken', JSON.stringify(userData))
+  //   //     // localStorage.setItem('lMuserDataToken', JSON.stringify(userData))
   //   //     // window.location.reload()
   //   //   })
   //   //   .catch((err) => {

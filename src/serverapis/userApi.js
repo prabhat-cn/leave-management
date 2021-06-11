@@ -27,7 +27,7 @@ export const userLogin = (frmData) => {
 
       // if (res.data.status === 'success') {
       //   sessionStorage.setItem('accessJWT', res.data.accessJWT)
-      //   localStorage.setItem('userToken', JSON.stringify({ refreshJWT: res.data.refreshJWT }))
+      //   localStorage.setItem('lMuserDataToken', JSON.stringify({ refreshJWT: res.data.refreshJWT }))
       //   window.location.reload()
       // }
     } catch (error) {
