@@ -1,4 +1,5 @@
-import React from 'react'
+/* eslint-disable no-undef */
+import React, { useState, useEffect } from 'react'
 import {
   CAvatar,
   CBadge,
@@ -13,15 +14,27 @@ import CIcon from '@coreui/icons-react'
 import { Link } from 'react-router-dom'
 
 const AppHeaderDropdown = () => {
+  const [user, setUser] = useState({})
+
   const makeLogout = (e) => {
     e.preventDefault()
     localStorage.removeItem('userToken')
     window.location.reload()
   }
+  useEffect(() => {
+    const loggedInUser = localStorage.getItem('userToken')
+    console.log('loggedInUser', loggedInUser)
+    if (loggedInUser) {
+      const foundUser = JSON.parse(loggedInUser)
+      console.log('foundUser', foundUser)
+      setUser(foundUser)
+    }
+  }, [])
   return (
     <CDropdown variant="nav-item">
       <CDropdownToggle placement="bottom-end" className="py-0" caret={false}>
-        <CAvatar src="avatars/8.jpg" size="md" />
+        {/* <CAvatar src="avatars/8.jpg" size="md" /> */}
+        <h5>{user && user.user_nicename}</h5>
       </CDropdownToggle>
       <CDropdownMenu className="pt-0" placement="bottom-end">
         <CDropdownHeader className="bg-light fw-semibold py-2">Account</CDropdownHeader>

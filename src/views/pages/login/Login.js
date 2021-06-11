@@ -1,3 +1,4 @@
+/* eslint-disable no-undef */
 /* eslint-disable jsx-a11y/alt-text */
 import React, { useState, useEffect } from 'react'
 import { Link } from 'react-router-dom'
@@ -31,7 +32,7 @@ const Login = () => {
   const [isRevealPwd, setIsRevealPwd] = useState(false)
   const [submitted, setSubmitted] = useState(false)
   const [error, setError] = useState('')
-
+  const [user, setUser] = useState()
   const initialValues = {
     username: '',
     password: '',
@@ -55,9 +56,12 @@ const Login = () => {
       .then((response) => {
         setError('')
         setSubmitted(true)
-        const userData = response.data.token
+        const userData = response.data
         console.log('userData', userData)
+        // set the state of the user
+        setUser(userData)
         localStorage.setItem('userToken', JSON.stringify(userData))
+        sessionStorage.setItem('accessJWT', userData.token)
         window.location.reload()
       })
       .catch((err) => {
@@ -72,20 +76,41 @@ const Login = () => {
 
   // const loginSubmit = async (loginData) => {
   //   dispatch(loginPending())
+  //   // userLogin(loginData)
+  //   //   .then((response) => {
+  //   //     setError('')
+  //   //     setSubmitted(true)
+  //   //     const userData = response.data
+  //   //     console.log('userData', userData)
+  //   //     dispatch(loginSuccess())
+  //   //     // localStorage.setItem('userToken', JSON.stringify(userData))
+  //   //     // window.location.reload()
+  //   //   })
+  //   //   .catch((err) => {
+  //   //     console.log(err.response)
+  //   //     const { status, data } = err.response
+  //   //     setSubmitted(false)
+  //   //     if (status === 403) {
+  //   //       setError(data.message)
+  //   //     }
+  //   //   })
   //   try {
-  //     const isAuth = await userLogin({ username, password })
+  //     const isAuth = await userLogin(loginData)
   //     console.log('login-isAuth->', isAuth)
-  //     setSubmitted(true)
-  //   } catch (err) {
-  //     console.log(err.response)
-  //     dispatch(loginFail(err.message))
-  //     setSubmitted(false)
+  //     then((response) => {
+  //       setSubmitted(true)
+  //       const userData = response.data
+  //       console.log('userData', userData)
+  //     })
+  //   } catch (error) {
+  //     console.log(error.response)
+  //     dispatch(loginFail(error.message))
   //   }
   // }
   const onSubmit = async (data, submitProps) => {
     loginSubmit(data)
     await sleep(500)
-    submitProps.resetForm()
+    // submitProps.resetForm()
   }
   return (
     <>
@@ -118,7 +143,7 @@ const Login = () => {
                                   type="text"
                                   name="username"
                                   id="email"
-                                  placeholder="Enter username"
+                                  placeholder="Enter username or email"
                                   autoComplete="on"
                                   className={
                                     'form-control' +

@@ -5,7 +5,7 @@ import axios from 'axios'
 export const userRegistration = (frmData) => {
   return new Promise(async (resolve, reject) => {
     try {
-      const res = await API.post('/wp-jwt/v1/create-new-user', frmData)
+      const res = await axios.post('/wp-jwt/v1/create-new-user', frmData)
       console.log('res-Regis->', res);
       resolve(res.data)
 
