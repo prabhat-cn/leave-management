@@ -1,7 +1,7 @@
 /* eslint-disable no-undef */
 /* eslint-disable jsx-a11y/alt-text */
 import React, { useState, useEffect } from 'react'
-import { Link, useHistory } from 'react-router-dom'
+import { Link } from 'react-router-dom'
 import showPwdImg from '../../../assets/icons/eye-slash-solid.svg'
 import hidePwdImg from '../../../assets/icons/eye-solid.svg'
 import { Formik, Form, Field, ErrorMessage } from 'formik'
@@ -27,12 +27,10 @@ import { loginPending, loginSuccess, loginFail } from '../../../store/reducers/l
 import { userLogin } from '../../../serverApis/userApi'
 const sleep = (ms) => new Promise((r) => setTimeout(r, ms))
 const Login = () => {
-  const dispatch = useDispatch()
   const [isRevealPwd, setIsRevealPwd] = useState(false)
   const [submitted, setSubmitted] = useState(false)
   const [error, setError] = useState('')
   const [user, setUser] = useState()
-  let history = useHistory()
   const initialValues = {
     username: '',
     password: '',
@@ -63,7 +61,6 @@ const Login = () => {
         localStorage.setItem('userToken', JSON.stringify(userData))
         // sessionStorage.setItem('accessJWT', userData.token)
         window.location.reload()
-        // history.push('/dashboard')
       })
       .catch((err) => {
         console.log(err.response)
