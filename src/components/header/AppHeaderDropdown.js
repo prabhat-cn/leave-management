@@ -12,7 +12,6 @@ import {
 } from '@coreui/react'
 import CIcon from '@coreui/icons-react'
 import { Link } from 'react-router-dom'
-
 const AppHeaderDropdown = () => {
   const [user, setUser] = useState({})
 
