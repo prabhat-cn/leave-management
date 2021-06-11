@@ -22,22 +22,21 @@ import {
 } from '@coreui/react'
 import CIcon from '@coreui/icons-react'
 import API from '../../../api'
-import { useDispatch, useSelector } from 'react-redux'
+import { useDispatch } from 'react-redux'
 import { loginPending, loginSuccess, loginFail } from '../../../store/reducers/loginReducer'
-import { userLogin } from '../../../serverApis/userApi'
 const sleep = (ms) => new Promise((r) => setTimeout(r, ms))
 const Login = () => {
   const [isRevealPwd, setIsRevealPwd] = useState(false)
   const [submitted, setSubmitted] = useState(false)
   const [error, setError] = useState('')
   const [user, setUser] = useState()
+  const dispatch = useDispatch()
   const initialValues = {
     username: '',
     password: '',
   }
 
   const loginSchema = Yup.object().shape({
-    // email: Yup.string().required('Email is required').email('Email is invalid'),
     username: Yup.string().required('Username required'),
 
     password: Yup.string()
@@ -50,13 +49,13 @@ const Login = () => {
   })
 
   const loginSubmit = (loginData) => {
+    dispatch(loginPending())
     API.post('/jwt-auth/v1/token', loginData)
       .then((response) => {
         setError('')
         setSubmitted(true)
         const userData = response.data
-        console.log('userData', userData)
-        // set the state of the user
+        dispatch(loginSuccess())
         setUser(userData)
         localStorage.setItem('lMuserDataToken', JSON.stringify(userData))
         // sessionStorage.setItem('accessDataToken', userData.token)
@@ -66,49 +65,17 @@ const Login = () => {
         console.log(err.response)
         const { status, data } = err.response
         setSubmitted(false)
+        dispatch(loginFail(error.message))
         if (status === 403) {
           setError(data.message)
         }
       })
   }
 
-  // const loginSubmit = async (loginData) => {
-  //   dispatch(loginPending())
-  //   // userLogin(loginData)
-  //   //   .then((response) => {
-  //   //     setError('')
-  //   //     setSubmitted(true)
-  //   //     const userData = response.data
-  //   //     console.log('userData', userData)
-  //   //     dispatch(loginSuccess())
-  //   //     // localStorage.setItem('lMuserDataToken', JSON.stringify(userData))
-  //   //     // window.location.reload()
-  //   //   })
-  //   //   .catch((err) => {
-  //   //     console.log(err.response)
-  //   //     const { status, data } = err.response
-  //   //     setSubmitted(false)
-  //   //     if (status === 403) {
-  //   //       setError(data.message)
-  //   //     }
-  //   //   })
-  //   try {
-  //     const isAuth = await userLogin(loginData)
-  //     console.log('login-isAuth->', isAuth)
-  //     then((response) => {
-  //       setSubmitted(true)
-  //       const userData = response.data
-  //       console.log('userData', userData)
-  //     })
-  //   } catch (error) {
-  //     console.log(error.response)
-  //     dispatch(loginFail(error.message))
-  //   }
-  // }
   const onSubmit = async (data, submitProps) => {
     loginSubmit(data)
     await sleep(500)
-    // submitProps.resetForm()
+    submitProps.resetForm()
   }
   return (
     <>

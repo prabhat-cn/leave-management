@@ -16,10 +16,13 @@ import storeSide from './store/store1'
 React.icons = icons
 
 ReactDOM.render(
-  <Provider store={storeOps}>
-    <Provider store={storeSide}>
-      <App />
-    </Provider>
+  // <Provider store={storeOps}>
+  //   <Provider store={storeSide}>
+  //     <App />
+  //   </Provider>
+  // </Provider>
+  <Provider reduxStore={storeSide} store={storeOps}>
+    <App />
   </Provider>,
   document.getElementById('root'),
 )
