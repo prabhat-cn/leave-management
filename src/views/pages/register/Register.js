@@ -1,3 +1,4 @@
+/* eslint-disable jsx-a11y/alt-text */
 import React, { useState } from 'react'
 import { Link } from 'react-router-dom'
 import showPwdImg from '../../../assets/icons/eye-slash-solid.svg'
@@ -18,12 +19,22 @@ import {
   CRow,
 } from '@coreui/react'
 import CIcon from '@coreui/icons-react'
+import { useDispatch } from 'react-redux'
+import API from '../../../api'
+import {
+  registrationPending,
+  registrationSuccess,
+  registrationError,
+} from '../../../store/reducers/userRegReducer'
 
 const sleep = (ms) => new Promise((r) => setTimeout(r, ms))
 const Register = () => {
+  const dispatch = useDispatch()
   const [isRevealPwd, setIsRevealPwd] = useState(false)
   const [isRevealCPwd, setIsRevealCPwd] = useState(false)
   const [submitted, setSubmitted] = useState(false)
+  const [error, setError] = useState('')
+  const [user, setUser] = useState()
   const initialValues = {
     firstname: '',
     lastname: '',
@@ -57,12 +68,35 @@ const Register = () => {
       .oneOf([Yup.ref('password'), null], 'Passwords must match')
       .required('Repeat Password is required'),
   })
-  const onSubmit = async (values, submitProps) => {
-    console.log('form-values', JSON.stringify(values, null, 2))
-    console.log('submitProps', submitProps)
+  const registerSubmit = (loginData) => {
+    dispatch(registrationPending())
+    API.post('/wp-jwt/v1/create-new-user', loginData)
+      .then((response) => {
+        setError('')
+        setSubmitted(true)
+        const userData = response.data
+        console.log('userData', userData)
+        dispatch(registrationSuccess())
+        setUser(userData)
+        // localStorage.setItem('lMuserDataToken', JSON.stringify(userData))
+        // sessionStorage.setItem('accessDataToken', userData.token)
+        // window.location.reload()
+      })
+      .catch((err) => {
+        console.log(err.response)
+        // const { status, data } = err.response
+        setSubmitted(false)
+        dispatch(registrationError(error.message))
+        // if (status === 403) {
+        //   setError(data.message)
+        // }
+      })
+  }
+  const onSubmit = async (data, submitProps) => {
+    // console.log('form-values', JSON.stringify(data, null, 2))
+    registerSubmit(data)
     await sleep(500)
-    setSubmitted(true)
-    submitProps.resetForm()
+    // submitProps.resetForm()
   }
   return (
     <>
@@ -81,8 +115,9 @@ const Register = () => {
                         <CCardBody className="p-4">
                           <Form id="register" name="register">
                             {submitted && (
-                              <CAlert color="success">Success! Account Created Successfully</CAlert>
+                              <CAlert color="success">Success! Register Successfully</CAlert>
                             )}
+                            {error !== '' && <CAlert color="danger">Error! Register failed</CAlert>}
                             <h1>Register</h1>
                             <p className="text-medium-emphasis">Create your account</p>
                             <CRow xs={{ gutterX: 6 }}>

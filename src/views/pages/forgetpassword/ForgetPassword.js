@@ -1,6 +1,6 @@
 /* eslint-disable jsx-a11y/alt-text */
 import React, { useState } from 'react'
-import { Link } from 'react-router-dom'
+import { Link, useHistory } from 'react-router-dom'
 import showPwdImg from '../../../assets/icons/eye-slash-solid.svg'
 import hidePwdImg from '../../../assets/icons/eye-solid.svg'
 import { Formik, Form, Field, ErrorMessage } from 'formik'
@@ -20,20 +20,31 @@ import {
   CRow,
 } from '@coreui/react'
 import CIcon from '@coreui/icons-react'
+import API from '../../../api'
+import { useDispatch } from 'react-redux'
+import {
+  forgetPassPending,
+  forgetPassSuccess,
+  forgetPassFail,
+  updatePassSuccess,
+} from '../../../store/reducers/forgetPassReducer'
 
 const sleep = (ms) => new Promise((r) => setTimeout(r, ms))
 const ForgetPassword = () => {
   const [isRevealPwd, setIsRevealPwd] = useState(false)
   const [isRevealCPwd, setIsRevealCPwd] = useState(false)
   const [submitted, setSubmitted] = useState(false)
+  const [error, setError] = useState('')
+  const history = useHistory()
+  const dispatch = useDispatch()
   const initialValues = {
-    username: '',
+    userName: '',
     newPassword: '',
     repeatPassword: '',
   }
 
-  const loginSchema = Yup.object().shape({
-    username: Yup.string().required('Username required'),
+  const forgetPassSchema = Yup.object().shape({
+    userName: Yup.string().required('Username required'),
 
     newPassword: Yup.string()
       .min(8, 'Password must be at least 8 characters')
@@ -43,19 +54,46 @@ const ForgetPassword = () => {
         'One Uppercase, One Lowercase, One Number and one special case Character',
       ),
     repeatPassword: Yup.string()
-      .oneOf([Yup.ref('password'), null], 'Passwords must match')
+      .oneOf([Yup.ref('newPassword'), null], 'Password must match')
       .required('Repeat Password is required'),
   })
-  const onSubmit = async (values, submitProps) => {
-    console.log('form-values', JSON.stringify(values, null, 2))
+  const forgetPassSubmit = (forgetData) => {
+    dispatch(forgetPassPending())
+    API.post('/wp-jwt/v1/forgot-password', forgetData)
+      .then((response) => {
+        console.log('response', response)
+        setError('')
+        setSubmitted(true)
+        dispatch(forgetPassSuccess())
+        const forgetPassData = response.data
+        console.log('forgetPassData', forgetPassData)
+        // window.location.reload()
+        // history.push('/login')
+      })
+      .catch((err) => {
+        console.log(err)
+        // const status = err
+        // const { status, data } = err.response
+        setSubmitted(false)
+        dispatch(forgetPassFail(error.message))
+        // if (status === 403) {
+        //   setError(data.message)
+        // }
+        // if (status === 200) {
+        //   setError(data.message)
+        // }
+      })
+  }
+  const onSubmit = async (data, submitProps) => {
     // console.log('submitProps', submitProps)
+    forgetPassSubmit(data)
     await sleep(500)
     setSubmitted(true)
-    submitProps.resetForm()
+    // submitProps.resetForm()
   }
   return (
     <>
-      <Formik initialValues={initialValues} validationSchema={loginSchema} onSubmit={onSubmit}>
+      <Formik initialValues={initialValues} validationSchema={forgetPassSchema} onSubmit={onSubmit}>
         {(formik) => {
           // console.log('formik', formik.values)
           const { errors, touched, isValid, dirty } = formik
@@ -70,7 +108,14 @@ const ForgetPassword = () => {
                         <CCard className="p-4">
                           <CCardBody>
                             <Form id="login" name="login">
-                              {submitted && <CAlert color="success">You will get a mail</CAlert>}
+                              {submitted && (
+                                <CAlert color="success">
+                                  Success! Password reset Successfully
+                                </CAlert>
+                              )}
+                              {error !== '' && (
+                                <CAlert color="danger">Error! Failed submission</CAlert>
+                              )}
                               <h1>Forget Password</h1>
                               <p className="text-medium-emphasis">Verify account</p>
                               <CInputGroup className="mb-2">
@@ -79,19 +124,19 @@ const ForgetPassword = () => {
                                 </CInputGroupText>
                                 <Field
                                   type="text"
-                                  name="username"
-                                  id="username"
+                                  name="userName"
+                                  id="userName"
                                   placeholder="Enter username or email"
                                   autoComplete="on"
                                   className={
                                     'form-control' +
                                     ' ' +
-                                    (errors.username && touched.username ? 'input-error' : null)
+                                    (errors.userName && touched.userName ? 'input-error' : null)
                                   }
                                 />
                               </CInputGroup>
                               <ErrorMessage
-                                name="username"
+                                name="userName"
                                 style={{ color: 'red', marginBottom: '4px' }}
                                 component="div"
                                 className="error"
