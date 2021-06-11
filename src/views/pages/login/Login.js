@@ -1,5 +1,5 @@
 /* eslint-disable jsx-a11y/alt-text */
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import { Link } from 'react-router-dom'
 import showPwdImg from '../../../assets/icons/eye-slash-solid.svg'
 import hidePwdImg from '../../../assets/icons/eye-solid.svg'
@@ -21,9 +21,13 @@ import {
 } from '@coreui/react'
 import CIcon from '@coreui/icons-react'
 import API from '../../../api'
+import { useDispatch, useSelector } from 'react-redux'
+import { loginPending, loginSuccess, loginFail } from '../../../store/reducers/loginReducer'
+import { userLogin } from '../../../serverApis/userApi'
 
 const sleep = (ms) => new Promise((r) => setTimeout(r, ms))
 const Login = () => {
+  const dispatch = useDispatch()
   const [isRevealPwd, setIsRevealPwd] = useState(false)
   const [submitted, setSubmitted] = useState(false)
   const [error, setError] = useState('')
@@ -53,15 +57,31 @@ const Login = () => {
         setSubmitted(true)
         const userData = response.data.token
         console.log('userData', userData)
-
         localStorage.setItem('userToken', JSON.stringify(userData))
         window.location.reload()
       })
       .catch((err) => {
         console.log(err.response)
+        const { status, data } = err.response
         setSubmitted(false)
+        if (status === 403) {
+          setError(data.message)
+        }
       })
   }
+
+  // const loginSubmit = async (loginData) => {
+  //   dispatch(loginPending())
+  //   try {
+  //     const isAuth = await userLogin({ username, password })
+  //     console.log('login-isAuth->', isAuth)
+  //     setSubmitted(true)
+  //   } catch (err) {
+  //     console.log(err.response)
+  //     dispatch(loginFail(err.message))
+  //     setSubmitted(false)
+  //   }
+  // }
   const onSubmit = async (data, submitProps) => {
     loginSubmit(data)
     await sleep(500)

@@ -5,7 +5,7 @@ import {
   registrationError,
 } from '../reducers/userRegReducer'
 
-import { userRegistration } from '../../serverapis/userApi'
+import { userRegistration } from '../../serverApis/userApi'
 
 export const newUserRegistration = (formData) => async (dispatch) => {
   try {
