@@ -21,7 +21,7 @@ import {
 } from '@coreui/react'
 import CIcon from '@coreui/icons-react'
 import API from '../../../api'
-import { useDispatch } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import {
   forgetPassPending,
   forgetPassSuccess,
@@ -36,6 +36,7 @@ const ForgetPassword = () => {
   const [submitted, setSubmitted] = useState(false)
   const [error, setError] = useState('')
   const history = useHistory()
+  const { isLoading, status, message } = useSelector((state) => state.forgetPassword)
   const dispatch = useDispatch()
   const initialValues = {
     userName: '',
@@ -57,32 +58,49 @@ const ForgetPassword = () => {
       .oneOf([Yup.ref('newPassword'), null], 'Password must match')
       .required('Repeat Password is required'),
   })
-  const forgetPassSubmit = (forgetData) => {
+  // const forgetPassSubmit = (forgetData) => {
+  //   dispatch(forgetPassPending())
+  //   API.post('/wp-jwt/v1/forgot-password', forgetData)
+  //     .then((response) => {
+  //       console.log('response', response)
+  //       setError('')
+  //       setSubmitted(true)
+  //       dispatch(forgetPassSuccess())
+  //       const forgetPassData = response.data
+  //       console.log('forgetPassData', forgetPassData)
+  //       // window.location.reload()
+  //       // history.push('/login')
+  //     })
+  //     .catch((err) => {
+  //       console.log(err)
+  //       // const status = err
+  //       // const { status, data } = err.response
+  //       setSubmitted(false)
+  //       dispatch(forgetPassFail(error.message))
+  //       // if (status === 403) {
+  //       //   setError(data.message)
+  //       // }
+  //       // if (status === 200) {
+  //       //   setError(data.message)
+  //       // }
+  //     })
+  // }
+  const forgetPassSubmit = async (forgetData) => {
     dispatch(forgetPassPending())
-    API.post('/wp-jwt/v1/forgot-password', forgetData)
-      .then((response) => {
-        console.log('response', response)
-        setError('')
-        setSubmitted(true)
-        dispatch(forgetPassSuccess())
-        const forgetPassData = response.data
-        console.log('forgetPassData', forgetPassData)
-        // window.location.reload()
-        // history.push('/login')
-      })
-      .catch((err) => {
-        console.log(err)
-        // const status = err
-        // const { status, data } = err.response
-        setSubmitted(false)
-        dispatch(forgetPassFail(error.message))
-        // if (status === 403) {
-        //   setError(data.message)
-        // }
-        // if (status === 200) {
-        //   setError(data.message)
-        // }
-      })
+    try {
+      const forgetPass = await API.post('/wp-jwt/v1/forgot-password', forgetData)
+      console.log('forgetPass', forgetPass)
+      setSubmitted(true)
+
+      // if (forgetPass.status === 'error') {
+      //   return dispatch(forgetPassFail(forgetPass.message))
+      // }
+
+      dispatch(forgetPassSuccess())
+      // history.push('/dashboard')
+    } catch (error) {
+      dispatch(forgetPassFail(error.message))
+    }
   }
   const onSubmit = async (data, submitProps) => {
     // console.log('submitProps', submitProps)
@@ -108,14 +126,15 @@ const ForgetPassword = () => {
                         <CCard className="p-4">
                           <CCardBody>
                             <Form id="login" name="login">
-                              {submitted && (
+                              {/* {submitted && (
                                 <CAlert color="success">
                                   Success! Password reset Successfully
                                 </CAlert>
-                              )}
-                              {error !== '' && (
+                              )} */}
+                              {error !== '' && <CAlert color="danger">{error}</CAlert>}
+                              {/* {error !== '' && (
                                 <CAlert color="danger">Error! Failed submission</CAlert>
-                              )}
+                              )} */}
                               <h1>Forget Password</h1>
                               <p className="text-medium-emphasis">Verify account</p>
                               <CInputGroup className="mb-2">
