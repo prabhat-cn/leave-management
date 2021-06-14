@@ -28,7 +28,7 @@ import {
 } from '../../../store/reducers/userRegReducer'
 
 const sleep = (ms) => new Promise((r) => setTimeout(r, ms))
-const Register = (history) => {
+const Register = (props) => {
   const dispatch = useDispatch()
   // const history = useHistory()
   const [isRevealPwd, setIsRevealPwd] = useState(false)
@@ -83,7 +83,8 @@ const Register = (history) => {
         dispatch(registrationSuccess())
         setUser(userData)
         // window.location.reload()
-        history.push('/login')
+        // eslint-disable-next-line react/prop-types
+        props.history.push('/login')
       })
       .catch((error) => {
         console.log(error.response)
@@ -333,7 +334,7 @@ const eyeToggle = `
 .pwd-container {
     position: relative;
   }
-   
+
   .pwd-container img {
     cursor: pointer;
     position: absolute;
@@ -342,7 +343,7 @@ const eyeToggle = `
     top: 8px;
   }
 
-  
+
   input#password:active {
     background: #0000000d;
 }
