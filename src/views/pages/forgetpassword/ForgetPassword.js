@@ -1,6 +1,8 @@
+/* eslint-disable react/prop-types */
 /* eslint-disable jsx-a11y/alt-text */
 import React, { useState } from 'react'
-import { Link, useHistory } from 'react-router-dom'
+import { Link, useHistory, Redirect } from 'react-router-dom'
+import { useDispatch } from 'react-redux'
 import showPwdImg from '../../../assets/icons/eye-slash-solid.svg'
 import hidePwdImg from '../../../assets/icons/eye-solid.svg'
 import { Formik, Form, Field, ErrorMessage } from 'formik'
@@ -21,7 +23,6 @@ import {
 } from '@coreui/react'
 import CIcon from '@coreui/icons-react'
 import API from '../../../api'
-import { useDispatch, useSelector } from 'react-redux'
 import {
   forgetPassPending,
   forgetPassSuccess,
@@ -30,7 +31,7 @@ import {
 } from '../../../store/reducers/forgetPassReducer'
 
 const sleep = (ms) => new Promise((r) => setTimeout(r, ms))
-const ForgetPassword = () => {
+const ForgetPassword = (props) => {
   const [isRevealPwd, setIsRevealPwd] = useState(false)
   const [isRevealCPwd, setIsRevealCPwd] = useState(false)
   const [submitted, setSubmitted] = useState(false)
@@ -88,6 +89,7 @@ const ForgetPassword = () => {
   // }
   const forgetPassSubmit = async (forgetData) => {
     dispatch(forgetPassPending())
+    // console.log(props)
     try {
       const forgetPass = await API.post('/wp-jwt/v1/forgot-password', forgetData)
       setError('')
@@ -96,11 +98,12 @@ const ForgetPassword = () => {
       console.log('forgetPassData', forgetPassData)
       setForgetPassUse(forgetPassData)
       dispatch(forgetPassSuccess())
-      window.location.reload()
-      // history.push('/login')
+      // eslint-disable-next-line react/prop-types
+      history.push('/login')
     } catch (error) {
       setSubmitted(false)
       dispatch(forgetPassFail(error.message))
+      history.push('/forgetpassword')
     }
   }
   const onSubmit = async (data, submitProps) => {

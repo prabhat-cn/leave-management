@@ -72,11 +72,11 @@ const App = () => {
             ) : (
               <Redirect from="/" to="/register" />
             )} */}
-            {authState ? (
+            {/* {authState ? (
               <Redirect exact from="/" to="/login" />
             ) : (
               <Redirect from="/" to="/forgetpassword" />
-            )}
+            )} */}
             {authState ? (
               <Redirect exact from="/" to="/admin" />
             ) : (

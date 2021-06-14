@@ -1,6 +1,6 @@
 /* eslint-disable jsx-a11y/alt-text */
 import React, { useState } from 'react'
-import { Link, useHistory } from 'react-router-dom'
+import { Link, useHistory, Redirect } from 'react-router-dom'
 import showPwdImg from '../../../assets/icons/eye-slash-solid.svg'
 import hidePwdImg from '../../../assets/icons/eye-solid.svg'
 import { Formik, Form, Field, ErrorMessage } from 'formik'
@@ -30,7 +30,7 @@ import {
 const sleep = (ms) => new Promise((r) => setTimeout(r, ms))
 const Register = (props) => {
   const dispatch = useDispatch()
-  // const history = useHistory()
+  const history = useHistory()
   const [isRevealPwd, setIsRevealPwd] = useState(false)
   const [isRevealCPwd, setIsRevealCPwd] = useState(false)
   const [submitted, setSubmitted] = useState(false)
@@ -38,8 +38,8 @@ const Register = (props) => {
   const [user, setUser] = useState()
   const initialValues = {
     username: '',
-    firstname: '',
-    lastname: '',
+    first_name: '',
+    last_name: '',
     email: '',
     password: '',
     repeatPassword: '',
@@ -47,13 +47,13 @@ const Register = (props) => {
   const registerSchema = Yup.object().shape({
     username: Yup.string().required('Username required'),
 
-    firstname: Yup.string()
+    first_name: Yup.string()
       .required('Firstname required')
       .min(3, 'Must be 3 letters')
       .max(20, 'Can be 20 letters or less')
       .matches(/^[A-Za-z]+$/i, 'Firstname should be letter'),
 
-    lastname: Yup.string()
+    last_name: Yup.string()
       .required('Lastname required')
       .min(3, 'Must be 3 letters')
       .max(20, 'Can be 20 letters or less')
@@ -72,24 +72,27 @@ const Register = (props) => {
       .oneOf([Yup.ref('password'), null], 'Passwords must match')
       .required('Repeat Password is required'),
   })
-  const registerSubmit = (loginData) => {
+  const registerSubmit = (regData) => {
     dispatch(registrationPending())
-    API.post('/wp-jwt/v1/create-new-user', loginData)
+    API.post('/wp-jwt/v1/create-new-user', regData)
       .then((response) => {
         setError('')
         setSubmitted(true)
+        dispatch(registrationSuccess())
         const userData = response.data
         console.log('userData', userData)
-        dispatch(registrationSuccess())
         setUser(userData)
-        // window.location.reload()
-        // eslint-disable-next-line react/prop-types
-        props.history.push('/login')
+        if (user.status !== 0) {
+          // eslint-disable-next-line react/prop-types
+          props.history.push('/login')
+        }
       })
       .catch((error) => {
         console.log(error.response)
         // const { status, data } = err.response
         setSubmitted(false)
+        // eslint-disable-next-line react/prop-types
+        // props.history.push('/register')
         dispatch(registrationError(error.message))
         // if (status === 403) {
         //   setError(data.message)
@@ -162,19 +165,21 @@ const Register = (props) => {
                                   </CInputGroupText>
                                   <Field
                                     type="text"
-                                    name="firstname"
-                                    id="firstname"
+                                    name="first_name"
+                                    id="first_name"
                                     placeholder="Firstname"
                                     autoComplete="on"
                                     className={
                                       'form-control' +
                                       ' ' +
-                                      (errors.firstname && touched.firstname ? 'input-error' : null)
+                                      (errors.first_name && touched.first_name
+                                        ? 'input-error'
+                                        : null)
                                     }
                                   />
                                 </CInputGroup>
                                 <ErrorMessage
-                                  name="firstname"
+                                  name="first_name"
                                   style={{ color: 'red', marginBottom: '4px' }}
                                   component="div"
                                   className="error"
@@ -187,19 +192,19 @@ const Register = (props) => {
                                   </CInputGroupText>
                                   <Field
                                     type="text"
-                                    name="lastname"
-                                    id="lastname"
+                                    name="last_name"
+                                    id="last_name"
                                     placeholder="Lastname"
                                     autoComplete="on"
                                     className={
                                       'form-control' +
                                       ' ' +
-                                      (errors.lastname && touched.lastname ? 'input-error' : null)
+                                      (errors.last_name && touched.last_name ? 'input-error' : null)
                                     }
                                   />
                                 </CInputGroup>
                                 <ErrorMessage
-                                  name="lastname"
+                                  name="last_name"
                                   style={{ color: 'red', marginBottom: '4px' }}
                                   component="div"
                                   className="error"
