@@ -9,7 +9,7 @@ const initialState = {
 }
 
 const forgetPassReducer = createSlice({
-  name: 'userRegistration',
+  name: 'forgetPassword',
   initialState,
   reducers: {
     forgetPassPending: (state) => {
@@ -19,7 +19,7 @@ const forgetPassReducer = createSlice({
       state.isLoading = false
       state.status = 'success'
       state.message = payload.message
-      state.email = payload.email
+      // state.email = payload.email
     },
     updatePassSuccess: (state, { payload }) => {
       state.isLoading = false

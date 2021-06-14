@@ -34,28 +34,28 @@ const ForgetPassword = () => {
   const [isRevealPwd, setIsRevealPwd] = useState(false)
   const [isRevealCPwd, setIsRevealCPwd] = useState(false)
   const [submitted, setSubmitted] = useState(false)
+  const [forgetPassUse, setForgetPassUse] = useState()
   const [error, setError] = useState('')
   const history = useHistory()
-  const { isLoading, status, message } = useSelector((state) => state.forgetPassword)
   const dispatch = useDispatch()
   const initialValues = {
-    userName: '',
-    newPassword: '',
-    repeatPassword: '',
+    user_login: '',
+    new_password: '',
+    confirm_password: '',
   }
 
   const forgetPassSchema = Yup.object().shape({
-    userName: Yup.string().required('Username required'),
+    user_login: Yup.string().required('Username required'),
 
-    newPassword: Yup.string()
+    new_password: Yup.string()
       .min(8, 'Password must be at least 8 characters')
       .required('New password is required')
       .matches(
         '^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#$%^&*])(?=.{8,})',
         'One Uppercase, One Lowercase, One Number and one special case Character',
       ),
-    repeatPassword: Yup.string()
-      .oneOf([Yup.ref('newPassword'), null], 'Password must match')
+    confirm_password: Yup.string()
+      .oneOf([Yup.ref('new_password'), null], 'Password must match')
       .required('Repeat Password is required'),
   })
   // const forgetPassSubmit = (forgetData) => {
@@ -68,11 +68,12 @@ const ForgetPassword = () => {
   //       dispatch(forgetPassSuccess())
   //       const forgetPassData = response.data
   //       console.log('forgetPassData', forgetPassData)
+  //       setForgetPassUse(forgetPassData)
   //       // window.location.reload()
   //       // history.push('/login')
   //     })
-  //     .catch((err) => {
-  //       console.log(err)
+  //     .catch((error) => {
+  //       console.log(error)
   //       // const status = err
   //       // const { status, data } = err.response
   //       setSubmitted(false)
@@ -89,16 +90,16 @@ const ForgetPassword = () => {
     dispatch(forgetPassPending())
     try {
       const forgetPass = await API.post('/wp-jwt/v1/forgot-password', forgetData)
-      console.log('forgetPass', forgetPass)
+      setError('')
       setSubmitted(true)
-
-      // if (forgetPass.status === 'error') {
-      //   return dispatch(forgetPassFail(forgetPass.message))
-      // }
-
+      const forgetPassData = forgetPass.data
+      console.log('forgetPassData', forgetPassData)
+      setForgetPassUse(forgetPassData)
       dispatch(forgetPassSuccess())
-      // history.push('/dashboard')
+      window.location.reload()
+      // history.push('/login')
     } catch (error) {
+      setSubmitted(false)
       dispatch(forgetPassFail(error.message))
     }
   }
@@ -126,12 +127,18 @@ const ForgetPassword = () => {
                         <CCard className="p-4">
                           <CCardBody>
                             <Form id="login" name="login">
+                              {forgetPassUse && (
+                                <CAlert color={forgetPassUse.status === 0 ? 'danger' : 'success'}>
+                                  {forgetPassUse.status === 0 ? 'Error! ' : 'Success! '}
+                                  {forgetPassUse.message}
+                                </CAlert>
+                              )}
                               {/* {submitted && (
                                 <CAlert color="success">
                                   Success! Password reset Successfully
                                 </CAlert>
                               )} */}
-                              {error !== '' && <CAlert color="danger">{error}</CAlert>}
+                              {/* {error !== '' && <CAlert color="danger">{error}</CAlert>} */}
                               {/* {error !== '' && (
                                 <CAlert color="danger">Error! Failed submission</CAlert>
                               )} */}
@@ -143,19 +150,19 @@ const ForgetPassword = () => {
                                 </CInputGroupText>
                                 <Field
                                   type="text"
-                                  name="userName"
-                                  id="userName"
+                                  name="user_login"
+                                  id="user_login"
                                   placeholder="Enter username or email"
                                   autoComplete="on"
                                   className={
                                     'form-control' +
                                     ' ' +
-                                    (errors.userName && touched.userName ? 'input-error' : null)
+                                    (errors.user_login && touched.user_login ? 'input-error' : null)
                                   }
                                 />
                               </CInputGroup>
                               <ErrorMessage
-                                name="userName"
+                                name="user_login"
                                 style={{ color: 'red', marginBottom: '4px' }}
                                 component="div"
                                 className="error"
@@ -166,14 +173,14 @@ const ForgetPassword = () => {
                                 </CInputGroupText>
                                 <Field
                                   type={isRevealPwd ? 'text' : 'password'}
-                                  name="newPassword"
-                                  id="newPassword"
+                                  name="new_password"
+                                  id="new_password"
                                   placeholder="Enter new password"
                                   autoComplete="on"
                                   className={
                                     'form-control' +
                                     ' ' +
-                                    (errors.newPassword && touched.newPassword
+                                    (errors.new_password && touched.new_password
                                       ? 'input-error'
                                       : null)
                                   }
@@ -186,7 +193,7 @@ const ForgetPassword = () => {
                                 />
                               </CInputGroup>
                               <ErrorMessage
-                                name="newPassword"
+                                name="new_password"
                                 style={{ color: 'red', marginBottom: '6px' }}
                                 component="span"
                                 className="error"
@@ -197,14 +204,14 @@ const ForgetPassword = () => {
                                 </CInputGroupText>
                                 <Field
                                   type={isRevealCPwd ? 'text' : 'password'}
-                                  name="repeatPassword"
-                                  id="repeatPassword"
+                                  name="confirm_password"
+                                  id="confirm_password"
                                   placeholder="Repeat password"
                                   autoComplete="on"
                                   className={
                                     'form-control' +
                                     ' ' +
-                                    (errors.repeatPassword && touched.repeatPassword
+                                    (errors.confirm_password && touched.confirm_password
                                       ? 'input-error'
                                       : null)
                                   }
@@ -217,7 +224,7 @@ const ForgetPassword = () => {
                                 />
                               </CInputGroup>
                               <ErrorMessage
-                                name="repeatPassword"
+                                name="confirm_password"
                                 style={{ color: 'red', marginBottom: '4px' }}
                                 component="span"
                                 className="error"

@@ -67,6 +67,16 @@ const App = () => {
             <PrivateRoute path="/" auth={authState} name="Home" component={DefaultLayout} />
             <PrivateRoute path="/admin" auth={authState} name="Home" component={DefaultLayout} />
             {/* condonation */}
+            {/* {authState ? (
+              <Redirect exact from="/" to="/login" />
+            ) : (
+              <Redirect from="/" to="/register" />
+            )} */}
+            {authState ? (
+              <Redirect exact from="/" to="/login" />
+            ) : (
+              <Redirect from="/" to="/forgetpassword" />
+            )}
             {authState ? (
               <Redirect exact from="/" to="/admin" />
             ) : (

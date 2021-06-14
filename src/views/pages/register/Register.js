@@ -1,6 +1,6 @@
 /* eslint-disable jsx-a11y/alt-text */
 import React, { useState } from 'react'
-import { Link } from 'react-router-dom'
+import { Link, useHistory } from 'react-router-dom'
 import showPwdImg from '../../../assets/icons/eye-slash-solid.svg'
 import hidePwdImg from '../../../assets/icons/eye-solid.svg'
 import { Formik, Form, Field, ErrorMessage } from 'formik'
@@ -28,14 +28,16 @@ import {
 } from '../../../store/reducers/userRegReducer'
 
 const sleep = (ms) => new Promise((r) => setTimeout(r, ms))
-const Register = () => {
+const Register = (history) => {
   const dispatch = useDispatch()
+  // const history = useHistory()
   const [isRevealPwd, setIsRevealPwd] = useState(false)
   const [isRevealCPwd, setIsRevealCPwd] = useState(false)
   const [submitted, setSubmitted] = useState(false)
   const [error, setError] = useState('')
   const [user, setUser] = useState()
   const initialValues = {
+    username: '',
     firstname: '',
     lastname: '',
     email: '',
@@ -43,6 +45,8 @@ const Register = () => {
     repeatPassword: '',
   }
   const registerSchema = Yup.object().shape({
+    username: Yup.string().required('Username required'),
+
     firstname: Yup.string()
       .required('Firstname required')
       .min(3, 'Must be 3 letters')
@@ -78,12 +82,11 @@ const Register = () => {
         console.log('userData', userData)
         dispatch(registrationSuccess())
         setUser(userData)
-        // localStorage.setItem('lMuserDataToken', JSON.stringify(userData))
-        // sessionStorage.setItem('accessDataToken', userData.token)
         // window.location.reload()
+        history.push('/login')
       })
-      .catch((err) => {
-        console.log(err.response)
+      .catch((error) => {
+        console.log(error.response)
         // const { status, data } = err.response
         setSubmitted(false)
         dispatch(registrationError(error.message))
@@ -114,12 +117,42 @@ const Register = () => {
                       <CCard className="mx-4">
                         <CCardBody className="p-4">
                           <Form id="register" name="register">
-                            {submitted && (
-                              <CAlert color="success">Success! Register Successfully</CAlert>
+                            {user && (
+                              <CAlert color={user.status === 0 ? 'danger' : 'success'}>
+                                {user.status === 0 ? 'Error! ' : 'Success! '} {user.message}
+                              </CAlert>
                             )}
-                            {error !== '' && <CAlert color="danger">Error! Register failed</CAlert>}
+
+                            {/* {user && (
+                              <CAlert color="success">Success! Register Successfully</CAlert>
+                            )} */}
+                            {/* {error !== '' && <CAlert color="danger">Error! Register failed</CAlert>} */}
                             <h1>Register</h1>
                             <p className="text-medium-emphasis">Create your account</p>
+
+                            <CInputGroup className="mb-3 mt-2">
+                              <CInputGroupText>
+                                <CIcon name="cil-user" />
+                              </CInputGroupText>
+                              <Field
+                                type="text"
+                                name="username"
+                                id="username"
+                                placeholder="Enter username"
+                                autoComplete="on"
+                                className={
+                                  'form-control' +
+                                  ' ' +
+                                  (errors.username && touched.username ? 'input-error' : null)
+                                }
+                              />
+                            </CInputGroup>
+                            <ErrorMessage
+                              name="username"
+                              style={{ color: 'red', marginBottom: '4px' }}
+                              component="div"
+                              className="error"
+                            />
                             <CRow xs={{ gutterX: 6 }}>
                               <CCol>
                                 <CInputGroup className="mb-3">

@@ -8,7 +8,7 @@ const initialState = {
 }
 
 const userRegReducer = createSlice({
-  name: 'userRegistration',
+  name: 'registration',
   initialState,
   reducers: {
     registrationPending: (state) => {
