@@ -5,6 +5,7 @@ import userRegReducer from "./reducers/userRegReducer";
 import loginReducer from "./reducers/loginReducer";
 import forgetPassReducer from "./reducers/forgetPassReducer";
 import updatePassReducer from "./reducers/updatePassReducer";
+import profileReducer from "./reducers/profileReducer";
 
 export default configureStore({
   reducer: {
@@ -13,5 +14,6 @@ export default configureStore({
     login: loginReducer,
     forgetPassword: forgetPassReducer,
     updatePassword: updatePassReducer,
+    profile: profileReducer,
   },
 })

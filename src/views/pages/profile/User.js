@@ -1,5 +1,5 @@
-/* eslint-disable react/jsx-no-duplicate-props */
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
+import { useParams } from 'react-router-dom'
 import {
   CButton,
   CCard,
@@ -20,13 +20,14 @@ import {
 import DatePicker from 'react-date-picker'
 import CreatableSelect from 'react-select/creatable'
 import makeAnimated from 'react-select/animated'
-import { Formik, Form, Field, ErrorMessage, useFormik } from 'formik'
+import { Formik, Form, Field, ErrorMessage } from 'formik'
 import * as Yup from 'yup'
 
 const sleep = (ms) => new Promise((r) => setTimeout(r, ms))
 const User = () => {
   const [changeSkill, handleChangeSkill] = useState()
   const [submitted, setSubmitted] = useState(false)
+  const [profileState, setProfileState] = useState()
   const handleChange = (newValue, actionMeta) => {
     console.group('Value Changed')
     console.log(newValue)
@@ -110,6 +111,14 @@ const User = () => {
     setSubmitted(true)
     submitProps.resetForm()
   }
+  const getProfileDate = () => {
+    const storedProfile = localStorage.getItem('lMuserDataToken')
+    console.log('storedProfile->', storedProfile)
+    setProfileState(storedProfile)
+  }
+  useEffect(() => {
+    getProfileDate()
+  }, [])
 
   const animatedComponents = makeAnimated()
   const skillOptions = [
