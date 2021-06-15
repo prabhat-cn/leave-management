@@ -67,7 +67,7 @@ const ForgetPassword = (props) => {
         setSubmitted(true)
         const forgetPassData = response.data
         console.log('forgetPassData', forgetPassData)
-        dispatch(forgetPassSuccess())
+        dispatch(forgetPassSuccess(response))
         setForgetPassUse(forgetPassData)
         // eslint-disable-next-line react/prop-types
         props.history.push('/login')
@@ -288,7 +288,7 @@ const eyeToggle = `
 .pwd-container {
     position: relative;
   }
-   
+
   .pwd-container img {
     cursor: pointer;
     position: absolute;
@@ -297,7 +297,7 @@ const eyeToggle = `
     top: 8px;
   }
 
-  
+
   input#password:active {
     background: #0000000d;
 }
