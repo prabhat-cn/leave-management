@@ -77,7 +77,7 @@ const Register = (props) => {
       .then((response) => {
         setError('')
         setSubmitted(true)
-        dispatch(registrationSuccess())
+        dispatch(registrationSuccess(response))
         const userData = response.data
         console.log('userData', userData)
         setUser(userData)
@@ -89,7 +89,7 @@ const Register = (props) => {
       .catch((error) => {
         console.log(error.response)
         setSubmitted(false)
-        dispatch(registrationError(error.message))
+        dispatch(registrationError(error.response))
         // if (status === 403) {
         //   setError(data.message)
         // }
@@ -104,7 +104,6 @@ const Register = (props) => {
     <>
       <Formik initialValues={initialValues} validationSchema={registerSchema} onSubmit={onSubmit}>
         {(formik) => {
-          // console.log('formik', formik.values)
           const { errors, touched, isValid, dirty } = formik
 
           return (

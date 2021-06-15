@@ -70,12 +70,10 @@ const ForgetPassword = (props) => {
         // response is the payload for redux
         dispatch(forgetPassSuccess(response))
         setForgetPassUse(forgetPassData)
-        // eslint-disable-next-line react/prop-types
-        props.history.push('/login')
-        // if (forgetPassData.status === 1) {
-        //   // eslint-disable-next-line react/prop-types
-        //   props.history.push('/login')
-        // }
+        if (forgetPassData.status === 1) {
+          // eslint-disable-next-line react/prop-types
+          props.history.push('/login')
+        }
 
         // if (status === 403) {
         //   setError(data.message)
@@ -88,30 +86,10 @@ const ForgetPassword = (props) => {
         dispatch(forgetPassFail(error.response))
       })
   }
-
-  // const forgetPassSubmit = async (forgetData) => {
-  //   dispatch(forgetPassPending())
-  //   // console.log(props)
-  //   try {
-  //     const forgetPass = await API.post('/wp-jwt/v1/forgot-password', forgetData)
-  //     setError('')
-  //     setSubmitted(true)
-  //     dispatch(forgetPassSuccess())
-  //     const forgetPassData = forgetPass.data
-  //     console.log('forgetPassData', forgetPassData)
-  //     setForgetPassUse(forgetPassData)
-  //     // eslint-disable-next-line react/prop-types
-  //     props.history.push('/login')
-  //   } catch (error) {
-  //     setSubmitted(false)
-  //     dispatch(forgetPassFail(error.message))
-  //   }
-  // }
   const onSubmit = async (data, submitProps) => {
-    // console.log('submitProps', submitProps)
     forgetPassSubmit(data)
     await sleep(500)
-    // submitProps.resetForm()
+    submitProps.resetForm()
   }
   return (
     <>

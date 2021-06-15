@@ -17,7 +17,7 @@ const userRegReducer = createSlice({
     registrationSuccess: (state, { payload }) => {
       state.isLoading = false
       state.status = 'success'
-      state.message = payload
+      state.message = payload.message
     },
     registrationError: (state, { payload }) => {
       state.isLoading = false
