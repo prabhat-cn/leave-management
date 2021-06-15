@@ -1,7 +1,7 @@
 /* eslint-disable react/prop-types */
 /* eslint-disable jsx-a11y/alt-text */
 import React, { useState } from 'react'
-import { Link, useHistory, Redirect } from 'react-router-dom'
+import { Link } from 'react-router-dom'
 import { useDispatch } from 'react-redux'
 import showPwdImg from '../../../assets/icons/eye-slash-solid.svg'
 import hidePwdImg from '../../../assets/icons/eye-solid.svg'
@@ -36,8 +36,7 @@ const ForgetPassword = (props) => {
   const [isRevealCPwd, setIsRevealCPwd] = useState(false)
   const [submitted, setSubmitted] = useState(false)
   const [forgetPassUse, setForgetPassUse] = useState()
-  const [error, setError] = useState('')
-  const history = useHistory()
+  const [error, setError] = useState(false)
   const dispatch = useDispatch()
   const initialValues = {
     user_login: '',
@@ -59,58 +58,58 @@ const ForgetPassword = (props) => {
       .oneOf([Yup.ref('new_password'), null], 'Password must match')
       .required('Repeat Password is required'),
   })
-  // const forgetPassSubmit = (forgetData) => {
-  //   dispatch(forgetPassPending())
-  //   API.post('/wp-jwt/v1/forgot-password', forgetData)
-  //     .then((response) => {
-  //       console.log('response', response)
-  //       setError('')
-  //       setSubmitted(true)
-  //       dispatch(forgetPassSuccess())
-  //       const forgetPassData = response.data
-  //       console.log('forgetPassData', forgetPassData)
-  //       setForgetPassUse(forgetPassData)
-  //       // window.location.reload()
-  //       // history.push('/login')
-  //     })
-  //     .catch((error) => {
-  //       console.log(error)
-  //       // const status = err
-  //       // const { status, data } = err.response
-  //       setSubmitted(false)
-  //       dispatch(forgetPassFail(error.message))
-  //       // if (status === 403) {
-  //       //   setError(data.message)
-  //       // }
-  //       // if (status === 200) {
-  //       //   setError(data.message)
-  //       // }
-  //     })
-  // }
-  const forgetPassSubmit = async (forgetData) => {
+
+  const forgetPassSubmit = (forgetData) => {
     dispatch(forgetPassPending())
-    // console.log(props)
-    try {
-      const forgetPass = await API.post('/wp-jwt/v1/forgot-password', forgetData)
-      setError('')
-      setSubmitted(true)
-      const forgetPassData = forgetPass.data
-      console.log('forgetPassData', forgetPassData)
-      setForgetPassUse(forgetPassData)
-      dispatch(forgetPassSuccess())
-      // eslint-disable-next-line react/prop-types
-      history.push('/login')
-    } catch (error) {
-      setSubmitted(false)
-      dispatch(forgetPassFail(error.message))
-      history.push('/forgetpassword')
-    }
+    API.post('/wp-jwt/v1/forgot-password', forgetData)
+      .then((response) => {
+        setError('')
+        setSubmitted(true)
+        const forgetPassData = response.data
+        console.log('forgetPassData', forgetPassData)
+        dispatch(forgetPassSuccess())
+        setForgetPassUse(forgetPassData)
+        // eslint-disable-next-line react/prop-types
+        props.history.push('/login')
+        // if (forgetPassData.status === 1) {
+        //   // eslint-disable-next-line react/prop-types
+        //   props.history.push('/login')
+        // }
+
+        // if (status === 403) {
+        //   setError(data.message)
+        // }
+      })
+      .catch((error) => {
+        console.log(error.response)
+        setError('')
+        setSubmitted(false)
+        dispatch(forgetPassFail(error.response))
+      })
   }
+
+  // const forgetPassSubmit = async (forgetData) => {
+  //   dispatch(forgetPassPending())
+  //   // console.log(props)
+  //   try {
+  //     const forgetPass = await API.post('/wp-jwt/v1/forgot-password', forgetData)
+  //     setError('')
+  //     setSubmitted(true)
+  //     dispatch(forgetPassSuccess())
+  //     const forgetPassData = forgetPass.data
+  //     console.log('forgetPassData', forgetPassData)
+  //     setForgetPassUse(forgetPassData)
+  //     // eslint-disable-next-line react/prop-types
+  //     props.history.push('/login')
+  //   } catch (error) {
+  //     setSubmitted(false)
+  //     dispatch(forgetPassFail(error.message))
+  //   }
+  // }
   const onSubmit = async (data, submitProps) => {
     // console.log('submitProps', submitProps)
     forgetPassSubmit(data)
     await sleep(500)
-    setSubmitted(true)
     // submitProps.resetForm()
   }
   return (
@@ -137,14 +136,9 @@ const ForgetPassword = (props) => {
                                 </CAlert>
                               )}
                               {/* {submitted && (
-                                <CAlert color="success">
-                                  Success! Password reset Successfully
-                                </CAlert>
-                              )} */}
-                              {/* {error !== '' && <CAlert color="danger">{error}</CAlert>} */}
-                              {/* {error !== '' && (
                                 <CAlert color="danger">Error! Failed submission</CAlert>
                               )} */}
+                              {error && <CAlert color="danger">Error! Failed submission</CAlert>}
                               <h1>Forget Password</h1>
                               <p className="text-medium-emphasis">Verify account</p>
                               <CInputGroup className="mb-2">

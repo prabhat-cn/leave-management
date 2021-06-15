@@ -5,7 +5,7 @@ const initialState = {
   isLoading: false,
   status: '',
   message: '',
-  email: '',
+  // email: '',
 }
 
 const forgetPassReducer = createSlice({
