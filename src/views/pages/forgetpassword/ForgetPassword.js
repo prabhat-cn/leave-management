@@ -67,6 +67,7 @@ const ForgetPassword = (props) => {
         setSubmitted(true)
         const forgetPassData = response.data
         console.log('forgetPassData', forgetPassData)
+        // response is the payload for redux
         dispatch(forgetPassSuccess(response))
         setForgetPassUse(forgetPassData)
         // eslint-disable-next-line react/prop-types
