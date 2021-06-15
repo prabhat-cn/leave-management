@@ -4,6 +4,7 @@ import { configureStore } from '@reduxjs/toolkit'
 import userRegReducer from "./reducers/userRegReducer";
 import loginReducer from "./reducers/loginReducer";
 import forgetPassReducer from "./reducers/forgetPassReducer";
+import updatePassReducer from "./reducers/updatePassReducer";
 
 export default configureStore({
   reducer: {
@@ -11,5 +12,6 @@ export default configureStore({
     registration: userRegReducer,
     login: loginReducer,
     forgetPassword: forgetPassReducer,
+    updatePassword: updatePassReducer,
   },
 })

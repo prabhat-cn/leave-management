@@ -14,7 +14,7 @@ API.interceptors.request.use((config) => {
 
   const userData = localStorage.getItem('lMuserDataToken');
 
-  config.headers.Authorization =  userData ? `bearer ${JSON.parse(userData).token}` : '';
+  config.headers.Authorization =  userData ? `Bearer ${JSON.parse(userData).token}` : '';
 
   return config;
 });

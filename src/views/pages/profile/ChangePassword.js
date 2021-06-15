@@ -1,5 +1,6 @@
 import React, { useState } from 'react'
 import { Link } from 'react-router-dom'
+import { useDispatch } from 'react-redux'
 import showPwdImg from '../../../assets/icons/eye-slash-solid.svg'
 import hidePwdImg from '../../../assets/icons/eye-solid.svg'
 import { Formik, Form, Field, ErrorMessage } from 'formik'
@@ -19,34 +20,68 @@ import {
   CRow,
 } from '@coreui/react'
 import CIcon from '@coreui/icons-react'
+import API from '../../../api'
+import {
+  updatePassPending,
+  updatePassSuccess,
+  updatePassFail,
+} from '../../../store/reducers/updatePassReducer'
 
 const sleep = (ms) => new Promise((r) => setTimeout(r, ms))
-const ChangePassword = () => {
+const ChangePassword = (props) => {
   const [isRevealPwd, setIsRevealPwd] = useState(false)
   const [isRevealCPwd, setIsRevealCPwd] = useState(false)
   const [submitted, setSubmitted] = useState(false)
+  const [error, setError] = useState('')
+  const [updatePassUse, setUpdatePassUse] = useState()
+  const dispatch = useDispatch()
   const initialValues = {
-    password: '',
-    repeatPassword: '',
+    new_password: '',
+    confirm_password: '',
   }
   const changePasswordSchema = Yup.object().shape({
-    password: Yup.string()
+    new_password: Yup.string()
       .min(8, 'Password must be at least 8 characters')
       .required('Password is required')
       .matches(
         '^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#$%^&*])(?=.{8,})',
         'One Uppercase, One Lowercase, One Number and one special case Character',
       ),
-    repeatPassword: Yup.string()
-      .oneOf([Yup.ref('password'), null], 'Passwords must match')
+    confirm_password: Yup.string()
+      .oneOf([Yup.ref('new_password'), null], 'Passwords must match')
       .required('Repeat Password is required'),
   })
+  const updatePassSubmit = (updateData) => {
+    dispatch(updatePassPending())
+    API.post('/wp-jwt/v1/update-employee-password', updateData)
+      .then((response) => {
+        // const updateToken = localStorage.getItem('lMuserDataToken')
+        // console.log('updateToken', updateToken)
+        setError('')
+        setSubmitted(true)
+        const updatePassData = response.data
+        console.log('updatePassData', updatePassData)
+        // response is the payload for redux
+        dispatch(updatePassSuccess(response))
+        setUpdatePassUse(updatePassData)
+      })
+      .catch((error) => {
+        console.log(error.response)
+        const { status, data } = error.response
+        setSubmitted(false)
+        dispatch(updatePassFail(error.response))
+        if (status === 403) {
+          setError(data.message)
+        }
+      })
+  }
   const onSubmit = async (values, submitProps) => {
-    console.log('form-values', JSON.stringify(values, null, 2))
-    console.log('submitProps', submitProps)
+    // console.log('form-values', JSON.stringify(values, null, 2))
+    // console.log('submitProps', submitProps)
+    updatePassSubmit()
     await sleep(500)
     setSubmitted(true)
-    submitProps.resetForm()
+    // submitProps.resetForm()
   }
   return (
     <>
@@ -56,7 +91,6 @@ const ChangePassword = () => {
         onSubmit={onSubmit}
       >
         {(formik) => {
-          // console.log('formik', formik.values)
           const { errors, touched, isValid, dirty } = formik
 
           return (
@@ -73,25 +107,34 @@ const ChangePassword = () => {
                         <CCard className="mx-4">
                           <CCardBody className="p-4">
                             <Form id="register" name="register">
-                              {submitted && (
+                              {updatePassUse && (
+                                <CAlert color={updatePassUse.status === 0 ? 'danger' : 'success'}>
+                                  {updatePassUse.status === 0 ? 'Error! ' : 'Success! '}
+                                  {updatePassUse.message}
+                                </CAlert>
+                              )}
+                              {/* {submitted && (
                                 <CAlert color="success">
                                   Success! Account Created Successfully
                                 </CAlert>
-                              )}
+                              )} */}
+                              {error !== '' && <CAlert color="danger">Error! Update failed</CAlert>}
                               <CInputGroup className="mb-3 mt-2 pwd-container">
                                 <CInputGroupText>
                                   <CIcon name="cil-lock-locked" />
                                 </CInputGroupText>
                                 <Field
                                   type={isRevealPwd ? 'text' : 'password'}
-                                  name="password"
-                                  id="password"
+                                  name="new_password"
+                                  id="new_password"
                                   placeholder="New password"
                                   autoComplete="on"
                                   className={
                                     'form-control' +
                                     ' ' +
-                                    (errors.password && touched.password ? 'input-error' : null)
+                                    (errors.new_password && touched.new_password
+                                      ? 'input-error'
+                                      : null)
                                   }
                                 />
                                 <img
@@ -102,7 +145,7 @@ const ChangePassword = () => {
                                 />
                               </CInputGroup>
                               <ErrorMessage
-                                name="password"
+                                name="new_password"
                                 style={{ color: 'red', marginBottom: '6px' }}
                                 component="span"
                                 className="error"
@@ -113,14 +156,14 @@ const ChangePassword = () => {
                                 </CInputGroupText>
                                 <Field
                                   type={isRevealCPwd ? 'text' : 'password'}
-                                  name="repeatPassword"
-                                  id="repeatPassword"
+                                  name="confirm_password"
+                                  id="confirm_password"
                                   placeholder="Repeat new password"
                                   autoComplete="on"
                                   className={
                                     'form-control' +
                                     ' ' +
-                                    (errors.repeatPassword && touched.repeatPassword
+                                    (errors.confirm_password && touched.confirm_password
                                       ? 'input-error'
                                       : null)
                                   }
@@ -133,7 +176,7 @@ const ChangePassword = () => {
                                 />
                               </CInputGroup>
                               <ErrorMessage
-                                name="repeatPassword"
+                                name="confirm_password"
                                 style={{ color: 'red', marginBottom: '4px' }}
                                 component="span"
                                 className="error"
@@ -149,7 +192,7 @@ const ChangePassword = () => {
                                     }
                                     disabled={!(dirty && isValid)}
                                   >
-                                    Create Account
+                                    Submit
                                   </button>
                                 </CCol>
                               </CRow>

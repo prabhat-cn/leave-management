@@ -27,7 +27,6 @@ import {
   forgetPassPending,
   forgetPassSuccess,
   forgetPassFail,
-  updatePassSuccess,
 } from '../../../store/reducers/forgetPassReducer'
 
 const sleep = (ms) => new Promise((r) => setTimeout(r, ms))
@@ -66,7 +65,7 @@ const ForgetPassword = (props) => {
         setError('')
         setSubmitted(true)
         const forgetPassData = response.data
-        console.log('forgetPassData', forgetPassData)
+        // console.log('forgetPassData', forgetPassData)
         // response is the payload for redux
         dispatch(forgetPassSuccess(response))
         setForgetPassUse(forgetPassData)
@@ -81,7 +80,6 @@ const ForgetPassword = (props) => {
       })
       .catch((error) => {
         console.log(error.response)
-        setError('')
         setSubmitted(false)
         dispatch(forgetPassFail(error.response))
       })

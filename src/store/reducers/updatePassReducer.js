@@ -8,20 +8,20 @@ const initialState = {
   // email: '',
 }
 
-const forgetPassReducer = createSlice({
-  name: 'forgetPassword',
+const updatePassReducer = createSlice({
+  name: 'updatePassword',
   initialState,
   reducers: {
-    forgetPassPending: (state) => {
+    updatePassPending: (state) => {
       state.isLoading = true
     },
-    forgetPassSuccess: (state, { payload }) => {
+    updatePassSuccess: (state, { payload }) => {
       state.isLoading = false
       state.status = 'success'
       state.message = payload.message
       // state.email = payload.email
     },
-    forgetPassFail: (state, { payload }) => {
+    updatePassFail: (state, { payload }) => {
       state.isLoading = false
       state.status = 'error'
       state.message = payload
@@ -30,9 +30,9 @@ const forgetPassReducer = createSlice({
 })
 
 export const { 
-  forgetPassPending, 
-  forgetPassSuccess,
-  forgetPassFail 
-} = forgetPassReducer.actions
+  updatePassPending, 
+  updatePassSuccess, 
+  updatePassFail
+} = updatePassReducer.actions
 
-export default forgetPassReducer.reducer
+export default updatePassReducer.reducer
