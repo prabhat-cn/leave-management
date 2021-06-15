@@ -1,6 +1,6 @@
 /* eslint-disable jsx-a11y/alt-text */
 import React, { useState } from 'react'
-import { Link, useHistory, Redirect } from 'react-router-dom'
+import { Link } from 'react-router-dom'
 import showPwdImg from '../../../assets/icons/eye-slash-solid.svg'
 import hidePwdImg from '../../../assets/icons/eye-solid.svg'
 import { Formik, Form, Field, ErrorMessage } from 'formik'
@@ -30,7 +30,6 @@ import {
 const sleep = (ms) => new Promise((r) => setTimeout(r, ms))
 const Register = (props) => {
   const dispatch = useDispatch()
-  const history = useHistory()
   const [isRevealPwd, setIsRevealPwd] = useState(false)
   const [isRevealCPwd, setIsRevealCPwd] = useState(false)
   const [submitted, setSubmitted] = useState(false)
@@ -82,17 +81,14 @@ const Register = (props) => {
         const userData = response.data
         console.log('userData', userData)
         setUser(userData)
-        if (user.status !== 0) {
+        if (userData.status === 1) {
           // eslint-disable-next-line react/prop-types
           props.history.push('/login')
         }
       })
       .catch((error) => {
         console.log(error.response)
-        // const { status, data } = err.response
         setSubmitted(false)
-        // eslint-disable-next-line react/prop-types
-        // props.history.push('/register')
         dispatch(registrationError(error.message))
         // if (status === 403) {
         //   setError(data.message)
@@ -100,10 +96,9 @@ const Register = (props) => {
       })
   }
   const onSubmit = async (data, submitProps) => {
-    // console.log('form-values', JSON.stringify(data, null, 2))
     registerSubmit(data)
     await sleep(500)
-    // submitProps.resetForm()
+    submitProps.resetForm()
   }
   return (
     <>
