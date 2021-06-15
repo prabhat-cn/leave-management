@@ -76,12 +76,10 @@ const ChangePassword = (props) => {
       })
   }
   const onSubmit = async (values, submitProps) => {
-    // console.log('form-values', JSON.stringify(values, null, 2))
-    // console.log('submitProps', submitProps)
     updatePassSubmit()
     await sleep(500)
     setSubmitted(true)
-    // submitProps.resetForm()
+    submitProps.resetForm()
   }
   return (
     <>
