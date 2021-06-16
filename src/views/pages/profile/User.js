@@ -22,12 +22,15 @@ import CreatableSelect from 'react-select/creatable'
 import makeAnimated from 'react-select/animated'
 import { Formik, Form, Field, ErrorMessage } from 'formik'
 import * as Yup from 'yup'
+import API from '../../../api'
 
 const sleep = (ms) => new Promise((r) => setTimeout(r, ms))
 const User = () => {
   const [changeSkill, handleChangeSkill] = useState()
   const [submitted, setSubmitted] = useState(false)
-  const [profileState, setProfileState] = useState()
+  // profile is in array
+  const [profileData, setProfileData] = useState([])
+  const [profile, setProfile] = useState({})
   const handleChange = (newValue, actionMeta) => {
     console.group('Value Changed')
     console.log(newValue)
@@ -36,38 +39,38 @@ const User = () => {
     handleChangeSkill()
   }
   const initialValues = {
-    firstName: '',
-    lastName: '',
+    first_name: '',
+    last_name: '',
     email: '',
     department: '',
     employeeId: '',
-    personalEmail: '',
-    dob: '',
+    personal_email_address: '',
+    date_of_birth: '',
     doj: '',
-    bloodGroup: '',
-    UAN: '',
-    aadhar: '',
-    pan: '',
+    blood_group: '',
+    uan_no: '',
+    aadhaar_no: '',
+    pan_no: '',
     salaryBank: '',
     experience: '',
     address: '',
-    emargencyContact: '',
+    emargency_contact_number: '',
     cv: '',
     skill: '',
   }
 
   const userProfileSchema = Yup.object().shape({
-    firstName: Yup.string()
-      .required('Firstname required')
+    first_name: Yup.string()
+      .required('First name required')
       .min(3, 'Must be 3 letters')
       .max(20, 'Can be 20 letters or less')
-      .matches(/^[A-Za-z]+$/i, 'Firstname should be letter'),
+      .matches(/^[A-Za-z]+$/i, 'Name should be letter'),
 
-    lastName: Yup.string()
+    last_name: Yup.string()
       .required('Lastname required')
       .min(3, 'Must be 3 letters')
       .max(20, 'Can be 20 letters or less')
-      .matches(/^[A-Za-z]+$/i, 'Lastname should be letter'),
+      .matches(/^[A-Za-z]+$/i, 'Name should be letter'),
 
     email: Yup.string().required('Email is required').email('Email is invalid'),
 
@@ -75,19 +78,21 @@ const User = () => {
 
     employeeId: Yup.string().required('Employee Id required'),
 
-    personalEmail: Yup.string().required('Personal Email is required').email('Email is invalid'),
+    personal_email_address: Yup.string()
+      .required('Personal Email is required')
+      .email('Email is invalid'),
 
-    dob: Yup.string().required('Date of birth required'),
+    date_of_birth: Yup.string().required('Date of birth required'),
 
     doj: Yup.string().required('Date of join required'),
 
-    bloodGroup: Yup.string().required('Blood group required'),
+    blood_group: Yup.string().required('Blood group required'),
 
-    UAN: Yup.string().required('UAN required'),
+    uan_no: Yup.string().required('UAN required'),
 
-    aadhar: Yup.string().required('Aadhar number required'),
+    aadhaar_no: Yup.string().required('Aadhar number required'),
 
-    pan: Yup.string().required('PAN required'),
+    pan_no: Yup.string().required('PAN required'),
 
     salaryBank: Yup.string().required('Salary Bank Account required'),
 
@@ -95,7 +100,7 @@ const User = () => {
 
     address: Yup.string().required('Address required'),
 
-    emargencyContact: Yup.string()
+    emargency_contact_number: Yup.string()
       .required('Emargency contact required')
       .min(10, 'Should be 10 digit number')
       .matches(/^([+]\d{2})?\d{10}$/, 'Invalid contact'),
@@ -111,14 +116,6 @@ const User = () => {
     setSubmitted(true)
     submitProps.resetForm()
   }
-  const getProfileDate = () => {
-    const storedProfile = localStorage.getItem('lMuserDataToken')
-    console.log('storedProfile->', storedProfile)
-    setProfileState(storedProfile)
-  }
-  useEffect(() => {
-    getProfileDate()
-  }, [])
 
   const animatedComponents = makeAnimated()
   const skillOptions = [
@@ -126,7 +123,21 @@ const User = () => {
     { label: 'React', value: 'React' },
     { label: 'Angular', value: 'Angular' },
     { label: 'Vue', value: 'Vue' },
+    { label: 'Java', value: 'Java' },
   ]
+  // const getProfile = async (profData) => {
+  //   try {
+  //     const proData = await API.get('/wp-jwt/v1/get-user-info')
+  //     console.log('proData', proData.data.data)
+  //     setProfileData(proData.data.data)
+  //   } catch (error) {
+  //     console.log(error.message)
+  //   }
+  // }
+  // // eslint-disable-next-line react-hooks/rules-of-hooks
+  // useEffect(() => {
+  //   getProfile()
+  // }, [])
 
   return (
     <>
@@ -137,8 +148,36 @@ const User = () => {
       >
         {(formik) => {
           // console.log('formik', formik.values)
-          const { errors, touched, isValid, dirty } = formik
-
+          const { errors, touched, isValid, dirty, setFieldValue } = formik
+          const getProfile = async (profData) => {
+            try {
+              const proData = await API.get('/wp-jwt/v1/get-user-info')
+              console.log('proData', proData.data.data)
+              const bulkData = proData.data.data
+              const fields = [
+                'first_name',
+                'last_name',
+                'date_of_birth',
+                'skill',
+                'uan_no',
+                'aadhaar_no',
+                'pan_no',
+                'experience',
+                'address',
+                'blood_group',
+                'emargency_contact_number',
+                'personal_email_address',
+              ]
+              fields.forEach((field) => setFieldValue(field, bulkData[field], false))
+              setProfileData(proData.data.data)
+            } catch (error) {
+              console.log(error.message)
+            }
+          }
+          // eslint-disable-next-line react-hooks/rules-of-hooks
+          useEffect(() => {
+            getProfile()
+          }, [])
           return (
             <>
               <CContainer className="overflow-hidden">
@@ -155,20 +194,21 @@ const User = () => {
                           <CRow xs={{ gutterX: 6 }}>
                             <CCol>
                               <div className="mb-3">
-                                <CFormLabel htmlFor="firstName">First Name</CFormLabel>
+                                <CFormLabel htmlFor="first_name">First Name</CFormLabel>
                                 <Field
                                   type="text"
-                                  name="firstName"
-                                  id="firstName"
+                                  name="first_name"
+                                  id="first_name"
+                                  // value={profileData.first_name}
                                   placeholder="First Name"
                                   className={
                                     'form-control' +
                                     ' ' +
-                                    (errors.firstName && touched.firstName ? 'input-error' : null)
+                                    (errors.first_name && touched.first_name ? 'input-error' : null)
                                   }
                                 />
                                 <ErrorMessage
-                                  name="firstName"
+                                  name="first_name"
                                   style={{ color: 'red', marginBottom: '4px' }}
                                   component="div"
                                   className="error"
@@ -177,20 +217,20 @@ const User = () => {
                             </CCol>
                             <CCol>
                               <div className="mb-3">
-                                <CFormLabel htmlFor="lastName">Last Name</CFormLabel>
+                                <CFormLabel htmlFor="last_name">Last Name</CFormLabel>
                                 <Field
                                   type="text"
-                                  name="lastName"
-                                  id="lastName"
+                                  name="last_name"
+                                  id="last_name"
                                   placeholder="Last Name"
                                   className={
                                     'form-control' +
                                     ' ' +
-                                    (errors.lastName && touched.lastName ? 'input-error' : null)
+                                    (errors.last_name && touched.last_name ? 'input-error' : null)
                                   }
                                 />
                                 <ErrorMessage
-                                  name="lastName"
+                                  name="last_name"
                                   style={{ color: 'red', marginBottom: '4px' }}
                                   component="div"
                                   className="error"
@@ -269,24 +309,24 @@ const User = () => {
                             </CCol>
                             <CCol>
                               <div className="mb-3">
-                                <CFormLabel htmlFor="personalEmail">
+                                <CFormLabel htmlFor="personal_email_address">
                                   Personal Email address
                                 </CFormLabel>
                                 <Field
                                   type="email"
-                                  id="personalEmail"
-                                  name="personalEmail"
+                                  id="personal_email_address"
+                                  name="personal_email_address"
                                   placeholder="name@example.com"
                                   className={
                                     'form-control' +
                                     ' ' +
-                                    (errors.personalEmail && touched.personalEmail
+                                    (errors.personal_email_address && touched.personal_email_address
                                       ? 'input-error'
                                       : null)
                                   }
                                 />
                                 <ErrorMessage
-                                  name="personalEmail"
+                                  name="personal_email_address"
                                   style={{ color: 'red', marginBottom: '4px' }}
                                   component="div"
                                   className="error"
@@ -297,19 +337,21 @@ const User = () => {
                           <CRow xs={{ gutterX: 6 }}>
                             <CCol>
                               <div className="mb-3">
-                                <CFormLabel htmlFor="dob">Date of Birth</CFormLabel>
+                                <CFormLabel htmlFor="date_of_birth">Date of Birth</CFormLabel>
                                 <Field
                                   type="date"
-                                  name="dob"
-                                  id="dob"
+                                  name="date_of_birth"
+                                  id="date_of_birth"
                                   className={
                                     'form-control' +
                                     ' ' +
-                                    (errors.dob && touched.dob ? 'input-error' : null)
+                                    (errors.date_of_birth && touched.date_of_birth
+                                      ? 'input-error'
+                                      : null)
                                   }
                                 />
                                 <ErrorMessage
-                                  name="dob"
+                                  name="date_of_birth"
                                   style={{ color: 'red', marginBottom: '4px' }}
                                   component="div"
                                   className="error"
@@ -339,20 +381,22 @@ const User = () => {
                             </CCol>
                             <CCol>
                               <div className="mb-3">
-                                <CFormLabel htmlFor="bloodGroup">Blood group</CFormLabel>
+                                <CFormLabel htmlFor="blood_group">Blood group</CFormLabel>
                                 <Field
                                   type="text"
-                                  id="bloodGroup"
-                                  name="bloodGroup"
+                                  id="blood_group"
+                                  name="blood_group"
                                   placeholder="Blood group"
                                   className={
                                     'form-control' +
                                     ' ' +
-                                    (errors.bloodGroup && touched.bloodGroup ? 'input-error' : null)
+                                    (errors.blood_group && touched.blood_group
+                                      ? 'input-error'
+                                      : null)
                                   }
                                 />
                                 <ErrorMessage
-                                  name="bloodGroup"
+                                  name="blood_group"
                                   style={{ color: 'red', marginBottom: '4px' }}
                                   component="div"
                                   className="error"
@@ -363,20 +407,20 @@ const User = () => {
                           <CRow xs={{ gutterX: 6 }}>
                             <CCol>
                               <div className="mb-3">
-                                <CFormLabel htmlFor="UAN">UAN No.</CFormLabel>
+                                <CFormLabel htmlFor="uan_no">UAN No.</CFormLabel>
                                 <Field
                                   type="text"
-                                  name="UAN"
-                                  id="UAN"
+                                  name="uan_no"
+                                  id="uan_no"
                                   placeholder="UAN No"
                                   className={
                                     'form-control' +
                                     ' ' +
-                                    (errors.UAN && touched.UAN ? 'input-error' : null)
+                                    (errors.uan_no && touched.uan_no ? 'input-error' : null)
                                   }
                                 />
                                 <ErrorMessage
-                                  name="UAN"
+                                  name="uan_no"
                                   style={{ color: 'red', marginBottom: '4px' }}
                                   component="div"
                                   className="error"
@@ -385,20 +429,20 @@ const User = () => {
                             </CCol>
                             <CCol>
                               <div className="mb-3">
-                                <CFormLabel htmlFor="aadhar">Aadher No.</CFormLabel>
+                                <CFormLabel htmlFor="aadhaar_no">Aadher No.</CFormLabel>
                                 <Field
                                   type="text"
-                                  name="aadhar"
-                                  id="aadhar"
+                                  name="aadhaar_no"
+                                  id="aadhaar_no"
                                   placeholder="Aadhar Number"
                                   className={
                                     'form-control' +
                                     ' ' +
-                                    (errors.aadhar && touched.aadhar ? 'input-error' : null)
+                                    (errors.aadhaar_no && touched.aadhaar_no ? 'input-error' : null)
                                   }
                                 />
                                 <ErrorMessage
-                                  name="aadhar"
+                                  name="aadhaar_no"
                                   style={{ color: 'red', marginBottom: '4px' }}
                                   component="div"
                                   className="error"
@@ -409,20 +453,20 @@ const User = () => {
                           <CRow xs={{ gutterX: 6 }}>
                             <CCol>
                               <div className="mb-3">
-                                <CFormLabel htmlFor="pan">Pan No</CFormLabel>
+                                <CFormLabel htmlFor="pan_no">Pan No</CFormLabel>
                                 <Field
                                   type="text"
-                                  id="pan"
-                                  name="pan"
+                                  id="pan_no"
+                                  name="pan_no"
                                   placeholder="Pan No"
                                   className={
                                     'form-control' +
                                     ' ' +
-                                    (errors.pan && touched.pan ? 'input-error' : null)
+                                    (errors.pan_no && touched.pan_no ? 'input-error' : null)
                                   }
                                 />
                                 <ErrorMessage
-                                  name="pan"
+                                  name="pan_no"
                                   style={{ color: 'red', marginBottom: '4px' }}
                                   component="div"
                                   className="error"
@@ -501,24 +545,25 @@ const User = () => {
                           <CRow xs={{ gutterX: 6 }}>
                             <CCol>
                               <div className="mb-3">
-                                <CFormLabel htmlFor="emargencyContact">
+                                <CFormLabel htmlFor="emargency_contact_number">
                                   Emargency contact number
                                 </CFormLabel>
                                 <Field
                                   type="text"
-                                  name="emargencyContact"
-                                  id="emargencyContact"
+                                  name="emargency_contact_number"
+                                  id="emargency_contact_number"
                                   placeholder="Emargency contact number"
                                   className={
                                     'form-control' +
                                     ' ' +
-                                    (errors.emargencyContact && touched.emargencyContact
+                                    (errors.emargency_contact_number &&
+                                    touched.emargency_contact_number
                                       ? 'input-error'
                                       : null)
                                   }
                                 />
                                 <ErrorMessage
-                                  name="emargencyContact"
+                                  name="emargency_contact_number"
                                   style={{ color: 'red', marginBottom: '4px' }}
                                   component="div"
                                   className="error"
