@@ -28,9 +28,33 @@ const sleep = (ms) => new Promise((r) => setTimeout(r, ms))
 const User = () => {
   const [changeSkill, handleChangeSkill] = useState()
   const [submitted, setSubmitted] = useState(false)
+
   // profile is in array
-  const [profileData, setProfileData] = useState([])
+  // const [
+  //   initialValues = {
+  //     first_name: '',
+  //     last_name: '',
+  //     email: '',
+  //     department: '',
+  //     employeeId: '',
+  //     personal_email_address: '',
+  //     date_of_birth: '',
+  //     doj: '',
+  //     blood_group: '',
+  //     uan_no: '',
+  //     aadhaar_no: '',
+  //     pan_no: '',
+  //     salaryBank: '',
+  //     experience: '',
+  //     address: '',
+  //     emargency_contact_number: '',
+  //     cv: '',
+  //     skill: '',
+  //   },
+  //   setProfileData,
+  // ] = useState([])
   const [profile, setProfile] = useState({})
+  const [profileData, setProfileData] = useState([])
   const handleChange = (newValue, actionMeta) => {
     console.group('Value Changed')
     console.log(newValue)
@@ -41,24 +65,23 @@ const User = () => {
   const initialValues = {
     first_name: '',
     last_name: '',
-    email: '',
     department: '',
-    employeeId: '',
+    employee_id: '',
+    user_email: '',
     personal_email_address: '',
     date_of_birth: '',
-    doj: '',
+    date_of_joining: '',
     blood_group: '',
     uan_no: '',
     aadhaar_no: '',
     pan_no: '',
-    salaryBank: '',
+    salary_bank_no: '',
     experience: '',
     address: '',
     emargency_contact_number: '',
     cv: '',
     skill: '',
   }
-
   const userProfileSchema = Yup.object().shape({
     first_name: Yup.string()
       .required('First name required')
@@ -72,11 +95,11 @@ const User = () => {
       .max(20, 'Can be 20 letters or less')
       .matches(/^[A-Za-z]+$/i, 'Name should be letter'),
 
-    email: Yup.string().required('Email is required').email('Email is invalid'),
+    user_email: Yup.string().required('Email is required').email('Email is invalid'),
 
     department: Yup.string().required('Department required'),
 
-    employeeId: Yup.string().required('Employee Id required'),
+    employee_id: Yup.string().required('Employee Id required'),
 
     personal_email_address: Yup.string()
       .required('Personal Email is required')
@@ -84,7 +107,7 @@ const User = () => {
 
     date_of_birth: Yup.string().required('Date of birth required'),
 
-    doj: Yup.string().required('Date of join required'),
+    date_of_joining: Yup.string().required('Date of join required'),
 
     blood_group: Yup.string().required('Blood group required'),
 
@@ -109,12 +132,38 @@ const User = () => {
 
     skill: Yup.string().required('Select your skill'),
   })
+
+  const updateUserSubmit = (updateData) => {
+    console.log('updateUserSubmit')
+    // dispatch(updatePassPending())
+    // API.post('/wp-jwt/v1/profile', updateData)
+    //   .then((response) => {
+    //     // setError('')
+    //     setSubmitted(true)
+    //     const updateUserData = response.data
+    //     console.log('updatePassData', updateUserData)
+    //     // response is the payload for redux
+    //     // dispatch(updatePassSuccess(response))
+    //     // setUpdatePassUse(updatePassData)
+    //   })
+    //   .catch((error) => {
+    //     console.log(error.response)
+    //     // const { status, data } = error.response
+    //     setSubmitted(false)
+    //     // dispatch(updatePassFail(error.response))
+    //     // if (status === 403) {
+    //     //   setError(data.message)
+    //     // }
+    //   })
+  }
+
   const onSubmit = async (values, submitProps) => {
-    console.log('form-values', JSON.stringify(values, null, 2))
+    // console.log('form-values', JSON.stringify(values, null, 2))
     console.log('submitProps', submitProps)
+    updateUserSubmit()
     await sleep(500)
     setSubmitted(true)
-    submitProps.resetForm()
+    // submitProps.resetForm()
   }
 
   const animatedComponents = makeAnimated()
@@ -129,6 +178,9 @@ const User = () => {
   //   try {
   //     const proData = await API.get('/wp-jwt/v1/get-user-info')
   //     console.log('proData', proData.data.data)
+  //     // const bulkData = {
+  //     //   first_name: proData.data.data.first_name,
+  //     // }
   //     setProfileData(proData.data.data)
   //   } catch (error) {
   //     console.log(error.message)
@@ -138,10 +190,10 @@ const User = () => {
   // useEffect(() => {
   //   getProfile()
   // }, [])
-
   return (
     <>
       <Formik
+        enableReinitialize={true}
         initialValues={initialValues}
         validationSchema={userProfileSchema}
         onSubmit={onSubmit}
@@ -152,21 +204,27 @@ const User = () => {
           const getProfile = async (profData) => {
             try {
               const proData = await API.get('/wp-jwt/v1/get-user-info')
-              console.log('proData', proData.data.data)
+              console.log('proData', proData)
               const bulkData = proData.data.data
+              console.log('bulkData', bulkData)
               const fields = [
                 'first_name',
                 'last_name',
+                'department',
+                'employee_id',
+                'user_email',
+                'personal_email_address',
                 'date_of_birth',
-                'skill',
+                'date_of_joining',
+                'blood_group',
                 'uan_no',
                 'aadhaar_no',
                 'pan_no',
+                'salary_bank_no',
                 'experience',
                 'address',
-                'blood_group',
                 'emargency_contact_number',
-                'personal_email_address',
+                'skill',
               ]
               fields.forEach((field) => setFieldValue(field, bulkData[field], false))
               setProfileData(proData.data.data)
@@ -199,6 +257,7 @@ const User = () => {
                                   type="text"
                                   name="first_name"
                                   id="first_name"
+                                  // eslint-disable-next-line no-undef
                                   // value={profileData.first_name}
                                   placeholder="First Name"
                                   className={
@@ -263,20 +322,22 @@ const User = () => {
                             </CCol>
                             <CCol>
                               <div className="mb-3">
-                                <CFormLabel htmlFor="employeeId">Employee ID</CFormLabel>
+                                <CFormLabel htmlFor="employee_id">Employee ID</CFormLabel>
                                 <Field
                                   type="text"
-                                  name="employeeId"
-                                  id="employeeId"
+                                  name="employee_id"
+                                  id="employee_id"
                                   placeholder="Type Employee ID"
                                   className={
                                     'form-control' +
                                     ' ' +
-                                    (errors.employeeId && touched.employeeId ? 'input-error' : null)
+                                    (errors.employee_id && touched.employee_id
+                                      ? 'input-error'
+                                      : null)
                                   }
                                 />
                                 <ErrorMessage
-                                  name="employeeId"
+                                  name="employee_id"
                                   style={{ color: 'red', marginBottom: '4px' }}
                                   component="div"
                                   className="error"
@@ -287,20 +348,20 @@ const User = () => {
                           <CRow xs={{ gutterX: 6 }}>
                             <CCol>
                               <div className="mb-3">
-                                <CFormLabel htmlFor="email">Email address</CFormLabel>
+                                <CFormLabel htmlFor="user_email">Email address</CFormLabel>
                                 <Field
                                   type="email"
-                                  id="email"
-                                  name="email"
+                                  id="user_email"
+                                  name="user_email"
                                   placeholder="name@example.com"
                                   className={
                                     'form-control' +
                                     ' ' +
-                                    (errors.email && touched.email ? 'input-error' : null)
+                                    (errors.user_email && touched.user_email ? 'input-error' : null)
                                   }
                                 />
                                 <ErrorMessage
-                                  name="email"
+                                  name="user_email"
                                   style={{ color: 'red', marginBottom: '4px' }}
                                   component="div"
                                   className="error"
@@ -360,19 +421,21 @@ const User = () => {
                             </CCol>
                             <CCol>
                               <div className="mb-3">
-                                <CFormLabel htmlFor="doj">Date of Joining</CFormLabel>
+                                <CFormLabel htmlFor="date_of_joining">Date of Joining</CFormLabel>
                                 <Field
                                   type="date"
-                                  id="doj"
-                                  name="doj"
+                                  id="date_of_joining"
+                                  name="date_of_joining"
                                   className={
                                     'form-control' +
                                     ' ' +
-                                    (errors.doj && touched.doj ? 'input-error' : null)
+                                    (errors.date_of_joining && touched.date_of_joining
+                                      ? 'input-error'
+                                      : null)
                                   }
                                 />
                                 <ErrorMessage
-                                  name="doj"
+                                  name="date_of_joining"
                                   style={{ color: 'red', marginBottom: '4px' }}
                                   component="div"
                                   className="error"
@@ -475,20 +538,22 @@ const User = () => {
                             </CCol>
                             <CCol>
                               <div className="mb-3">
-                                <CFormLabel htmlFor="salaryBank">Salary Bank No.</CFormLabel>
+                                <CFormLabel htmlFor="salary_bank_no">Salary Bank No.</CFormLabel>
                                 <Field
                                   type="text"
-                                  name="salaryBank"
-                                  id="salaryBank"
+                                  name="salary_bank_no"
+                                  id="salary_bank_no"
                                   placeholder="Salary Bank No"
                                   className={
                                     'form-control' +
                                     ' ' +
-                                    (errors.salaryBank && touched.salaryBank ? 'input-error' : null)
+                                    (errors.salary_bank_no && touched.salary_bank_no
+                                      ? 'input-error'
+                                      : null)
                                   }
                                 />
                                 <ErrorMessage
-                                  name="salaryBank"
+                                  name="salary_bank_no"
                                   style={{ color: 'red', marginBottom: '4px' }}
                                   component="div"
                                   className="error"
@@ -608,7 +673,10 @@ const User = () => {
 
                           <CRow className="mt-3">
                             <CCol lg="9">
-                              <button
+                              <button type="submit" className="btn btn-primary">
+                                Submit
+                              </button>
+                              {/* <button
                                 type="submit"
                                 className={
                                   'btn btn-primary' + ' ' + (!(dirty && isValid) ? 'disabled' : '')
@@ -616,7 +684,7 @@ const User = () => {
                                 disabled={!(dirty && isValid)}
                               >
                                 Submit
-                              </button>
+                              </button> */}
                             </CCol>
                             <CCol lg="3">
                               <CButton
