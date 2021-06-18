@@ -12,3 +12,10 @@ http://dev107.developer24x7.com/test_project/wp-json/wp-jwt/v1/update-employee-p
 
 // Profile
 http://dev107.developer24x7.com/test_project/wp-json/wp-jwt/v1/profile
+
+URL : -http://dev107.developer24x7.com/test_project/
+
+Admin
+
+User :- adminTestProject
+Password :- QxD)4)aF&hzS1WEF4DT%ucQi
