@@ -30,30 +30,6 @@ const User = () => {
   const [changeSkill, handleChangeSkill] = useState()
   const [submitted, setSubmitted] = useState(false)
 
-  // profile is in array
-  // const [
-  //   initialValues = {
-  //     first_name: '',
-  //     last_name: '',
-  //     email: '',
-  //     department: '',
-  //     employeeId: '',
-  //     personal_email_address: '',
-  //     date_of_birth: '',
-  //     doj: '',
-  //     blood_group: '',
-  //     uan_no: '',
-  //     aadhaar_no: '',
-  //     pan_no: '',
-  //     salaryBank: '',
-  //     experience: '',
-  //     address: '',
-  //     emargency_contact_number: '',
-  //     cv: '',
-  //     skill: '',
-  //   },
-  //   setProfileData,
-  // ] = useState([])
   const [profile, setProfile] = useState({})
   const [profileData, setProfileData] = useState([])
   const [error, setError] = useState('')
@@ -145,7 +121,7 @@ const User = () => {
         const updateUserData = response.data
         console.log('updateUserData', updateUserData)
         // response is the payload for redux
-        dispatch(profileSuccess(response))
+        dispatch(profileSuccess(updateUserData))
         // setProfile(updateUserData)
       })
       .catch((error) => {
@@ -160,9 +136,9 @@ const User = () => {
   }
 
   const onSubmit = async (values, submitProps) => {
-    console.log('form-values', JSON.stringify(values, null, 2))
+    // console.log('form-values', values)
     // console.log('submitProps', submitProps)
-    updateUserSubmit()
+    updateUserSubmit(values)
     // getProfile()
     await sleep(500)
     setSubmitted(true)
