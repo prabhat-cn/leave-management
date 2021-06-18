@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react'
-import { useParams } from 'react-router-dom'
+import { useDispatch } from 'react-redux'
 import {
   CButton,
   CCard,
@@ -23,6 +23,7 @@ import makeAnimated from 'react-select/animated'
 import { Formik, Form, Field, ErrorMessage } from 'formik'
 import * as Yup from 'yup'
 import API from '../../../api'
+import { profilePending, profileSuccess, profileFail } from '../../../store/reducers/profileReducer'
 
 const sleep = (ms) => new Promise((r) => setTimeout(r, ms))
 const User = () => {
@@ -55,6 +56,8 @@ const User = () => {
   // ] = useState([])
   const [profile, setProfile] = useState({})
   const [profileData, setProfileData] = useState([])
+  const [error, setError] = useState('')
+  const dispatch = useDispatch()
   const handleChange = (newValue, actionMeta) => {
     console.group('Value Changed')
     console.log(newValue)
@@ -97,9 +100,9 @@ const User = () => {
 
     user_email: Yup.string().required('Email is required').email('Email is invalid'),
 
-    department: Yup.string().required('Department required'),
+    // department: Yup.string().required('Department required'),
 
-    employee_id: Yup.string().required('Employee Id required'),
+    // employee_id: Yup.string().required('Employee Id required'),
 
     personal_email_address: Yup.string()
       .required('Personal Email is required')
@@ -107,7 +110,7 @@ const User = () => {
 
     date_of_birth: Yup.string().required('Date of birth required'),
 
-    date_of_joining: Yup.string().required('Date of join required'),
+    // date_of_joining: Yup.string().required('Date of join required'),
 
     blood_group: Yup.string().required('Blood group required'),
 
@@ -117,7 +120,7 @@ const User = () => {
 
     pan_no: Yup.string().required('PAN required'),
 
-    salaryBank: Yup.string().required('Salary Bank Account required'),
+    // salary_bank_no: Yup.string().required('Salary Bank Account required'),
 
     experience: Yup.string().required('Experience required'),
 
@@ -128,42 +131,41 @@ const User = () => {
       .min(10, 'Should be 10 digit number')
       .matches(/^([+]\d{2})?\d{10}$/, 'Invalid contact'),
 
-    cv: Yup.string().required('Cv required'),
+    // cv: Yup.string().required('Cv required'),
 
-    skill: Yup.string().required('Select your skill'),
+    // skill: Yup.string().required('Select your skill'),
   })
 
   const updateUserSubmit = (updateData) => {
-    console.log('updateUserSubmit')
-    // dispatch(updatePassPending())
-    // API.post('/wp-jwt/v1/profile', updateData)
-    //   .then((response) => {
-    //     // setError('')
-    //     setSubmitted(true)
-    //     const updateUserData = response.data
-    //     console.log('updatePassData', updateUserData)
-    //     // response is the payload for redux
-    //     // dispatch(updatePassSuccess(response))
-    //     // setUpdatePassUse(updatePassData)
-    //   })
-    //   .catch((error) => {
-    //     console.log(error.response)
-    //     // const { status, data } = error.response
-    //     setSubmitted(false)
-    //     // dispatch(updatePassFail(error.response))
-    //     // if (status === 403) {
-    //     //   setError(data.message)
-    //     // }
-    //   })
+    dispatch(profilePending())
+    API.post('/wp-jwt/v1/profile', updateData)
+      .then((response) => {
+        setError('')
+        setSubmitted(true)
+        const updateUserData = response.data
+        console.log('updateUserData', updateUserData)
+        // response is the payload for redux
+        dispatch(profileSuccess(response))
+        // setProfile(updateUserData)
+      })
+      .catch((error) => {
+        console.log(error.response)
+        // const { status, data } = error.response
+        setSubmitted(false)
+        // dispatch(profileFail(error.response))
+        // if (status === 403) {
+        //   setError(data.message)
+        // }
+      })
   }
 
   const onSubmit = async (values, submitProps) => {
-    // console.log('form-values', JSON.stringify(values, null, 2))
-    console.log('submitProps', submitProps)
+    console.log('form-values', JSON.stringify(values, null, 2))
+    // console.log('submitProps', submitProps)
     updateUserSubmit()
+    // getProfile()
     await sleep(500)
     setSubmitted(true)
-    // submitProps.resetForm()
   }
 
   const animatedComponents = makeAnimated()
@@ -257,8 +259,6 @@ const User = () => {
                                   type="text"
                                   name="first_name"
                                   id="first_name"
-                                  // eslint-disable-next-line no-undef
-                                  // value={profileData.first_name}
                                   placeholder="First Name"
                                   className={
                                     'form-control' +
@@ -400,7 +400,7 @@ const User = () => {
                               <div className="mb-3">
                                 <CFormLabel htmlFor="date_of_birth">Date of Birth</CFormLabel>
                                 <Field
-                                  type="date"
+                                  type="text"
                                   name="date_of_birth"
                                   id="date_of_birth"
                                   className={
@@ -423,7 +423,7 @@ const User = () => {
                               <div className="mb-3">
                                 <CFormLabel htmlFor="date_of_joining">Date of Joining</CFormLabel>
                                 <Field
-                                  type="date"
+                                  type="text"
                                   id="date_of_joining"
                                   name="date_of_joining"
                                   className={

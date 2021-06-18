@@ -5,7 +5,6 @@ const initialState = {
   isLoading: false,
   status: '',
   message: '',
-  // email: '',
 }
 
 const profileReducer = createSlice({
@@ -19,7 +18,6 @@ const profileReducer = createSlice({
       state.isLoading = false
       state.status = 'success'
       state.message = payload.message
-      // state.email = payload.email
     },
     profileFail: (state, { payload }) => {
       state.isLoading = false
