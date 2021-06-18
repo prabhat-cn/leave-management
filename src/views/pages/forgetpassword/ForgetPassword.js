@@ -64,6 +64,9 @@ const ForgetPassword = (props) => {
       .then((response) => {
         setError('')
         setSubmitted(true)
+        setTimeout(() => {
+          setSubmitted(false)
+        }, 2000)
         const forgetPassData = response.data
         // console.log('forgetPassData', forgetPassData)
         // response is the payload for redux

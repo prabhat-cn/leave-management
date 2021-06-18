@@ -22,7 +22,7 @@ const profileReducer = createSlice({
     profileFail: (state, { payload }) => {
       state.isLoading = false
       state.status = 'error'
-      state.message = payload
+      state.message = payload.message
     },
   },
 })

@@ -59,6 +59,9 @@ const ChangePassword = (props) => {
         // console.log('updateToken', updateToken)
         setError('')
         setSubmitted(true)
+        setTimeout(() => {
+          setSubmitted(false)
+        }, 2000)
         const updatePassData = response.data
         console.log('updatePassData', updatePassData)
         // response is the payload for redux
@@ -111,11 +114,6 @@ const ChangePassword = (props) => {
                                   {updatePassUse.message}
                                 </CAlert>
                               )}
-                              {/* {submitted && (
-                                <CAlert color="success">
-                                  Success! Account Created Successfully
-                                </CAlert>
-                              )} */}
                               {error !== '' && <CAlert color="danger">Error! Update failed</CAlert>}
                               <CInputGroup className="mb-3 mt-2 pwd-container">
                                 <CInputGroupText>

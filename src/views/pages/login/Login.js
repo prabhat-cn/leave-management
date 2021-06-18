@@ -54,6 +54,9 @@ const Login = () => {
       .then((response) => {
         setError('')
         setSubmitted(true)
+        setTimeout(() => {
+          setSubmitted(false)
+        }, 2000)
         const userData = response.data
         dispatch(loginSuccess())
         setUser(userData)

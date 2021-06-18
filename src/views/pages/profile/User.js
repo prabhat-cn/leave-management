@@ -30,7 +30,6 @@ const User = () => {
   const [changeSkill, handleChangeSkill] = useState()
   const [submitted, setSubmitted] = useState(false)
 
-  const [profile, setProfile] = useState({})
   const [profileData, setProfileData] = useState([])
   const [error, setError] = useState('')
   const dispatch = useDispatch()
@@ -118,28 +117,31 @@ const User = () => {
       .then((response) => {
         setError('')
         setSubmitted(true)
+        setTimeout(() => {
+          setSubmitted(false)
+        }, 2000)
         const updateUserData = response.data
         console.log('updateUserData', updateUserData)
-        // response is the payload for redux
+        // window.location.reload()
         dispatch(profileSuccess(updateUserData))
-        // setProfile(updateUserData)
+
+        if (updateUserData.status === 0) {
+          setError(updateUserData.message)
+        }
       })
       .catch((error) => {
         console.log(error.response)
-        // const { status, data } = error.response
+        const { status, data } = error.response
         setSubmitted(false)
-        // dispatch(profileFail(error.response))
-        // if (status === 403) {
-        //   setError(data.message)
-        // }
+        dispatch(profileFail(error.response))
+        if (status === 403) {
+          setError(data.message)
+        }
       })
   }
 
   const onSubmit = async (values, submitProps) => {
-    // console.log('form-values', values)
-    // console.log('submitProps', submitProps)
     updateUserSubmit(values)
-    // getProfile()
     await sleep(500)
     setSubmitted(true)
   }
@@ -152,22 +154,6 @@ const User = () => {
     { label: 'Vue', value: 'Vue' },
     { label: 'Java', value: 'Java' },
   ]
-  // const getProfile = async (profData) => {
-  //   try {
-  //     const proData = await API.get('/wp-jwt/v1/get-user-info')
-  //     console.log('proData', proData.data.data)
-  //     // const bulkData = {
-  //     //   first_name: proData.data.data.first_name,
-  //     // }
-  //     setProfileData(proData.data.data)
-  //   } catch (error) {
-  //     console.log(error.message)
-  //   }
-  // }
-  // // eslint-disable-next-line react-hooks/rules-of-hooks
-  // useEffect(() => {
-  //   getProfile()
-  // }, [])
   return (
     <>
       <Formik
@@ -179,7 +165,7 @@ const User = () => {
         {(formik) => {
           // console.log('formik', formik.values)
           const { errors, touched, isValid, dirty, setFieldValue } = formik
-          const getProfile = async (profData) => {
+          const getProfileValues = async (profData) => {
             try {
               const proData = await API.get('/wp-jwt/v1/get-user-info')
               console.log('proData', proData)
@@ -206,13 +192,13 @@ const User = () => {
               ]
               fields.forEach((field) => setFieldValue(field, bulkData[field], false))
               setProfileData(proData.data.data)
-            } catch (error) {
-              console.log(error.message)
+            } catch (err) {
+              console.log(err.message)
             }
           }
           // eslint-disable-next-line react-hooks/rules-of-hooks
           useEffect(() => {
-            getProfile()
+            getProfileValues()
           }, [])
           return (
             <>
@@ -225,7 +211,8 @@ const User = () => {
                       </CCardHeader>
                       <CCardBody>
                         <Form id="userProfile" name="userProfile">
-                          {submitted && <CAlert color="success">Profile seved</CAlert>}
+                          {submitted && <CAlert color="success">Success! Profile saved</CAlert>}
+                          {error !== '' && <CAlert color="danger">Error! Update failed</CAlert>}
 
                           <CRow xs={{ gutterX: 6 }}>
                             <CCol>
@@ -376,9 +363,12 @@ const User = () => {
                               <div className="mb-3">
                                 <CFormLabel htmlFor="date_of_birth">Date of Birth</CFormLabel>
                                 <Field
-                                  type="text"
+                                  type="date"
+                                  data-date-format="dd/mm/YYYY"
                                   name="date_of_birth"
                                   id="date_of_birth"
+                                  // min="1997-01-01"
+                                  // max="2030-12-31"
                                   className={
                                     'form-control' +
                                     ' ' +
@@ -399,7 +389,8 @@ const User = () => {
                               <div className="mb-3">
                                 <CFormLabel htmlFor="date_of_joining">Date of Joining</CFormLabel>
                                 <Field
-                                  type="text"
+                                  type="date"
+                                  data-date-format="dd/mm/YYYY"
                                   id="date_of_joining"
                                   name="date_of_joining"
                                   className={

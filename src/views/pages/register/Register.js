@@ -77,6 +77,9 @@ const Register = (props) => {
       .then((response) => {
         setError('')
         setSubmitted(true)
+        setTimeout(() => {
+          setSubmitted(false)
+        }, 2000)
         dispatch(registrationSuccess(response))
         const userData = response.data
         console.log('userData', userData)
