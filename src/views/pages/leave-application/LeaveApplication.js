@@ -23,7 +23,7 @@ import * as Yup from 'yup'
 import {Editor, EditorState, RichUtils} from 'draft-js';
 import 'draft-js/dist/Draft.css'
 import API from '../../../api'
-// import { profilePending, profileSuccess, profileFail } from '../../../store/reducers/profileReducer'
+import { leavePending, leaveSuccess, leaveFail } from '../../../store/reducers/leaveReducer'
 
 const sleep = (ms) => new Promise((r) => setTimeout(r, ms))
 const LeaveApplication = () => {
@@ -39,6 +39,8 @@ const LeaveApplication = () => {
   const initialValues = {
     start_date: '',
     end_date: '',
+    superior_user_id: '',
+    reason: '',
   }
   const userProfileSchema = Yup.object().shape({
 
@@ -54,41 +56,7 @@ const LeaveApplication = () => {
         .min(8, "Must be 8 characters or more"),
   })
 
-  const leaveApplicationSubmit = (addData) => {
-    // dispatch(profilePending())
-    API.post('/wp-jwt/v1/apply-leave', addData)
-      .then((response) => {
-        setError('')
-        setSubmitted(true)
-        setTimeout(() => {
-          setSubmitted(false)
-        }, 2000)
-        const updateUserData = response.data
-        console.log('updateUserData', updateUserData)
-        // dispatch(profileSuccess(updateUserData))
-
-        // if (updateUserData.status === 0) {
-        //   setError(updateUserData.message)
-        // }
-      })
-      .catch((error) => {
-        console.log(error.response)
-        const { status, data } = error.response
-        setSubmitted(false)
-        // dispatch(profileFail(error.response))
-        // if (status === 403) {
-        //   setError(data.message)
-        // }
-      })
-  }
-
-  const onSubmit = async (values) => {
-    leaveApplicationSubmit(values)
-    await sleep(500)
-    setSubmitted(true)
-  }
-  
-  const getProfileValues = async (profData) => {
+  const getProfileValues = async () => {
     try {
       const proData = await API.get('/wp-jwt/v1/get-user-info')
       const bulkData = proData.data.data
@@ -109,6 +77,42 @@ const LeaveApplication = () => {
       console.log(err.message)
     }
   }
+
+  const leaveApplicationSubmit = (addData) => {
+    dispatch(leavePending())
+    API.post('/wp-jwt/v1/apply-leave', addData)
+      .then((response) => {
+        setError('')
+        setSubmitted(true)
+        setTimeout(() => {
+          setSubmitted(false)
+        }, 2000)
+        const leaveData = response.data
+        console.log('leaveData', leaveData)
+        dispatch(leaveSuccess(leaveData))
+
+        if (leaveData.status === 0) {
+          setError(leaveData.message)
+        }
+      })
+      .catch((error) => {
+        console.log(error.response)
+        const { status, data } = error.response
+        setSubmitted(false)
+        dispatch(leaveFail(error.response))
+        if (status === 403) {
+          setError(data.message)
+        }
+      })
+  }
+
+  const onSubmit = async (values, submitProps) => {
+    leaveApplicationSubmit(values)
+    await sleep(500)
+    submitProps.resetForm()
+  }
+  
+
   // eslint-disable-next-line react-hooks/rules-of-hooks
   useEffect(() => {
     getProfileValues()
@@ -141,8 +145,8 @@ const LeaveApplication = () => {
                       </CCardHeader>
                       <CCardBody>
                         <Form id="leaveApplication" name="leaveApplication">
-                          {submitted && <CAlert color="success">Success! Profile saved</CAlert>}
-                          {error !== '' && <CAlert color="danger">Error! Update failed</CAlert>}
+                          {submitted && <CAlert color="success">Success! Leave applied</CAlert>}
+                          {error !== '' && <CAlert color="danger">Error! Application failed</CAlert>}
 
                           <CRow xs={{ gutterX: 6 }}>
                             <CCol>

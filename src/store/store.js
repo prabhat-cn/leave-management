@@ -6,6 +6,7 @@ import loginReducer from "./reducers/loginReducer";
 import forgetPassReducer from "./reducers/forgetPassReducer";
 import updatePassReducer from "./reducers/updatePassReducer";
 import profileReducer from "./reducers/profileReducer";
+import leaveReducer from "./reducers/leaveReducer";
 
 export default configureStore({
   reducer: {
@@ -15,5 +16,6 @@ export default configureStore({
     forgetPassword: forgetPassReducer,
     updatePassword: updatePassReducer,
     profile: profileReducer,
+    leave: leaveReducer,
   },
 })
