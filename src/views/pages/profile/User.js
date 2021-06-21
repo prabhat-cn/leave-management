@@ -119,10 +119,10 @@ const User = () => {
         setSubmitted(true)
         setTimeout(() => {
           setSubmitted(false)
+          window.location.reload()
         }, 2000)
         const updateUserData = response.data
         console.log('updateUserData', updateUserData)
-        // window.location.reload()
         dispatch(profileSuccess(updateUserData))
 
         if (updateUserData.status === 0) {
@@ -140,7 +140,7 @@ const User = () => {
       })
   }
 
-  const onSubmit = async (values, submitProps) => {
+  const onSubmit = async (values) => {
     updateUserSubmit(values)
     await sleep(500)
     setSubmitted(true)
@@ -644,10 +644,10 @@ const User = () => {
 
                           <CRow className="mt-3">
                             <CCol lg="9">
-                              <button type="submit" className="btn btn-primary">
+                              {/* <button type="submit" className="btn btn-primary">
                                 Submit
-                              </button>
-                              {/* <button
+                              </button> */}
+                              <button
                                 type="submit"
                                 className={
                                   'btn btn-primary' + ' ' + (!(dirty && isValid) ? 'disabled' : '')
@@ -655,7 +655,7 @@ const User = () => {
                                 disabled={!(dirty && isValid)}
                               >
                                 Submit
-                              </button> */}
+                              </button>
                             </CCol>
                             <CCol lg="3">
                               <CButton

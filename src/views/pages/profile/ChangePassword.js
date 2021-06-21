@@ -31,9 +31,8 @@ const sleep = (ms) => new Promise((r) => setTimeout(r, ms))
 const ChangePassword = (props) => {
   const [isRevealPwd, setIsRevealPwd] = useState(false)
   const [isRevealCPwd, setIsRevealCPwd] = useState(false)
-  const [submitted, setSubmitted] = useState(false)
   const [error, setError] = useState('')
-  const [updatePassUse, setUpdatePassUse] = useState()
+  const [updatePassAlert, setUpdatePassAlert] = useState()
   const dispatch = useDispatch()
   const initialValues = {
     new_password: '',
@@ -55,23 +54,16 @@ const ChangePassword = (props) => {
     dispatch(updatePassPending())
     API.post('/wp-jwt/v1/update-employee-password', updateData)
       .then((response) => {
-        // const updateToken = localStorage.getItem('lMuserDataToken')
-        // console.log('updateToken', updateToken)
         setError('')
-        setSubmitted(true)
-        setTimeout(() => {
-          setSubmitted(false)
-        }, 2000)
         const updatePassData = response.data
         console.log('updatePassData', updatePassData)
         // response is the payload for redux
-        dispatch(updatePassSuccess(response))
-        setUpdatePassUse(updatePassData)
+        dispatch(updatePassSuccess(updatePassData))
+        setUpdatePassAlert(updatePassData)
       })
       .catch((error) => {
         console.log(error.response)
         const { status, data } = error.response
-        setSubmitted(false)
         dispatch(updatePassFail(error.response))
         if (status === 403) {
           setError(data.message)
@@ -79,9 +71,8 @@ const ChangePassword = (props) => {
       })
   }
   const onSubmit = async (values, submitProps) => {
-    updatePassSubmit()
+    updatePassSubmit(values)
     await sleep(500)
-    setSubmitted(true)
     submitProps.resetForm()
   }
   return (
@@ -108,10 +99,10 @@ const ChangePassword = (props) => {
                         <CCard className="mx-4">
                           <CCardBody className="p-4">
                             <Form id="register" name="register">
-                              {updatePassUse && (
-                                <CAlert color={updatePassUse.status === 0 ? 'danger' : 'success'}>
-                                  {updatePassUse.status === 0 ? 'Error! ' : 'Success! '}
-                                  {updatePassUse.message}
+                              {updatePassAlert && (
+                                <CAlert color={updatePassAlert.status === 0 ? 'danger' : 'success'}>
+                                  {updatePassAlert.status === 0 ? 'Error! ' : 'Success! '}
+                                  {updatePassAlert.message}
                                 </CAlert>
                               )}
                               {error !== '' && <CAlert color="danger">Error! Update failed</CAlert>}
