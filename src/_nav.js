@@ -1,5 +1,6 @@
 import React from 'react'
 import CIcon from '@coreui/icons-react'
+import { freeSet } from '@coreui/icons'
 import { NavLink } from 'react-router-dom'
 
 const _nav = [
@@ -13,6 +14,13 @@ const _nav = [
       color: 'info',
       text: 'NEW',
     },
+  },
+  {
+    _component: 'CNavItem',
+    as: NavLink,
+    anchor: 'Leave Application',
+    to: '/leave-application',
+    icon: <CIcon content={freeSet.cilAddressBook} customClasses="nav-icon" />,
   },
   // {
   //   _component: 'CNavTitle',

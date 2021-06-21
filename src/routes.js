@@ -60,6 +60,11 @@ const User = React.lazy(() => import('./views/pages/profile/User'))
 const Settings = React.lazy(() => import('./views/pages/profile/Settings'))
 const ChangePassword = React.lazy(() => import('./views/pages/profile/ChangePassword'))
 
+// Pages leave
+const LeaveApplication = React.lazy(() =>
+  import('./views/pages/leave-application/LeaveApplication'),
+)
+
 const routes = [
   { path: '/', exact: true, name: 'Home' },
   { path: '/dashboard', name: 'Dashboard', component: Dashboard },
@@ -71,6 +76,8 @@ const routes = [
     component: ChangePassword,
     exact: true,
   },
+  { path: '/leave-application', name: 'Leave Application', component: LeaveApplication },
+
   { path: '/theme', name: 'Theme', component: Colors, exact: true },
   { path: '/theme/colors', name: 'Colors', component: Colors },
   { path: '/theme/typography', name: 'Typography', component: Typography },

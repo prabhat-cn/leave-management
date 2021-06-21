@@ -168,9 +168,7 @@ const User = () => {
           const getProfileValues = async (profData) => {
             try {
               const proData = await API.get('/wp-jwt/v1/get-user-info')
-              console.log('proData', proData)
               const bulkData = proData.data.data
-              console.log('bulkData', bulkData)
               const fields = [
                 'first_name',
                 'last_name',
