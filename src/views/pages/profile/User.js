@@ -274,6 +274,7 @@ const User = () => {
                                     ' ' +
                                     (errors.department && touched.department ? 'input-error' : null)
                                   }
+                                  disabled={true}
                                 />
                                 <ErrorMessage
                                   name="department"
@@ -298,6 +299,7 @@ const User = () => {
                                       ? 'input-error'
                                       : null)
                                   }
+                                  disabled
                                 />
                                 <ErrorMessage
                                   name="employee_id"
@@ -364,7 +366,7 @@ const User = () => {
                                 <CFormLabel htmlFor="date_of_birth">Date of Birth</CFormLabel>
                                 <Field
                                   type="date"
-                                  data-date-format="dd/mm/YYYY"
+                                  data-date-format="dd-mm-YYYY"
                                   name="date_of_birth"
                                   id="date_of_birth"
                                   // min="1997-01-01"
@@ -390,7 +392,7 @@ const User = () => {
                                 <CFormLabel htmlFor="date_of_joining">Date of Joining</CFormLabel>
                                 <Field
                                   type="date"
-                                  data-date-format="dd/mm/YYYY"
+                                  data-date-format="dd-mm-YYYY"
                                   id="date_of_joining"
                                   name="date_of_joining"
                                   className={
@@ -400,6 +402,7 @@ const User = () => {
                                       ? 'input-error'
                                       : null)
                                   }
+                                  disabled
                                 />
                                 <ErrorMessage
                                   name="date_of_joining"
@@ -518,6 +521,7 @@ const User = () => {
                                       ? 'input-error'
                                       : null)
                                   }
+                                  disabled
                                 />
                                 <ErrorMessage
                                   name="salary_bank_no"

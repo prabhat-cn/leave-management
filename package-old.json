@@ -66,8 +66,7 @@
   },
   "scripts": {
     "start": "react-scripts start",
-    "local-build": "react-scripts build",
-    "build": "CI= react-scripts build",
+    "build": "react-scripts build",
     "lint": "eslint \"src/**/*.js\"",
     "test": "react-scripts test",
     "test:cov": "npm test -- --coverage --watchAll=false",
