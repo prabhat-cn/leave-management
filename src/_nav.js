@@ -16,11 +16,29 @@ const _nav = [
     },
   },
   {
-    _component: 'CNavItem',
-    as: NavLink,
+    _component: 'CNavGroup',
     anchor: 'Leave Application',
-    to: '/leave-application',
     icon: <CIcon content={freeSet.cilAddressBook} customClasses="nav-icon" />,
+    items: [
+      {
+        _component: 'CNavItem',
+        as: NavLink,
+        anchor: 'Apply',
+        to: '/leave-application/apply',
+      },
+      {
+        _component: 'CNavItem',
+        as: NavLink,
+        anchor: 'List',
+        to: '/leave-application/list',
+      },
+      {
+        _component: 'CNavItem',
+        as: NavLink,
+        anchor: 'Details',
+        to: '/leave-application/details',
+      },
+    ],
   },
   // {
   //   _component: 'CNavTitle',

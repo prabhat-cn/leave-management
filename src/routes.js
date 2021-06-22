@@ -64,6 +64,8 @@ const ChangePassword = React.lazy(() => import('./views/pages/profile/ChangePass
 const LeaveApplication = React.lazy(() =>
   import('./views/pages/leave-application/LeaveApplication'),
 )
+const LeaveList = React.lazy(() => import('./views/pages/leave-application/LeaveList'))
+const LeaveDetails = React.lazy(() => import('./views/pages/leave-application/LeaveDetails'))
 
 const routes = [
   { path: '/', exact: true, name: 'Home' },
@@ -76,7 +78,15 @@ const routes = [
     component: ChangePassword,
     exact: true,
   },
-  { path: '/leave-application', name: 'Leave Application', component: LeaveApplication },
+  {
+    path: '/leave-application',
+    name: 'Leave Application',
+    component: LeaveApplication,
+    exact: true,
+  },
+  { path: '/leave-application/apply', name: 'Apply Leave', component: LeaveApplication },
+  { path: '/leave-application/list', name: 'List', component: LeaveList },
+  { path: '/leave-application/details', name: 'Details', component: LeaveDetails },
 
   { path: '/theme', name: 'Theme', component: Colors, exact: true },
   { path: '/theme/colors', name: 'Colors', component: Colors },
