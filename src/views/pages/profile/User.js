@@ -119,7 +119,7 @@ const User = () => {
         setSubmitted(true)
         setTimeout(() => {
           setSubmitted(false)
-          window.location.reload()
+          // window.location.reload()
         }, 2000)
         const updateUserData = response.data
         console.log('updateUserData', updateUserData)

@@ -16,20 +16,18 @@ import {
   CFormSelect
 } from '@coreui/react'
 import { useForm } from 'react-hook-form'
-import {Editor, EditorState} from 'draft-js';
-import 'draft-js/dist/Draft.css';
+import JoditEditor from "jodit-react";
 import API from '../../../api'
 import { leavePending, leaveSuccess, leaveFail } from '../../../store/reducers/leaveReducer'
 
 const LeaveApplication = () => {
   const [submitted, setSubmitted] = useState(false)
-  const [editorState, setEditorState] = useState(
-    EditorState.createEmpty()
-  );
-  const editor = useRef(null);
-  function focusEditor() {
-    editor.current.focus();
-  }
+  const editor = useRef(null)
+  console.log('editor-ref', editor)
+	const [content, setContent] = useState('')
+  const config = {
+		readonly: false
+	}
 
   const [profileData, setProfileData] = useState([])
   const [superior, setSuperior] = useState([])
@@ -104,7 +102,6 @@ const LeaveApplication = () => {
   useEffect(() => {
     getProfileValues()
     getSuperior()
-    focusEditor()
   }, [])
   return (
     <>
@@ -187,13 +184,15 @@ const LeaveApplication = () => {
                       <div className="mb-3">
                         <CFormLabel htmlFor="reason">Reason to Leave</CFormLabel>
                         {/* <CFormControl component="textarea" name="reason" id="reason" {...register("reason", { required: true, minLength: 8})} placeholder="Type reason here"></CFormControl>  */}
-                        <div onClick={focusEditor}>
-                        <Editor
+                        <JoditEditor
                         ref={editor}
-                        editorState={editorState}
-                        onChange={editorState => setEditorState(editorState)}
+                        value={''}
+                        config={config}
+                        tabIndex={1}
+                        // onBlur={newContent => setContent(newContent)}
+                        onChange={newContent => {}}
+                        name="reason" id="reason" {...register("reason", { required: true, minLength: 8})} placeholder="Type reason here"
                         />
-                        </div>
 
                         {errors.reason?.type === "required" && <span style={{color: 'red'}}>Reason required</span>}
                         {errors.reason?.type === "minLength" && <span style={{color: 'red'}}>Minimum length is 8 characters</span>}
