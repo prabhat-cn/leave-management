@@ -60,6 +60,7 @@ const Login = () => {
         const userData = response.data
         dispatch(loginSuccess())
         setUser(userData)
+        // console.log(userData)
         localStorage.setItem('lMuserDataToken', JSON.stringify(userData))
         // sessionStorage.setItem('accessDataToken', userData.token)
         window.location.reload()
@@ -217,7 +218,7 @@ const eyeToggle = `
 .pwd-container {
     position: relative;
   }
-   
+
   .pwd-container img {
     cursor: pointer;
     position: absolute;
@@ -226,7 +227,7 @@ const eyeToggle = `
     top: 8px;
   }
 
-  
+
   input#password:active {
     background: #0000000d;
 }
