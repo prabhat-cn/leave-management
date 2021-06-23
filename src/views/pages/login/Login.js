@@ -60,7 +60,7 @@ const Login = () => {
         const userData = response.data
         dispatch(loginSuccess())
         setUser(userData)
-        // console.log(userData)
+        console.log(userData)
         localStorage.setItem('lMuserDataToken', JSON.stringify(userData))
         // sessionStorage.setItem('accessDataToken', userData.token)
         window.location.reload()
