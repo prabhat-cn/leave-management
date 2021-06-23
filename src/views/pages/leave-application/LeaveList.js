@@ -174,6 +174,7 @@ const LeaveList = () => {
                         data={posts}
                         pagination
                         paginationPerPage={5}
+                        paginationRowsPerPageOptions={[5, 10, 15, 20, 25, 30]}
                       />
                       </>
                     )}
