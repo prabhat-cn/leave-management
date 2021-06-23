@@ -25,7 +25,7 @@ import API from '../../../api'
 import { useDispatch } from 'react-redux'
 import { loginPending, loginSuccess, loginFail } from '../../../store/reducers/loginReducer'
 const sleep = (ms) => new Promise((r) => setTimeout(r, ms))
-const Login = () => {
+const Login = (props) => {
   const [isRevealPwd, setIsRevealPwd] = useState(false)
   const [submitted, setSubmitted] = useState(false)
   const [error, setError] = useState('')
@@ -48,6 +48,16 @@ const Login = () => {
       ),
   })
 
+  const userRole = () => {
+    API.get('/wp-jwt/v1/get-user-role')
+      .then((res) => {
+        console.log('userRole', res)
+      })
+      .catch((err) => {
+        console.log(err)
+      })
+  }
+
   const loginSubmit = (loginData) => {
     dispatch(loginPending())
     API.post('/jwt-auth/v1/token', loginData)
@@ -62,6 +72,8 @@ const Login = () => {
         setUser(userData)
         console.log(userData)
         localStorage.setItem('lMuserDataToken', JSON.stringify(userData))
+        // after geting token
+        userRole()
         // sessionStorage.setItem('accessDataToken', userData.token)
         window.location.reload()
       })
