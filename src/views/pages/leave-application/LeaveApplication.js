@@ -1,5 +1,5 @@
 /* eslint-disable prettier/prettier */
-import React, { useState, useEffect, useRef } from 'react'
+import React, { useState, useEffect  } from 'react'
 import { useDispatch } from 'react-redux'
 import {
   CButton,
@@ -13,24 +13,37 @@ import {
   CFormLabel,
   CRow,
   CContainer,
-  CFormSelect
+  CFormSelect,
+  CSpinner,
+  CTable,
+  CTableHead,
+  CTableRow,
+  CTableHeaderCell,
+  CTableBody,
+  CTableDataCell,
 } from '@coreui/react'
 import { useForm } from 'react-hook-form'
-import JoditEditor from "jodit-react";
+
+import {EditorState, convertToRaw, convertFromRaw} from 'draft-js';
+import 'draft-js/dist/Draft.css';
+import { Editor } from "react-draft-wysiwyg"
+import "react-draft-wysiwyg/dist/react-draft-wysiwyg.css";
+import draftToHtml from 'draftjs-to-html';
+// if get data
+import htmlToDraft from 'html-to-draftjs';
+
 import API from '../../../api'
 import { leavePending, leaveSuccess, leaveFail } from '../../../store/reducers/leaveReducer'
 
 const LeaveApplication = () => {
   const [submitted, setSubmitted] = useState(false)
-  const editor = useRef(null)
-  console.log('editor-ref', editor)
-	const [content, setContent] = useState('')
-  const config = {
-		readonly: false
-	}
+  const [editorState, setEditorState] = useState(
+    EditorState.createEmpty()
+  );
 
   const [profileData, setProfileData] = useState([])
   const [superior, setSuperior] = useState([])
+  const [empLeave, setEmpLeave] = useState([])
   const [error, setError] = useState('')
   const dispatch = useDispatch()
 
@@ -55,6 +68,17 @@ const LeaveApplication = () => {
     }
   }
 
+  const getEmployeeLeave = async () => {
+    try {
+      const earnedLeave = await API.get('/wp-jwt/v1/employee-leave-list')
+      const earnedLeaveData = earnedLeave.data.data
+      console.log('earnedLeaveData', earnedLeaveData)
+      setEmpLeave(earnedLeaveData)
+    } catch (err) {
+      console.log(err.message)
+    }
+  }
+
   const {
     register,
     handleSubmit,
@@ -62,7 +86,7 @@ const LeaveApplication = () => {
     reset,
     control,
     formState: { errors, isSubmitting, isValid }
-  } = useForm({mode: "onChange"})
+  } = useForm()
 
   const leaveApplicationSubmit = (addData) => {
     dispatch(leavePending())
@@ -93,18 +117,74 @@ const LeaveApplication = () => {
   }
 
   const onSubmit = async (values) => {
-    leaveApplicationSubmit(values)
+    const modifyData = {...values, ...{reason: draftToHtml(convertToRaw(editorState.getCurrentContent()))}}
+    leaveApplicationSubmit(modifyData)
     reset()
   }
   console.log(watch('example'))
 
   // eslint-disable-next-line react-hooks/rules-of-hooks
   useEffect(() => {
+    getEmployeeLeave()
     getProfileValues()
     getSuperior()
   }, [])
+
+  // solved by Draftjs: TypeError: TypeError: this.getImmutable(…) is undefined
+  const onEditorStateChange =(editorState)=>{
+    draftToHtml(convertToRaw(editorState.getCurrentContent()))
+    console.log('editorState', draftToHtml(convertToRaw(editorState.getCurrentContent())));
+    setEditorState(editorState)
+  }
+
   return (
     <>
+      <CContainer className="overflow-hidden">
+        <CRow xs={{ gutterY: 5 }}>
+          <CCol xs={{ span: 12 }}>
+            <CCard className="mb-4">
+              <CCardHeader>
+                <strong>Number of Leaves</strong>
+              </CCardHeader>
+              <CCardBody>
+                {!empLeave ? (
+                  <CSpinner color="primary" />
+                ) : (
+                  <>
+                  {empLeave && empLeave.length === 0 ? (
+                    <p className="d-flex justify-content-center">No leaves found!</p>
+                    ) : (
+                      <>
+                      <CTable striped>
+                        <CTableHead>
+                          <CTableRow>
+                            <CTableHeaderCell scope="col">Casual Leave</CTableHeaderCell>
+                            <CTableHeaderCell scope="col">Sick Leave</CTableHeaderCell>
+                            <CTableHeaderCell scope="col">Earn Leave</CTableHeaderCell>
+                          </CTableRow>
+                        </CTableHead>
+                        <CTableBody>
+                          {empLeave &&
+                            empLeave.map((post, index) => (
+                              <CTableRow key={post.id}>
+                                <CTableHeaderCell>{post.casual_leave}</CTableHeaderCell>
+                                <CTableDataCell>{post.sick_leave}</CTableDataCell>
+                                <CTableDataCell>{post.earn_leave}</CTableDataCell>
+                              </CTableRow>
+                            ))}
+                        </CTableBody>
+                      </CTable>
+                      </>
+                    )}
+
+                  </>
+                )}
+              </CCardBody>
+            </CCard>
+          </CCol>
+        </CRow>
+      </CContainer>
+
       <CContainer className="overflow-hidden">
         <CRow xs={{ gutterY: 5 }}>
           <CCol xs={{ span: 12 }}>
@@ -183,16 +263,26 @@ const LeaveApplication = () => {
                     <CCol>
                       <div className="mb-3">
                         <CFormLabel htmlFor="reason">Reason to Leave</CFormLabel>
-                        {/* <CFormControl component="textarea" name="reason" id="reason" {...register("reason", { required: true, minLength: 8})} placeholder="Type reason here"></CFormControl>  */}
-                        <JoditEditor
-                        ref={editor}
-                        value={''}
-                        config={config}
-                        tabIndex={1}
-                        // onBlur={newContent => setContent(newContent)}
-                        onChange={newContent => {}}
-                        name="reason" id="reason" {...register("reason", { required: true, minLength: 8})} placeholder="Type reason here"
+                        {/* <CFormControl component="textarea" name="reason" id="reason" {...register("reason", { required: true, minLength: 8})} placeholder="Type reason here"></CFormControl> */}
+
+                        <Editor
+                          editorState={editorState}                 
+                          toolbarClassName="toolbarClassName"
+                          wrapperClassName="wrapperClassName"
+                          editorClassName="form-control"
+                          onEditorStateChange={onEditorStateChange}
+                          name="reason" id="reason"
+                          placeholder="Type reason here"
+                          toolbar={{
+                            inline: { inDropdown: true },
+                            list: { inDropdown: true },
+                            textAlign: { inDropdown: true },
+                            link: { inDropdown: true },
+                            history: { inDropdown: true },
+                          }}
                         />
+                        {/* <textarea disabled name="reason" id="reason" 
+                        value={editorState && draftToHtml(convertToRaw(editorState.getCurrentContent()))}></textarea> */}
 
                         {errors.reason?.type === "required" && <span style={{color: 'red'}}>Reason required</span>}
                         {errors.reason?.type === "minLength" && <span style={{color: 'red'}}>Minimum length is 8 characters</span>}

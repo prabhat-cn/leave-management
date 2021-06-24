@@ -29,12 +29,6 @@ const _nav = [
       {
         _component: 'CNavItem',
         as: NavLink,
-        anchor: 'List',
-        to: '/leave-application/list',
-      },
-      {
-        _component: 'CNavItem',
-        as: NavLink,
         anchor: 'Details',
         to: '/leave-application/details',
       },

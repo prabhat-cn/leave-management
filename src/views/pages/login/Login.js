@@ -52,6 +52,7 @@ const Login = (props) => {
     API.get('/wp-jwt/v1/get-user-role')
       .then((res) => {
         console.log('userRole', res)
+        window.location.reload()
       })
       .catch((err) => {
         console.log(err)
@@ -75,7 +76,6 @@ const Login = (props) => {
         // after geting token
         userRole()
         // sessionStorage.setItem('accessDataToken', userData.token)
-        window.location.reload()
       })
       .catch((err) => {
         console.log(err.response)

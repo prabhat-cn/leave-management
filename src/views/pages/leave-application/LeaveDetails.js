@@ -33,11 +33,15 @@ const LeaveDetails = () => {
   const switchClasses = (type) => {
     switch (type) {
       case 0:
-        return 'btn btn-danger'
+        return 'btn btn-warning'
       case 1:
         return 'btn btn-success'
       case 2:
-        return 'btn btn-warning'
+        return 'btn btn-danger'
+      case 3:
+        return 'btn btn-dark'
+      case 4:
+        return 'btn btn-secondary'
       default:
         break
     }
@@ -46,8 +50,10 @@ const LeaveDetails = () => {
   const StatusCell = ({ row }) => (
     <p className={switchClasses(row?.status * 1)}>
       {row?.status * 1 === 0 && 'Pending'}
-      {row?.status * 1 === 1 && 'Complected'}
-      {row?.status * 1 === 2 && 'In Progress'}
+      {row?.status * 1 === 1 && 'Approved'}
+      {row?.status * 1 === 2 && 'Rejected'}
+      {row?.status * 1 === 3 && 'On Hold'}
+      {row?.status * 1 === 4 && 'Modified'}
     </p>
   )
 
@@ -172,9 +178,7 @@ const LeaveDetails = () => {
             <CFormLabel htmlFor="start_date">Start Date</CFormLabel>
             <CFormControl
               type="text"
-              name="start_date"
-              id="start_date"
-              value={singleLeave[0]?.start_date}
+              value={DateTime.fromISO(singleLeave[0]?.start_date).toFormat('dd / MM / yyyy')}
               disabled
             />
           </div>
@@ -185,9 +189,7 @@ const LeaveDetails = () => {
             <CFormLabel htmlFor="start_date">End Date</CFormLabel>
             <CFormControl
               type="text"
-              name="start_date"
-              id="start_date"
-              value={singleLeave[0]?.end_date}
+              value={DateTime.fromISO(singleLeave[0]?.end_date).toFormat('dd / MM / yyyy')}
               disabled
             />
           </div>
@@ -198,8 +200,6 @@ const LeaveDetails = () => {
             <CFormLabel htmlFor="start_date">Department</CFormLabel>
             <CFormControl
               type="text"
-              name="dept_name"
-              id="dept_name"
               value={singleLeave[0]?.dept_name}
               disabled
             />
@@ -211,12 +211,10 @@ const LeaveDetails = () => {
         
         <CCol>
           <div className="mb-3">
-            <CFormLabel htmlFor="start_date">End Date</CFormLabel>
+            <CFormLabel htmlFor="start_date">Reason of leave</CFormLabel>
             <CFormControl
               component="textarea"
-              name="reason"
-              id="reason"
-              value={singleLeave[0]?.reason}
+              value={(singleLeave[0]?.reason)}
               disabled
             />
           </div>
@@ -243,7 +241,7 @@ const LeaveDetails = () => {
                 ) : (
                   <>
                     {posts.length === 0 ? (
-                      <h3 className="d-flex justify-content-center">No data found!</h3>
+                      <h3 className="d-flex justify-content-center">No leave found!</h3>
                     ) : (
                       <>
                         <DataTable
