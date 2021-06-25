@@ -85,7 +85,7 @@ const EmployeeLeaveDetails = (props) => {
       sortable: true,
     },
     {
-      name: 'Project Manager',
+      name: 'Employee Name',
       selector: 'display_name',
       sortable: true,
     },
@@ -190,8 +190,8 @@ const EmployeeLeaveDetails = (props) => {
     e.preventDefault()
     saveEdit({
       leave_edit_details: {
-        start_date: editvalue.start_date,
-        end_date: editvalue.end_date,
+        start_date: DateTime.fromISO(editvalue.start_date).toFormat('dd / MM / yyyy'),
+        end_date: DateTime.fromISO(editvalue.end_date).toFormat('dd / MM / yyyy'),
       },
       leave_edit: {
         id: editvalue.id
@@ -240,7 +240,7 @@ const EmployeeLeaveDetails = (props) => {
         <CModalBody>
           <CRow className="row">
             <CCol className="mb-2">
-            <strong>[P.M- {singleLeave[0]?.display_name}]</strong>
+            <strong>[Employee- {singleLeave[0]?.display_name}]</strong>
             </CCol>
           </CRow>
           <CRow className="row gy-2 gx-3">
@@ -298,7 +298,7 @@ const EmployeeLeaveDetails = (props) => {
           <CModalBody>
             <CRow className="row">
               <CCol className="mb-2">
-                <strong>P.M- {editvalue.display_name}</strong>
+                <strong>Employee- {editvalue.display_name}</strong>
               </CCol>
             </CRow>
               <CRow className="row gy-2 gx-3">
@@ -306,7 +306,8 @@ const EmployeeLeaveDetails = (props) => {
                 <div className="mb-3">
                   <CFormLabel htmlFor="start_date">Start Date</CFormLabel>
                   <CFormControl
-                    type="text" value={editvalue.start_date}
+                    className="custom-date"
+                    type="date" value={editvalue.start_date}
                     name="start_date"
                     id="start_date"
                     onChange={e=>setEditvalues({...editvalue,start_date:e.target.value})}
@@ -318,7 +319,8 @@ const EmployeeLeaveDetails = (props) => {
                 <div className="mb-3">
                   <CFormLabel htmlFor="end_date">End Date</CFormLabel>
                   <CFormControl
-                    type="text"
+                    className="custom-date"
+                    type="date"
                     value={editvalue.end_date}
                     name="end_date"
                     id="end_date"
@@ -402,5 +404,8 @@ const customCss = `
     button.btn.btn-success.round.custom-btn{
     border-radius: 50px;
     height: 40px;
+  }
+  .custom-date {
+    width: 160px;
   }
 `
