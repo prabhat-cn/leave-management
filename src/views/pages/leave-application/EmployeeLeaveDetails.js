@@ -23,12 +23,26 @@ import {
   CFormControl,
 } from '@coreui/react'
 import API from '../../../api'
-import { ViewIcon } from '../../../constant/icons'
+import { ViewIcon, EditIcon } from '../../../constant/icons'
 
-const LeaveDetails = () => {
+const EmployeeLeaveDetails = (props) => {
+  // role based auth start
+  if (localStorage.getItem('lMuserDataToken') !== null) {
+    const userData = JSON.parse(localStorage.getItem('lMuserDataToken'))
+    if(userData.user_role === 'employee'){
+      if(props){
+        // eslint-disable-next-line react/prop-types
+        props.history.push('/dashboard')
+      }
+    }
+    
+  }
+  // role based auth end
   const [visible, setVisible] = useState(false)
+  const [editVisible, setEditVisible] = useState(false)
   const [singleLeave, setSingleLeave] = useState({})
   const [posts, setPosts] = useState()
+  const [editvalue, setEditvalues] = useState({})
   const switchClasses = (type) => {
     switch (type) {
       case 0:
@@ -120,12 +134,21 @@ const LeaveDetails = () => {
         >
           <ViewIcon />
         </CButton>
+        &nbsp;&nbsp;
+        <CButton
+          color="success"
+          shape="round"
+          className="custom-btn"
+          onClick={() => editLeave(row)}
+        >
+          <EditIcon />
+        </CButton>
       </>
     )
   }
 
   const getData = () => {
-    API.get('/wp-jwt/v1/apply-leave-details')
+    API.get('/wp-jwt/v1/applied-leave-details')
       .then((res) => {
         setPosts(
           res.data.data.map((m, i) => {
@@ -152,7 +175,7 @@ const LeaveDetails = () => {
 
   // this is for edit & view get data
   const singleData = (id) => {
-    API.get(`/wp-jwt/v1/apply-leave-details/${id}`)
+    API.get(`/wp-jwt/v1/applied-leave-details/${id}`)
       .then((res) => {
         console.log('singleData', res.data.data)
         setSingleLeave(res.data.data)
@@ -162,7 +185,47 @@ const LeaveDetails = () => {
       })
   }
 
+  // Edit
+  const editSubmit = (e) => {
+    e.preventDefault()
+    saveEdit({
+      leave_edit_details: {
+        start_date: editvalue.start_date,
+        end_date: editvalue.end_date,
+      },
+      leave_edit: {
+        id: editvalue.id
+      }
+    })
+  }
 
+  const saveEdit = (editData) => {
+    API.post(`/wp-jwt/v1/date-edit/${editData.leave_edit.id}`, editData.leave_edit_details)
+      .then(() => {
+        editDismiss();
+      })
+      .catch((err) => {
+        console.log(err)
+      })
+  }
+
+  const editDismiss = () => {
+    setEditVisible(!editVisible)
+    getData()
+  }
+
+  const editLeave = (row) => {
+    setEditVisible(true)
+    const modifiedData = {
+      id: row.id,
+      display_name: row.display_name,
+      start_date: row.start_date,
+      end_date: row.end_date,
+      reason: row.reason,
+      dept_name: row.dept_name,
+    }
+    setEditvalues(modifiedData);
+  }
 
   useEffect(() => {
     getData()
@@ -227,6 +290,68 @@ const LeaveDetails = () => {
         </CModalFooter>
       </CModal>
 
+      <CModal name="edit-modal" visible={editVisible} onDismiss={() => setEditVisible(false)}>
+        <CModalHeader onDismiss={editDismiss}>
+          <CModalTitle>Edit Leave Detail</CModalTitle>
+        </CModalHeader>
+        <CForm id="edit" onSubmit={(editSubmit)}>
+          <CModalBody>
+            <CRow className="row">
+              <CCol className="mb-2">
+                <strong>P.M- {editvalue.display_name}</strong>
+              </CCol>
+            </CRow>
+              <CRow className="row gy-2 gx-3">
+              <CCol xs>
+                <div className="mb-3">
+                  <CFormLabel htmlFor="start_date">Start Date</CFormLabel>
+                  <CFormControl
+                    type="text" value={editvalue.start_date}
+                    name="start_date"
+                    id="start_date"
+                    onChange={e=>setEditvalues({...editvalue,start_date:e.target.value})}
+                  />
+                </div>
+              </CCol>
+
+              <CCol xs>
+                <div className="mb-3">
+                  <CFormLabel htmlFor="end_date">End Date</CFormLabel>
+                  <CFormControl
+                    type="text"
+                    value={editvalue.end_date}
+                    name="end_date"
+                    id="end_date"
+                    onChange={e=>setEditvalues({...editvalue,end_date:e.target.value})}
+                  />
+                </div>
+              </CCol>
+
+              <CCol>
+                <div className="mb-3">
+                  <CFormLabel htmlFor="dept_name">Department</CFormLabel>
+                  <CFormControl type="text" value={editvalue.dept_name} disabled />
+                </div>
+              </CCol>
+            </CRow>
+            <CRow xs={{ gutterX: 6 }}>
+              <CCol>
+                <div className="mb-3">
+                  <CFormLabel htmlFor="reason">Reason of leave</CFormLabel>
+                  <CFormControl component="textarea" value={editvalue.reason} disabled />
+                </div>
+              </CCol>
+            </CRow>
+          </CModalBody>
+          <CModalFooter>
+            <CButton color="danger" style={{ color: '#fff' }} onClick={() => setEditVisible(false)}>
+              Close
+            </CButton>
+            <CButton type="submit" color="primary">Save</CButton>
+          </CModalFooter>
+        </CForm>
+      </CModal>
+
       <CContainer className="overflow-hidden">
         <CRow xs={{ gutterY: 5 }}>
           <CCol xs={{ span: 12 }}>
@@ -264,7 +389,7 @@ const LeaveDetails = () => {
   )
 }
 
-export default LeaveDetails
+export default EmployeeLeaveDetails
 
 const customCss = `
   .custom-class .sc-fnVZcZ.cDmETx.rdt_TableHeader {

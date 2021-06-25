@@ -66,6 +66,9 @@ const LeaveApplication = React.lazy(() =>
 )
 const LeaveList = React.lazy(() => import('./views/pages/extra-files/LeaveList'))
 const LeaveDetails = React.lazy(() => import('./views/pages/leave-application/LeaveDetails'))
+const EmployeeLeaveDetails = React.lazy(() =>
+  import('./views/pages/leave-application/EmployeeLeaveDetails'),
+)
 
 const routes = [
   { path: '/', exact: true, name: 'Home' },
@@ -85,7 +88,13 @@ const routes = [
     exact: true,
   },
   { path: '/leave-application/apply', name: 'Apply Leave', component: LeaveApplication },
-  { path: '/leave-application/details', name: 'Details', component: LeaveDetails },
+  { path: '/leave-application/details', name: 'My Details', component: LeaveDetails },
+  // for project-manager
+  {
+    path: '/leave-application/employee-leave',
+    name: 'Employee Leave',
+    component: EmployeeLeaveDetails,
+  },
 
   { path: '/theme', name: 'Theme', component: Colors, exact: true },
   { path: '/theme/colors', name: 'Colors', component: Colors },

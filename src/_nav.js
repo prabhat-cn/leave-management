@@ -17,20 +17,27 @@ const _nav = [
   },
   {
     _component: 'CNavGroup',
-    anchor: 'Leave Application',
+    anchor: 'Leave',
     icon: <CIcon content={freeSet.cilAddressBook} customClasses="nav-icon" />,
     items: [
       {
         _component: 'CNavItem',
         as: NavLink,
-        anchor: 'Apply',
+        anchor: 'Apply Leave',
         to: '/leave-application/apply',
       },
       {
         _component: 'CNavItem',
         as: NavLink,
-        anchor: 'Details',
+        anchor: 'My Details',
         to: '/leave-application/details',
+      },
+      {
+        // for project-manager
+        _component: 'CNavItem',
+        as: NavLink,
+        anchor: 'Employee Leave',
+        to: '/leave-application/employee-leave',
       },
     ],
   },

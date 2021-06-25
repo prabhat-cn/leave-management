@@ -32,7 +32,22 @@ const AppSidebar = () => {
       result = navArray.map((arrayValue) => {
         arrayValue = Object.assign({}, arrayValue)
         if (arrayValue.items) {
-          arrayValue.items = arrayValue.items.filter((anchorName) => anchorName.anchor !== 'Apply')
+          arrayValue.items = arrayValue.items.filter(
+            (anchorName) =>
+              anchorName.anchor !== 'Apply Leave' && anchorName.anchor !== 'My Details',
+          )
+          return arrayValue
+        } else {
+          return arrayValue
+        }
+      })
+    } else if (userData.user_role === 'employee') {
+      result = navArray.map((arrayValue) => {
+        arrayValue = Object.assign({}, arrayValue)
+        if (arrayValue.items) {
+          arrayValue.items = arrayValue.items.filter(
+            (anchorName) => anchorName.anchor !== 'Employee Leave',
+          )
           return arrayValue
         } else {
           return arrayValue
@@ -42,7 +57,7 @@ const AppSidebar = () => {
       result = navArray
     }
   }
-  // console.log(navigation)
+  console.log(navigation)
   // sidebar Block by user Role end
   return (
     <CSidebar

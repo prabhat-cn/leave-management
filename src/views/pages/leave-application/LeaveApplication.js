@@ -37,6 +37,7 @@ import API from '../../../api'
 import { leavePending, leaveSuccess, leaveFail } from '../../../store/reducers/leaveReducer'
 
 const LeaveApplication = (props) => {
+  // role based auth start
   console.log(localStorage.getItem('lMuserDataToken'))
   if (localStorage.getItem('lMuserDataToken') !== null) {
     const userData = JSON.parse(localStorage.getItem('lMuserDataToken'))
@@ -48,6 +49,8 @@ const LeaveApplication = (props) => {
     }
    
   }
+  // role based auth end
+  
   const [submitted, setSubmitted] = useState(false)
   const [editorState, setEditorState] = useState(
     EditorState.createEmpty()
