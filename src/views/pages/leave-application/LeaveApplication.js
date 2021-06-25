@@ -1,5 +1,6 @@
 /* eslint-disable prettier/prettier */
 import React, { useState, useEffect  } from 'react'
+import { Redirect } from 'react-router-dom'
 import { useDispatch } from 'react-redux'
 import {
   CButton,
@@ -35,7 +36,18 @@ import htmlToDraft from 'html-to-draftjs';
 import API from '../../../api'
 import { leavePending, leaveSuccess, leaveFail } from '../../../store/reducers/leaveReducer'
 
-const LeaveApplication = () => {
+const LeaveApplication = (props) => {
+  console.log(localStorage.getItem('lMuserDataToken'))
+  if (localStorage.getItem('lMuserDataToken') !== null) {
+    const userData = JSON.parse(localStorage.getItem('lMuserDataToken'))
+    if(userData.user_role === 'project_manager'){
+      if(props){
+        // eslint-disable-next-line react/prop-types
+        props.history.push('/dashboard')
+      }
+    }
+   
+  }
   const [submitted, setSubmitted] = useState(false)
   const [editorState, setEditorState] = useState(
     EditorState.createEmpty()

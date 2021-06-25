@@ -121,7 +121,7 @@ const LeaveDetails = () => {
           onClick={() => viewDetail(row.id)}
         >
           <ViewIcon />
-        </CButton>{' '}
+        </CButton>
         &nbsp;&nbsp;
         <CButton
           color="success"
@@ -223,9 +223,14 @@ const LeaveDetails = () => {
     <>
       <CModal name="view-modal" visible={visible} onDismiss={() => setVisible(false)}>
         <CModalHeader onDismiss={viewModalClose}>
-          <CModalTitle>Leave details [P.M- {singleLeave[0]?.display_name}]</CModalTitle>
+          <CModalTitle>View Leave Detail</CModalTitle>
         </CModalHeader>
         <CModalBody>
+          <CRow className="row">
+            <CCol className="mb-2">
+            <strong>[P.M- {singleLeave[0]?.display_name}]</strong>
+            </CCol>
+          </CRow>
           <CRow className="row gy-2 gx-3">
             <CCol xs>
               <div className="mb-3">
@@ -275,10 +280,15 @@ const LeaveDetails = () => {
 
       <CModal name="edit-modal" visible={editVisible} onDismiss={() => setEditVisible(false)}>
         <CModalHeader onDismiss={editDismiss}>
-          <CModalTitle>Edit leave details [P.M- {editvalue.display_name}]</CModalTitle>
+          <CModalTitle>Edit Leave Detail</CModalTitle>
         </CModalHeader>
         <CForm id="edit" onSubmit={(editSubmit)}>
           <CModalBody>
+            <CRow className="row">
+              <CCol className="mb-2">
+                <strong>P.M- {editvalue.display_name}</strong>
+              </CCol>
+            </CRow>
               <CRow className="row gy-2 gx-3">
               <CCol xs>
                 <div className="mb-3">
@@ -325,7 +335,7 @@ const LeaveDetails = () => {
             <CButton color="danger" style={{ color: '#fff' }} onClick={() => setEditVisible(false)}>
               Close
             </CButton>
-            <CButton type="submit" color="primary">Save changes</CButton>
+            <CButton type="submit" color="primary">Save</CButton>
           </CModalFooter>
         </CForm>
       </CModal>

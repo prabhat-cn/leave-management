@@ -12,7 +12,6 @@ import { Provider } from 'react-redux'
 // import store from './store/reducers/store'
 import storeOps from './store/store'
 // import storeSide from './store/store1'
-
 React.icons = icons
 
 ReactDOM.render(

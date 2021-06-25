@@ -23,6 +23,27 @@ const AppSidebar = () => {
   const unfoldable = useSelector((state) => state.sidebarUnfoldable)
   const sidebarShow = useSelector((state) => state.sidebarShow)
 
+  // sidebar Block by user Role start
+  let navArray = navigation
+  let result = []
+  if (localStorage.getItem('lMuserDataToken') !== null) {
+    const userData = JSON.parse(localStorage.getItem('lMuserDataToken'))
+    if (userData.user_role === 'project_manager') {
+      result = navArray.map((arrayValue) => {
+        arrayValue = Object.assign({}, arrayValue)
+        if (arrayValue.items) {
+          arrayValue.items = arrayValue.items.filter((anchorName) => anchorName.anchor !== 'Apply')
+          return arrayValue
+        } else {
+          return arrayValue
+        }
+      })
+    } else {
+      result = navArray
+    }
+  }
+  // console.log(navigation)
+  // sidebar Block by user Role end
   return (
     <CSidebar
       position="fixed"
@@ -44,7 +65,8 @@ const AppSidebar = () => {
       </CSidebarBrand>
       <CSidebarNav>
         <SimpleBar>
-          <CCreateNavItem items={navigation} />
+          {/* <CCreateNavItem items={navigation} /> */}
+          <CCreateNavItem items={result} />
         </SimpleBar>
       </CSidebarNav>
       <CSidebarToggler

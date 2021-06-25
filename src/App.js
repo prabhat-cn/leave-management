@@ -20,14 +20,35 @@ const ForgetPassword = React.lazy(() => import('./views/pages/forgetpassword/For
 const Page404 = React.lazy(() => import('./views/pages/page404/Page404'))
 const Page500 = React.lazy(() => import('./views/pages/page500/Page500'))
 
-const PrivateRoute = ({ component: Component, auth, name, ...rest }) => (
-  <Route
-    {...rest}
-    render={(props) =>
-      auth === true ? <Component {...props} name={name} /> : <Redirect to="/login" />
-    }
-  />
-)
+// const PrivateRoute = ({ component: Component, auth, name, ...rest }) => (
+//   <Route
+//     {...rest}
+//     render={(props) =>
+//       auth === true ? <Component {...props} name={name} /> : <Redirect to="/login" />
+//     }
+//   />
+// )
+const EmployeeRoute = ({ component: Component, auth, isEmployee, isProManager, name, ...rest }) => {
+  console.log(isEmployee)
+  return (
+    <>
+      <Route
+        {...rest}
+        render={(props) => {
+          if (auth === false) {
+            return <Redirect to="/login" />
+          }
+
+          // if (auth === true && isEmployee !== true) {
+          //   return <Redirect to="/" />
+          // }
+
+          return <Component {...props} />
+        }}
+      />
+    </>
+  )
+}
 
 const PublicRoute = ({ component: Component, auth, ...rest }) => (
   <Route
@@ -37,8 +58,16 @@ const PublicRoute = ({ component: Component, auth, ...rest }) => (
 )
 
 const App = () => {
-  const userData = localStorage.getItem('lMuserDataToken')
-  const authState = userData ? true : false
+  let authState = false
+  let employee = false
+  if (localStorage.getItem('lMuserDataToken') !== null) {
+    // to get string value data  by "JSON.parse"
+    const userData = JSON.parse(localStorage.getItem('lMuserDataToken'))
+    // console.log(userData.user_role)
+    authState = userData ? true : false
+    employee = userData.user_role === 'employee' ? true : false
+  }
+
   return (
     <React.Fragment>
       <Router>
@@ -62,21 +91,36 @@ const App = () => {
               component={ForgetPassword}
             />
             {/* Private */}
-            <PrivateRoute exact auth={authState} path="/404" name="Page 404" component={Page404} />
-            <PrivateRoute exact auth={authState} path="/500" name="Page 500" component={Page500} />
-            <PrivateRoute path="/" auth={authState} name="Home" component={DefaultLayout} />
-            <PrivateRoute path="/admin" auth={authState} name="Home" component={DefaultLayout} />
-            {/* condonation */}
-            {/* {authState ? (
-              <Redirect exact from="/" to="/login" />
-            ) : (
-              <Redirect from="/" to="/register" />
-            )} */}
-            {/* {authState ? (
-              <Redirect exact from="/" to="/login" />
-            ) : (
-              <Redirect from="/" to="/forgetpassword" />
-            )} */}
+            <EmployeeRoute
+              exact
+              auth={authState}
+              isEmployee={employee}
+              path="/404"
+              name="Page 404"
+              component={Page404}
+            />
+            <EmployeeRoute
+              exact
+              auth={authState}
+              isEmployee={employee}
+              path="/500"
+              name="Page 500"
+              component={Page500}
+            />
+            <EmployeeRoute
+              path="/"
+              auth={authState}
+              isEmployee={employee}
+              name="Home"
+              component={DefaultLayout}
+            />
+            <EmployeeRoute
+              path="/admin"
+              auth={authState}
+              isEmployee={employee}
+              name="Home"
+              component={DefaultLayout}
+            />
             {authState ? (
               <Redirect exact from="/" to="/admin" />
             ) : (
