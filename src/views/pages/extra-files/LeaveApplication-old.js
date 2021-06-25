@@ -1,4 +1,5 @@
 /* eslint-disable prettier/prettier */
+/* eslint-disable no-unused-vars */
 import React, { useState, useEffect } from 'react'
 import { Redirect } from 'react-router-dom'
 import { useDispatch } from 'react-redux'
@@ -16,6 +17,12 @@ import {
   CContainer,
   CFormSelect,
   CSpinner,
+  CTable,
+  CTableHead,
+  CTableRow,
+  CTableHeaderCell,
+  CTableBody,
+  CTableDataCell,
   CWidgetDropdown,
 } from '@coreui/react'
 
@@ -164,45 +171,75 @@ const LeaveApplication = (props) => {
                 ) : (
                   <>
                     {empLeave && empLeave.length === 0 ? (
-                      <p className="d-flex justify-content-center">
-                        <CSpinner color="primary" />
-                      </p>
+                      <p className="d-flex justify-content-center"><CSpinner color="primary" /></p>
+                    ) : (
+                <>
+                  {empLeave &&
+                    empLeave.map((post, index) => (
+                      <CRow key={post.id}>
+                        <CCol sm="6" lg="4">
+                          <CWidgetDropdown
+                            className="mb-4"
+                            color="primary"
+                            value={post.casual_leave}
+                            title="Members online"
+                          />
+                        </CCol>
+                        <CCol sm="6" lg="4">
+                          <CWidgetDropdown
+                            className="mb-4"
+                            color="info"
+                            value={post.sick_leave}
+                            title="Members online"
+                          />
+                        </CCol>
+                        <CCol sm="6" lg="4">
+                          <CWidgetDropdown
+                            className="mb-4"
+                            color="warning"
+                            value={post.earn_leave}
+                            title="Members online"
+                          />
+                        </CCol>
+                      </CRow>
+                  ))}
+                </>
+                    )}
+                    </>
+                  )}
+                {/* Card end */}
+                {/* Table Start */}
+                {/* {!empLeave ? (
+                  <CSpinner color="primary" />
+                ) : (
+                  <>
+                    {empLeave && empLeave.length === 0 ? (
+                      <p className="d-flex justify-content-center">No leaves found!</p>
                     ) : (
                       <>
-                        {empLeave &&
-                          empLeave.map((post, index) => (
-                            <CRow key={post.id}>
-                              <CCol sm="6" lg="4">
-                                <CWidgetDropdown
-                                  className="mb-4"
-                                  color="primary"
-                                  value={post.casual_leave}
-                                  title="Casual leaves"
-                                />
-                              </CCol>
-                              <CCol sm="6" lg="4">
-                                <CWidgetDropdown
-                                  className="mb-4"
-                                  color="info"
-                                  value={post.sick_leave}
-                                  title="Sick leaves"
-                                />
-                              </CCol>
-                              <CCol sm="6" lg="4">
-                                <CWidgetDropdown
-                                  className="mb-4"
-                                  color="warning"
-                                  value={post.earn_leave}
-                                  title="Earned leaves"
-                                />
-                              </CCol>
-                            </CRow>
-                          ))}
+                        <CTable striped>
+                          <CTableHead>
+                            <CTableRow>
+                              <CTableHeaderCell scope="col">Casual Leave</CTableHeaderCell>
+                              <CTableHeaderCell scope="col">Sick Leave</CTableHeaderCell>
+                              <CTableHeaderCell scope="col">Earn Leave</CTableHeaderCell>
+                            </CTableRow>
+                          </CTableHead>
+                          <CTableBody>
+                            {empLeave &&
+                              empLeave.map((post, index) => (
+                                <CTableRow key={post.id}>
+                                  <CTableHeaderCell>{post.casual_leave}</CTableHeaderCell>
+                                  <CTableDataCell>{post.sick_leave}</CTableDataCell>
+                                  <CTableDataCell>{post.earn_leave}</CTableDataCell>
+                                </CTableRow>
+                              ))}
+                          </CTableBody>
+                        </CTable>
                       </>
                     )}
                   </>
-                )}
-                {/* Card end */}
+                )} */}
               </CCardBody>
             </CCard>
           </CCol>
