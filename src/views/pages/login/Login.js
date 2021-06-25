@@ -52,6 +52,9 @@ const Login = (props) => {
     API.get('/wp-jwt/v1/get-user-role')
       .then((res) => {
         console.log('userRole', res)
+        const user = JSON.parse(localStorage.getItem('lMuserDataToken'))
+        const modifyUser = { ...user, ...res.data.data }
+        localStorage.setItem('lMuserDataToken', JSON.stringify(modifyUser))
         window.location.reload()
       })
       .catch((err) => {

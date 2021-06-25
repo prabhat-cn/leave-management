@@ -134,7 +134,6 @@ const LeaveDetails = () => {
       </>
     )
   }
-  
 
   const getData = () => {
     API.get('/wp-jwt/v1/apply-leave-details')
@@ -150,16 +149,18 @@ const LeaveDetails = () => {
       })
   }
 
-
   //  View
   const viewDetail = (id) => {
     setVisible(!visible)
+    console.log(id)
     singleData(id)
   }
+
   const viewModalClose = (e) => {
     e.preventDefault()
     setVisible(false)
   }
+
   // this is for edit & view get data
   const singleData = (id) => {
     API.get(`/wp-jwt/v1/apply-leave-details/${id}`)
@@ -171,38 +172,48 @@ const LeaveDetails = () => {
         console.log(err)
       })
   }
+
   // Edit
   const editSubmit = (e) => {
     e.preventDefault()
-    saveEdit({ start_date: editvalue.start_date, end_date: editvalue.end_date, id: editvalue.id })
+    saveEdit({
+      leave_edit_details: {
+        start_date: editvalue.start_date,
+        end_date: editvalue.end_date,
+      },
+      leave_edit: {
+        id: editvalue.id
+      }
+    })
   }
+
   const saveEdit = (editData) => {
-    API.put(`/wp-jwt/v1/date-edit/${editData.id}`, { start_date: editvalue.start_date, end_date: editvalue.end_date })
-      .then((eData) => {
-        console.log('eData', eData);
+    API.post(`/wp-jwt/v1/date-edit/${editData.leave_edit.id}`, editData.leave_edit_details)
+      .then(() => {
+        editDismiss();
       })
       .catch((err) => {
         console.log(err)
       })
   }
 
-  const editDetail = (id) => {
+  const editDismiss = () => {
     setEditVisible(!editVisible)
-    singleData(id)
+    getData()
   }
 
   const editLeave = (row) => {
     setEditVisible(true)
     const modifiedData = {
       id: row.id,
-      name: row.start_date,
+      display_name: row.display_name,
+      start_date: row.start_date,
       end_date: row.end_date,
+      reason: row.reason,
+      dept_name: row.dept_name,
     }
     setEditvalues(modifiedData);
   }
-
-
-
 
   useEffect(() => {
     getData()
@@ -263,56 +274,60 @@ const LeaveDetails = () => {
       </CModal>
 
       <CModal name="edit-modal" visible={editVisible} onDismiss={() => setEditVisible(false)}>
-        <CModalHeader onDismiss={editDetail}>
-          <CModalTitle>Edit leave details [P.M- {singleLeave[0]?.display_name}]</CModalTitle>
+        <CModalHeader onDismiss={editDismiss}>
+          <CModalTitle>Edit leave details [P.M- {editvalue.display_name}]</CModalTitle>
         </CModalHeader>
         <CForm id="edit" onSubmit={(editSubmit)}>
-        <CModalBody>
-            <CRow className="row gy-2 gx-3">
-            <CCol xs>
-              <div className="mb-3">
-                <CFormLabel htmlFor="start_date">Start Date</CFormLabel>
-                <CFormControl
-                  type="text" value={singleLeave[0]?.start_date} 
-                  name="start_date" id="start_date"
-                />
-              </div>
-            </CCol>
+          <CModalBody>
+              <CRow className="row gy-2 gx-3">
+              <CCol xs>
+                <div className="mb-3">
+                  <CFormLabel htmlFor="start_date">Start Date</CFormLabel>
+                  <CFormControl
+                    type="text" value={editvalue.start_date}
+                    name="start_date"
+                    id="start_date"
+                    onChange={e=>setEditvalues({...editvalue,start_date:e.target.value})}
+                  />
+                </div>
+              </CCol>
 
-            <CCol xs>
-              <div className="mb-3">
-                <CFormLabel htmlFor="end_date">End Date</CFormLabel>
-                <CFormControl
-                  type="text"
-                  value={singleLeave[0]?.end_date}
-                  name="end_date" id="end_date"
-                />
-              </div>
-            </CCol>
+              <CCol xs>
+                <div className="mb-3">
+                  <CFormLabel htmlFor="end_date">End Date</CFormLabel>
+                  <CFormControl
+                    type="text"
+                    value={editvalue.end_date}
+                    name="end_date"
+                    id="end_date"
+                    onChange={e=>setEditvalues({...editvalue,end_date:e.target.value})}
+                  />
+                </div>
+              </CCol>
 
-            <CCol>
-              <div className="mb-3">
-                <CFormLabel htmlFor="dept_name">Department</CFormLabel>
-                <CFormControl type="text" value={singleLeave[0]?.dept_name} />
-              </div>
-            </CCol>
-          </CRow>
-          <CRow xs={{ gutterX: 6 }}>
-            <CCol>
-              <div className="mb-3">
-                <CFormLabel htmlFor="reason">Reason of leave</CFormLabel>
-                <CFormControl component="textarea" value={singleLeave[0]?.reason} />
-              </div>
-            </CCol>
-          </CRow>
-        </CModalBody>
-        <CModalFooter>
-          <CButton color="danger" style={{ color: '#fff' }} onClick={() => setEditVisible(false)}>
-            Close
-          </CButton>
-          <CButton color="primary">Save changes</CButton>
-        </CModalFooter>
-          </CForm>
+              <CCol>
+                <div className="mb-3">
+                  <CFormLabel htmlFor="dept_name">Department</CFormLabel>
+                  <CFormControl type="text" value={editvalue.dept_name} disabled />
+                </div>
+              </CCol>
+            </CRow>
+            <CRow xs={{ gutterX: 6 }}>
+              <CCol>
+                <div className="mb-3">
+                  <CFormLabel htmlFor="reason">Reason of leave</CFormLabel>
+                  <CFormControl component="textarea" value={editvalue.reason} disabled />
+                </div>
+              </CCol>
+            </CRow>
+          </CModalBody>
+          <CModalFooter>
+            <CButton color="danger" style={{ color: '#fff' }} onClick={() => setEditVisible(false)}>
+              Close
+            </CButton>
+            <CButton type="submit" color="primary">Save changes</CButton>
+          </CModalFooter>
+        </CForm>
       </CModal>
 
       <CContainer className="overflow-hidden">
@@ -361,7 +376,7 @@ const customCss = `
   .custom-btn .custom_icon {
     color: #ffffffd1;
   }
-  button.btn.btn-info.round.custom-btn, 
+  button.btn.btn-info.round.custom-btn,
     button.btn.btn-success.round.custom-btn{
     border-radius: 50px;
     height: 40px;
