@@ -4,6 +4,7 @@
 import React, { useState, useEffect } from 'react'
 import { DateTime } from 'luxon'
 import DataTable, { createTheme } from 'react-data-table-component'
+import htmlToFormattedText from "html-to-formatted-text"
 import {
   CContainer,
   CRow,
@@ -278,7 +279,7 @@ const EmployeeLeaveDetails = (props) => {
             <CCol>
               <div className="mb-3">
                 <CFormLabel htmlFor="reason">Reason of leave</CFormLabel>
-                <CFormControl component="textarea" value={singleLeave[0]?.reason} disabled />
+                <CFormControl component="textarea" value={htmlToFormattedText(singleLeave[0]?.reason)} disabled />
               </div>
             </CCol>
           </CRow>
@@ -340,7 +341,7 @@ const EmployeeLeaveDetails = (props) => {
               <CCol>
                 <div className="mb-3">
                   <CFormLabel htmlFor="reason">Reason of leave</CFormLabel>
-                  <CFormControl component="textarea" value={editvalue.reason} disabled />
+                  <CFormControl component="textarea" value={htmlToFormattedText(editvalue.reason)} disabled />
                 </div>
               </CCol>
             </CRow>

@@ -28,6 +28,7 @@ import { profilePending, profileSuccess, profileFail } from '../../../store/redu
 const sleep = (ms) => new Promise((r) => setTimeout(r, ms))
 const User = () => {
   const [changeSkill, handleChangeSkill] = useState()
+  const [skillName, setSkillName] = useState([])
   const [submitted, setSubmitted] = useState(false)
 
   const [profileData, setProfileData] = useState([])
@@ -112,6 +113,7 @@ const User = () => {
   })
 
   const updateUserSubmit = (updateData) => {
+    console.log('updateData', updateData)
     dispatch(profilePending())
     API.post('/wp-jwt/v1/profile', updateData)
       .then((response) => {
@@ -165,7 +167,7 @@ const User = () => {
         {(formik) => {
           // console.log('formik', formik.values)
           const { errors, touched, isValid, dirty, setFieldValue } = formik
-          const getProfileValues = async (profData) => {
+          const getProfileValues = async () => {
             try {
               const proData = await API.get('/wp-jwt/v1/get-user-info')
               const bulkData = proData.data.data
@@ -186,10 +188,31 @@ const User = () => {
                 'experience',
                 'address',
                 'emargency_contact_number',
-                'skill',
               ]
               fields.forEach((field) => setFieldValue(field, bulkData[field], false))
-              setProfileData(proData.data.data)
+              setProfileData(bulkData)
+            } catch (err) {
+              console.log(err.message)
+            }
+          }
+          const getSkillsData = async () => {
+            try {
+              const skillData = await API.get('/wp-jwt/v1/skill-list')
+              const bulkSkillData = skillData.data.data
+              console.log('skillData', bulkSkillData)
+              // make the format as the field wise dropdown
+              const skillValue = bulkSkillData.map((data, i) => {
+                const tempData = {
+                  label: data.skill,
+                  value: data.skill,
+                }
+                return tempData
+              })
+              console.log('skillValue', skillValue)
+              const fields = ['skill']
+              console.log(fields)
+              fields.forEach((field) => setFieldValue(field, skillValue[field], false))
+              setSkillName(skillValue)
             } catch (err) {
               console.log(err.message)
             }
@@ -197,6 +220,7 @@ const User = () => {
           // eslint-disable-next-line react-hooks/rules-of-hooks
           useEffect(() => {
             getProfileValues()
+            getSkillsData()
           }, [])
           return (
             <>
@@ -636,7 +660,7 @@ const User = () => {
                               id="skill"
                               name="skill"
                               onChange={handleChange}
-                              options={skillOptions}
+                              options={skillName}
                             />
                           </div>
 
