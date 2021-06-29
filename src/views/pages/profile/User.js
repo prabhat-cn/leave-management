@@ -27,7 +27,7 @@ import { profilePending, profileSuccess, profileFail } from '../../../store/redu
 
 const sleep = (ms) => new Promise((r) => setTimeout(r, ms))
 const User = () => {
-  const [changeSkill, handleChangeSkill] = useState()
+  const [selectedSkill, handleSelectedSkill] = useState([])
   const [skillName, setSkillName] = useState([])
   const [submitted, setSubmitted] = useState(false)
 
@@ -39,7 +39,7 @@ const User = () => {
     console.log(newValue)
     console.log(`action: ${actionMeta.action}`)
     console.groupEnd()
-    handleChangeSkill()
+    handleSelectedSkill(newValue)
   }
   const initialValues = {
     first_name: '',
@@ -113,9 +113,8 @@ const User = () => {
   })
 
   const updateUserSubmit = (updateData) => {
-    console.log('updateData', updateData)
     dispatch(profilePending())
-    API.post('/wp-jwt/v1/profile', updateData)
+    API.post('/wp-jwt/v1/profile', { ...updateData, ...{ skill: selectedSkill } })
       .then((response) => {
         setError('')
         setSubmitted(true)
@@ -666,10 +665,10 @@ const User = () => {
 
                           <CRow className="mt-3">
                             <CCol lg="9">
-                              {/* <button type="submit" className="btn btn-primary">
+                              <button type="submit" className="btn btn-primary">
                                 Submit
-                              </button> */}
-                              <button
+                              </button>
+                              {/* <button
                                 type="submit"
                                 className={
                                   'btn btn-primary' + ' ' + (!(dirty && isValid) ? 'disabled' : '')
@@ -677,7 +676,7 @@ const User = () => {
                                 disabled={!(dirty && isValid)}
                               >
                                 Submit
-                              </button>
+                              </button> */}
                             </CCol>
                             <CCol lg="3">
                               <CButton
