@@ -48,7 +48,7 @@ const LeaveDetails = () => {
   }
 
   const StatusCell = ({ row }) => (
-    <p className={switchClasses(row?.status * 1)}>
+    <p className={'Status-cell' + ' ' +(switchClasses(row?.status * 1))}>
       {row?.status * 1 === 0 && 'Pending'}
       {row?.status * 1 === 1 && 'Approved'}
       {row?.status * 1 === 2 && 'Rejected'}
@@ -169,6 +169,25 @@ const LeaveDetails = () => {
     getData()
   }, [])
 
+  const customStyles = {
+    // rows: {
+    //   style: {
+    //     minHeight: '72px', // override the row height
+    //   }
+    // },
+    headCells: {
+      style: {
+        fontWeight: '500',
+        fontSize: '14px'
+      },
+    },
+    cells: {
+      style: {
+        fontSize: '14px'
+      },
+    },
+  };
+
   return (
     <>
       <CModal name="view-modal" visible={visible} onDismiss={() => setVisible(false)}>
@@ -250,6 +269,7 @@ const LeaveDetails = () => {
                           pagination
                           paginationPerPage={5}
                           paginationRowsPerPageOptions={[5, 10, 15, 20, 25, 30]}
+                          customStyles={customStyles}
                         />
                       </>
                     )}
@@ -278,5 +298,9 @@ const customCss = `
     button.btn.btn-success.round.custom-btn{
     border-radius: 50px;
     height: 40px;
+  }
+  .Status-cell {
+    margin-top: 8px;
+    margin-bottom: 8px;
   }
 `

@@ -735,7 +735,7 @@ const User = () => {
 export default User
 
 const userCss = `
-.react-date-picker__wrapper {
-  border: none !important;
-}
+  .react-date-picker__wrapper {
+    border: none !important;
+  }
 `
