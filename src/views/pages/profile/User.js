@@ -17,7 +17,6 @@ import {
   CCardText,
   CCardImage,
 } from '@coreui/react'
-import DatePicker from 'react-date-picker'
 import CreatableSelect from 'react-select/creatable'
 import makeAnimated from 'react-select/animated'
 import { Formik, Form, Field, ErrorMessage } from 'formik'
@@ -32,12 +31,14 @@ const User = () => {
   const [submitted, setSubmitted] = useState(false)
 
   const [profileData, setProfileData] = useState([])
+  const [updatedSkill, setUpdatedSkill] = useState([])
   const [error, setError] = useState('')
   const dispatch = useDispatch()
+
   const handleChange = (newValue, actionMeta) => {
     console.group('Value Changed')
     console.log(newValue)
-    console.log(`action: ${actionMeta.action}`)
+    // console.log(`action: ${actionMeta.action}`)
     console.groupEnd()
     // to update data
     handleSelectedSkill(newValue)
@@ -125,7 +126,7 @@ const User = () => {
           // window.location.reload()
         }, 2000)
         const updateUserData = response.data
-        console.log('updateUserData', updateUserData)
+        // console.log('updateUserData', updateUserData)
         dispatch(profileSuccess(updateUserData))
 
         if (updateUserData.status === 0) {
@@ -140,6 +141,39 @@ const User = () => {
         if (status === 403) {
           setError(data.message)
         }
+      })
+  }
+  // selected skill visual on field
+  const getUpdatedSkill = () => {
+    API.get('/wp-jwt/v1/skill-list')
+      .then((resData) => {
+        const skillListData = resData.data.data
+        API.get('/wp-jwt/v1/get-skill')
+          .then((res) => {
+            // console.log('res', res.data.data)
+            const getUpdatedValue = res.data.data
+
+            const selectedSkillValue = skillListData.filter((option) => {
+              return getUpdatedValue.some((item) => {
+                return item.value.label === option.skill
+              })
+            })
+            const skillValues = selectedSkillValue.map((data, i) => {
+              const tempData = {
+                label: data.skill,
+                value: data.skill,
+              }
+              return tempData
+            })
+            handleSelectedSkill(skillValues)
+            setUpdatedSkill(res.data.data)
+          })
+          .catch((err) => {
+            console.log('err', err)
+          })
+      })
+      .catch((err) => {
+        console.log('err', err)
       })
   }
 
@@ -189,6 +223,7 @@ const User = () => {
               console.log(err.message)
             }
           }
+          // fetch value in dropdown
           const getSkillsData = async () => {
             try {
               const skillData = await API.get('/wp-jwt/v1/skill-list')
@@ -203,9 +238,6 @@ const User = () => {
                 }
                 return tempData
               })
-              console.log('skillValue', skillValue)
-              // const fields = ['skill']
-              console.log(fields)
               fields.forEach((field) => setFieldValue(field, skillValue[field], false))
               setSkillName(skillValue)
             } catch (err) {
@@ -216,6 +248,7 @@ const User = () => {
           useEffect(() => {
             getProfileValues()
             getSkillsData()
+            getUpdatedSkill()
           }, [])
           return (
             <>
@@ -656,6 +689,7 @@ const User = () => {
                               name="skill"
                               onChange={handleChange}
                               options={skillName}
+                              value={selectedSkill}
                             />
                           </div>
 
@@ -664,15 +698,6 @@ const User = () => {
                               <button type="submit" className="btn btn-primary">
                                 Submit
                               </button>
-                              {/* <button
-                                type="submit"
-                                className={
-                                  'btn btn-primary' + ' ' + (!(dirty && isValid) ? 'disabled' : '')
-                                }
-                                disabled={!(dirty && isValid)}
-                              >
-                                Submit
-                              </button> */}
                             </CCol>
                             <CCol lg="3">
                               <CButton

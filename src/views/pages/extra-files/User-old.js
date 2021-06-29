@@ -24,6 +24,7 @@ import { Formik, Form, Field, ErrorMessage } from 'formik'
 import * as Yup from 'yup'
 import API from '../../../api'
 import { profilePending, profileSuccess, profileFail } from '../../../store/reducers/profileReducer'
+import MultiSelect from 'react-multi-select-component'
 
 const sleep = (ms) => new Promise((r) => setTimeout(r, ms))
 const User = () => {
@@ -32,12 +33,14 @@ const User = () => {
   const [submitted, setSubmitted] = useState(false)
 
   const [profileData, setProfileData] = useState([])
+  const [updatedSkill, setUpdatedSkill] = useState([])
   const [error, setError] = useState('')
   const dispatch = useDispatch()
+
   const handleChange = (newValue, actionMeta) => {
     console.group('Value Changed')
     console.log(newValue)
-    console.log(`action: ${actionMeta.action}`)
+    // console.log(`action: ${actionMeta.action}`)
     console.groupEnd()
     // to update data
     handleSelectedSkill(newValue)
@@ -115,7 +118,7 @@ const User = () => {
 
   const updateUserSubmit = (updateData) => {
     dispatch(profilePending())
-    // to update data '{ ...updateData, ...{ skill: selectedSkill } }--> all data'
+    // to update data '{ ...updateData, ...{ skill: selectedSkill } }--> all data merged'
     API.post('/wp-jwt/v1/profile', { ...updateData, ...{ skill: selectedSkill } })
       .then((response) => {
         setError('')
@@ -125,7 +128,7 @@ const User = () => {
           // window.location.reload()
         }, 2000)
         const updateUserData = response.data
-        console.log('updateUserData', updateUserData)
+        // console.log('updateUserData', updateUserData)
         dispatch(profileSuccess(updateUserData))
 
         if (updateUserData.status === 0) {
@@ -142,6 +145,39 @@ const User = () => {
         }
       })
   }
+  // selected skill visual on field
+  const getUpdatedSkill = () => {
+    API.get('/wp-jwt/v1/skill-list')
+      .then((resData) => {
+        const skillListData = resData.data.data
+        API.get('/wp-jwt/v1/get-skill')
+          .then((res) => {
+            // console.log('res', res.data.data)
+            const getUpdatedValue = res.data.data
+
+            const selectedSkillValue = skillListData.filter((option) => {
+              return getUpdatedValue.some((item) => {
+                return item.value.label === option.skill
+              })
+            })
+            const skillValues = selectedSkillValue.map((data, i) => {
+              const tempData = {
+                label: data.skill,
+                value: data.skill,
+              }
+              return tempData
+            })
+            handleSelectedSkill(skillValues)
+            setUpdatedSkill(res.data.data)
+          })
+          .catch((err) => {
+            console.log('err', err)
+          })
+      })
+      .catch((err) => {
+        console.log('err', err)
+      })
+  }
 
   const onSubmit = async (values) => {
     updateUserSubmit(values)
@@ -150,13 +186,6 @@ const User = () => {
   }
 
   const animatedComponents = makeAnimated()
-  const skillOptions = [
-    { label: 'Node', value: 'Node' },
-    { label: 'React', value: 'React' },
-    { label: 'Angular', value: 'Angular' },
-    { label: 'Vue', value: 'Vue' },
-    { label: 'Java', value: 'Java' },
-  ]
   return (
     <>
       <Formik
@@ -196,6 +225,7 @@ const User = () => {
               console.log(err.message)
             }
           }
+          // fetch value in dropdown
           const getSkillsData = async () => {
             try {
               const skillData = await API.get('/wp-jwt/v1/skill-list')
@@ -210,9 +240,6 @@ const User = () => {
                 }
                 return tempData
               })
-              console.log('skillValue', skillValue)
-              // const fields = ['skill']
-              console.log(fields)
               fields.forEach((field) => setFieldValue(field, skillValue[field], false))
               setSkillName(skillValue)
             } catch (err) {
@@ -223,6 +250,7 @@ const User = () => {
           useEffect(() => {
             getProfileValues()
             getSkillsData()
+            getUpdatedSkill()
           }, [])
           return (
             <>
@@ -654,6 +682,13 @@ const User = () => {
                           </CRow>
                           <div className="mb-3">
                             <CFormLabel htmlFor="skill">Your Skill</CFormLabel>
+                            {/* <Field
+                              component={MultiSelect}
+                              options={skillName}
+                              value={selectedSkill}
+                              onChange={handleChange}
+                              labelledBy="Select"
+                            /> */}
                             <Field
                               component={CreatableSelect}
                               components={animatedComponents}
@@ -663,6 +698,7 @@ const User = () => {
                               name="skill"
                               onChange={handleChange}
                               options={skillName}
+                              value={selectedSkill}
                             />
                           </div>
 
