@@ -115,7 +115,7 @@ const User = () => {
 
   const updateUserSubmit = (updateData) => {
     dispatch(profilePending())
-    // to update data '{ ...updateData, ...{ skill: selectedSkill } }--> all data merged'
+    // to update data '{ ...updateData, ...{ skill: selectedSkill } }--> all data'
     API.post('/wp-jwt/v1/profile', { ...updateData, ...{ skill: selectedSkill } })
       .then((response) => {
         setError('')
@@ -150,6 +150,13 @@ const User = () => {
   }
 
   const animatedComponents = makeAnimated()
+  const skillOptions = [
+    { label: 'Node', value: 'Node' },
+    { label: 'React', value: 'React' },
+    { label: 'Angular', value: 'Angular' },
+    { label: 'Vue', value: 'Vue' },
+    { label: 'Java', value: 'Java' },
+  ]
   return (
     <>
       <Formik
