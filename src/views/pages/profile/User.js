@@ -167,28 +167,28 @@ const User = () => {
         {(formik) => {
           // console.log('formik', formik.values)
           const { errors, touched, isValid, dirty, setFieldValue } = formik
+          const fields = [
+            'first_name',
+            'last_name',
+            'department',
+            'employee_id',
+            'user_email',
+            'personal_email_address',
+            'date_of_birth',
+            'date_of_joining',
+            'blood_group',
+            'uan_no',
+            'aadhaar_no',
+            'pan_no',
+            'salary_bank_no',
+            'experience',
+            'address',
+            'emargency_contact_number',
+          ]
           const getProfileValues = async () => {
             try {
               const proData = await API.get('/wp-jwt/v1/get-user-info')
               const bulkData = proData.data.data
-              const fields = [
-                'first_name',
-                'last_name',
-                'department',
-                'employee_id',
-                'user_email',
-                'personal_email_address',
-                'date_of_birth',
-                'date_of_joining',
-                'blood_group',
-                'uan_no',
-                'aadhaar_no',
-                'pan_no',
-                'salary_bank_no',
-                'experience',
-                'address',
-                'emargency_contact_number',
-              ]
               fields.forEach((field) => setFieldValue(field, bulkData[field], false))
               setProfileData(bulkData)
             } catch (err) {
@@ -209,7 +209,7 @@ const User = () => {
                 return tempData
               })
               console.log('skillValue', skillValue)
-              const fields = ['skill']
+              // const fields = ['skill']
               console.log(fields)
               fields.forEach((field) => setFieldValue(field, skillValue[field], false))
               setSkillName(skillValue)

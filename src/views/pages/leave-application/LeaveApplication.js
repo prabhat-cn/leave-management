@@ -172,26 +172,26 @@ const LeaveApplication = (props) => {
                         {empLeave &&
                           empLeave.map((post, index) => (
                             <CRow key={post.id}>
-                              <CCol sm="6" lg="4">
+                              <CCol sm="6" lg="4" className="pt-0">
                                 <CWidgetDropdown
-                                  className="mb-4"
-                                  color="primary"
+                                  className="mb-2 custom-class"
+                                  color="success"
                                   value={post.casual_leave}
                                   title="Casual leaves"
                                 />
                               </CCol>
-                              <CCol sm="6" lg="4">
+                              <CCol sm="6" lg="4" className="pt-0">
                                 <CWidgetDropdown
-                                  className="mb-4"
+                                  className="mb-2 custom-class"
                                   color="info"
                                   value={post.sick_leave}
                                   title="Sick leaves"
                                 />
                               </CCol>
-                              <CCol sm="6" lg="4">
+                              <CCol sm="6" lg="4" className="pt-0">
                                 <CWidgetDropdown
-                                  className="mb-4"
-                                  color="warning"
+                                  className="mb-2 custom-class"
+                                  color="primary"
                                   value={post.earn_leave}
                                   title="Earned leaves"
                                 />
@@ -344,5 +344,9 @@ export default LeaveApplication
 const userCss = `
 .react-date-picker__wrapper {
   border: none !important;
+}
+.custom-class div {
+  padding-top: 2px;
+  padding-bottom: 5px;
 }
 `
