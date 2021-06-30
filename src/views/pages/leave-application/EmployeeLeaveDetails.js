@@ -191,8 +191,8 @@ const EmployeeLeaveDetails = (props) => {
     e.preventDefault()
     saveEdit({
       leave_edit_details: {
-        start_date: DateTime.fromISO(editvalue.start_date).toFormat('dd / MM / yyyy'),
-        end_date: DateTime.fromISO(editvalue.end_date).toFormat('dd / MM / yyyy'),
+        start_date: DateTime.fromISO(editvalue.start_date).toFormat('yyyy-MM-dd'),
+        end_date: DateTime.fromISO(editvalue.end_date).toFormat('yyyy-MM-dd'),
       },
       leave_edit: {
         id: editvalue.id

@@ -64,8 +64,8 @@ const LeaveDetails = () => {
     </p>
   )
 
-  const StartDate = ({ row }) => DateTime.fromISO(row.start_date).toFormat('dd / MM / yyyy')
-  const EndDate = ({ row }) => DateTime.fromISO(row.end_date).toFormat('dd / MM / yyyy')
+  const StartDate = ({ row }) => DateTime.fromISO(row.start_date).toFormat('dd-MM-yyyy')
+  const EndDate = ({ row }) => DateTime.fromISO(row.end_date).toFormat('dd-MM-yyyy')
 
   const columns = [
     {
@@ -155,6 +155,7 @@ const LeaveDetails = () => {
 
   const viewModalClose = () => {
     setVisible(false)
+    // after close modal pass blank string
     setSingleLeave([{
       'dept_name': '',
       'display_name': '',
@@ -209,6 +210,7 @@ const LeaveDetails = () => {
           <CModalTitle>View Leave Detail</CModalTitle>
         </CModalHeader>
         <CModalBody>
+          {/*  any blank string pass here */}
           {singleLeave[0]?.start_date === '' ? (
             <div className="text-center">
               <CSpinner color="primary" />
