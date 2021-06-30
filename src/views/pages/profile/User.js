@@ -233,7 +233,6 @@ const User = () => {
               // make the format as the field wise dropdown
               const skillValue = bulkSkillData.map((data, i) => {
                 const tempData = {
-                  id: i + 1,
                   label: data.skill,
                   value: data.skill,
                 }
