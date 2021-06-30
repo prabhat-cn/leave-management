@@ -1,10 +1,8 @@
-/* eslint-disable prettier/prettier */
 /* eslint-disable react/prop-types */
-/* eslint-disable prettier/prettier */
 import React, { useState, useEffect } from 'react'
 import { DateTime } from 'luxon'
-import DataTable, { createTheme } from 'react-data-table-component'
-import htmlToFormattedText from "html-to-formatted-text"
+import DataTable from 'react-data-table-component'
+import htmlToFormattedText from 'html-to-formatted-text'
 import {
   CContainer,
   CRow,
@@ -30,25 +28,28 @@ const EmployeeLeaveDetails = (props) => {
   // role based auth start
   if (localStorage.getItem('lMuserDataToken') !== null) {
     const userData = JSON.parse(localStorage.getItem('lMuserDataToken'))
-    if(userData.user_role === 'employee'){
-      if(props){
+    if (userData.user_role === 'employee') {
+      if (props) {
         // eslint-disable-next-line react/prop-types
         props.history.push('/dashboard')
       }
     }
-    
   }
   // role based auth end
+
   const [visible, setVisible] = useState(false)
   const [editVisible, setEditVisible] = useState(false)
-  const [singleLeave, setSingleLeave] = useState([{
-    'dept_name': '',
-    'display_name': '',
-    'end_date': '',
-    'reason': '',
-    'start_date': '',
-    'status': '',
-  }])
+  const [singleLeave, setSingleLeave] = useState([
+    {
+      dept_name: '',
+      display_name: '',
+      end_date: '',
+      reason: '',
+      start_date: '',
+      status: '',
+    },
+  ])
+
   const [posts, setPosts] = useState()
   const [editvalue, setEditvalues] = useState({})
   const switchClasses = (type) => {
@@ -178,14 +179,16 @@ const EmployeeLeaveDetails = (props) => {
 
   const viewModalClose = () => {
     setVisible(false)
-    setSingleLeave([{
-      'dept_name': '',
-      'display_name': '',
-      'end_date': '',
-      'reason': '',
-      'start_date': '',
-      'status': '',
-    }])
+    setSingleLeave([
+      {
+        dept_name: '',
+        display_name: '',
+        end_date: '',
+        reason: '',
+        start_date: '',
+        status: '',
+      },
+    ])
   }
 
   // this is for edit & view get data
@@ -209,15 +212,15 @@ const EmployeeLeaveDetails = (props) => {
         end_date: DateTime.fromISO(editvalue.end_date).toFormat('dd / MM / yyyy'),
       },
       leave_edit: {
-        id: editvalue.id
-      }
+        id: editvalue.id,
+      },
     })
   }
 
   const saveEdit = (editData) => {
     API.post(`/wp-jwt/v1/date-edit/${editData.leave_edit.id}`, editData.leave_edit_date)
       .then(() => {
-        editDismiss();
+        editDismiss()
       })
       .catch((err) => {
         console.log(err)
@@ -239,12 +242,12 @@ const EmployeeLeaveDetails = (props) => {
       reason: row.reason,
       dept_name: row.dept_name,
     }
-    setEditvalues(modifiedData);
+    setEditvalues(modifiedData)
   }
 
-const editModalClose = () => {
-  setEditVisible(false)
-}
+  const editModalClose = () => {
+    setEditVisible(false)
+  }
 
   useEffect(() => {
     getData()
@@ -262,11 +265,11 @@ const editModalClose = () => {
             <div className="text-center">
               <CSpinner color="primary" />
             </div>
-          ): (
+          ) : (
             <>
               <CRow className="row">
                 <CCol className="mb-2">
-                <strong>[Employee- {singleLeave[0]?.display_name}]</strong>
+                  <strong>[Employee- {singleLeave[0]?.display_name}]</strong>
                 </CCol>
               </CRow>
               <CRow className="row gy-2 gx-3">
@@ -275,7 +278,9 @@ const editModalClose = () => {
                     <CFormLabel htmlFor="start_date">Start Date</CFormLabel>
                     <CFormControl
                       type="text"
-                      value={DateTime.fromISO(singleLeave[0]?.start_date).toFormat('dd / MM / yyyy')}
+                      value={DateTime.fromISO(singleLeave[0]?.start_date).toFormat(
+                        'dd / MM / yyyy',
+                      )}
                       disabled
                     />
                   </div>
@@ -301,13 +306,17 @@ const editModalClose = () => {
               </CRow>
 
               <CRow xs={{ gutterX: 6 }}>
-              <CCol>
-                <div className="mb-3">
-                  <CFormLabel htmlFor="reason">Reason of leave</CFormLabel>
-                  <CFormControl component="textarea" value={htmlToFormattedText(singleLeave[0]?.reason)} disabled />
-                </div>
-              </CCol>
-            </CRow>
+                <CCol>
+                  <div className="mb-3">
+                    <CFormLabel htmlFor="reason">Reason of leave</CFormLabel>
+                    <CFormControl
+                      component="textarea"
+                      value={htmlToFormattedText(singleLeave[0]?.reason)}
+                      disabled
+                    />
+                  </div>
+                </CCol>
+              </CRow>
             </>
           )}
         </CModalBody>
@@ -322,23 +331,24 @@ const editModalClose = () => {
         <CModalHeader onDismiss={editDismiss}>
           <CModalTitle>Edit Leave Detail</CModalTitle>
         </CModalHeader>
-        <CForm id="edit" onSubmit={(editSubmit)}>
+        <CForm id="edit" onSubmit={editSubmit}>
           <CModalBody>
             <CRow className="row">
               <CCol className="mb-2">
                 <strong>Employee- {editvalue.display_name}</strong>
               </CCol>
             </CRow>
-              <CRow className="row gy-2 gx-3">
+            <CRow className="row gy-2 gx-3">
               <CCol xs>
                 <div className="mb-3">
                   <CFormLabel htmlFor="start_date">Start Date</CFormLabel>
                   <CFormControl
                     className="custom-date"
-                    type="date" value={editvalue.start_date}
+                    type="date"
+                    value={editvalue.start_date}
                     name="start_date"
                     id="start_date"
-                    onChange={e=>setEditvalues({...editvalue,start_date:e.target.value})}
+                    onChange={(e) => setEditvalues({ ...editvalue, start_date: e.target.value })}
                   />
                 </div>
               </CCol>
@@ -352,7 +362,7 @@ const editModalClose = () => {
                     value={editvalue.end_date}
                     name="end_date"
                     id="end_date"
-                    onChange={e=>setEditvalues({...editvalue,end_date:e.target.value})}
+                    onChange={(e) => setEditvalues({ ...editvalue, end_date: e.target.value })}
                   />
                 </div>
               </CCol>
@@ -368,7 +378,11 @@ const editModalClose = () => {
               <CCol>
                 <div className="mb-3">
                   <CFormLabel htmlFor="reason">Reason of leave</CFormLabel>
-                  <CFormControl component="textarea" value={htmlToFormattedText(editvalue.reason)} disabled />
+                  <CFormControl
+                    component="textarea"
+                    value={htmlToFormattedText(editvalue.reason)}
+                    disabled
+                  />
                 </div>
               </CCol>
             </CRow>
@@ -377,7 +391,9 @@ const editModalClose = () => {
             <CButton color="danger" style={{ color: '#fff' }} onClick={editModalClose}>
               Close
             </CButton>
-            <CButton type="submit" color="primary">Save</CButton>
+            <CButton type="submit" color="primary">
+              Save
+            </CButton>
           </CModalFooter>
         </CForm>
       </CModal>

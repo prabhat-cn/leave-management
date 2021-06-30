@@ -148,6 +148,8 @@ const LeaveApplication = (props) => {
     setEditorState(editorState)
   }
 
+ 
+
   return (
     <>
       <CContainer className="overflow-hidden">
