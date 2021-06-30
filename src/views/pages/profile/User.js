@@ -36,10 +36,7 @@ const User = () => {
   const dispatch = useDispatch()
 
   const handleChange = (newValue, actionMeta) => {
-    console.group('Value Changed')
-    console.log(newValue)
     // console.log(`action: ${actionMeta.action}`)
-    console.groupEnd()
     // to update data
     handleSelectedSkill(newValue)
   }
@@ -126,7 +123,6 @@ const User = () => {
           // window.location.reload()
         }, 2000)
         const updateUserData = response.data
-        // console.log('updateUserData', updateUserData)
         dispatch(profileSuccess(updateUserData))
 
         if (updateUserData.status === 0) {
@@ -148,13 +144,14 @@ const User = () => {
     API.get('/wp-jwt/v1/skill-list')
       .then((resData) => {
         const skillListData = resData.data.data
+        console.log('skillListData', skillListData)
         API.get('/wp-jwt/v1/get-skill')
           .then((res) => {
-            // console.log('res', res.data.data)
             const getUpdatedValue = res.data.data
 
             const selectedSkillValue = skillListData.filter((option) => {
               return getUpdatedValue.some((item) => {
+                // (item.value.label)--> getUpdatedValue  && (option.skill)-->skillListData
                 return item.value.label === option.skill
               })
             })
@@ -166,7 +163,7 @@ const User = () => {
               return tempData
             })
             handleSelectedSkill(skillValues)
-            setUpdatedSkill(res.data.data)
+            setUpdatedSkill(getUpdatedValue)
           })
           .catch((err) => {
             console.log('err', err)
@@ -179,10 +176,12 @@ const User = () => {
 
   const onSubmit = async (values) => {
     updateUserSubmit(values)
-    // getUpdatedSkill()
     await sleep(500)
     setSubmitted(true)
   }
+  useEffect(() => {
+    getUpdatedSkill()
+  }, [])
 
   const animatedComponents = makeAnimated()
   return (
@@ -229,7 +228,6 @@ const User = () => {
             try {
               const skillData = await API.get('/wp-jwt/v1/skill-list')
               const bulkSkillData = skillData.data.data
-              console.log('skillData', bulkSkillData)
               // make the format as the field wise dropdown
               const skillValue = bulkSkillData.map((data, i) => {
                 const tempData = {
@@ -248,7 +246,6 @@ const User = () => {
           useEffect(() => {
             getProfileValues()
             getSkillsData()
-            getUpdatedSkill()
           }, [])
           return (
             <>

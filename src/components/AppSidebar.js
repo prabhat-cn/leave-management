@@ -57,7 +57,7 @@ const AppSidebar = () => {
       result = navArray
     }
   }
-  console.log(navigation)
+  // console.log(navigation)
   // sidebar Block by user Role end
   return (
     <CSidebar
