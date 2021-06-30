@@ -28,7 +28,14 @@ import { ViewIcon } from '../../../constant/icons'
 
 const LeaveDetails = () => {
   const [visible, setVisible] = useState(false)
-  const [singleLeave, setSingleLeave] = useState({})
+  const [singleLeave, setSingleLeave] = useState([{
+    'dept_name': '',
+    'display_name': '',
+    'end_date': '',
+    'reason': '',
+    'start_date': '',
+    'status': '',
+  }])
   const [posts, setPosts] = useState()
   const switchClasses = (type) => {
     switch (type) {
@@ -146,9 +153,16 @@ const LeaveDetails = () => {
     singleData(id)
   }
 
-  const viewModalClose = (e) => {
-    e.preventDefault()
+  const viewModalClose = () => {
     setVisible(false)
+    setSingleLeave([{
+      'dept_name': '',
+      'display_name': '',
+      'end_date': '',
+      'reason': '',
+      'start_date': '',
+      'status': '',
+    }])
   }
 
   // this is for edit & view get data
@@ -190,55 +204,63 @@ const LeaveDetails = () => {
 
   return (
     <>
-      <CModal name="view-modal" visible={visible} onDismiss={() => setVisible(false)}>
+      <CModal name="view-modal" visible={visible} onDismiss={viewModalClose}>
         <CModalHeader onDismiss={viewModalClose}>
           <CModalTitle>View Leave Detail</CModalTitle>
         </CModalHeader>
         <CModalBody>
-          <CRow className="row">
-            <CCol className="mb-2">
-            <strong>[P.M- {singleLeave[0]?.display_name}]</strong>
-            </CCol>
-          </CRow>
-          <CRow className="row gy-2 gx-3">
-            <CCol xs>
-              <div className="mb-3">
-                <CFormLabel htmlFor="start_date">Start Date</CFormLabel>
-                <CFormControl
-                  type="text"
-                  value={DateTime.fromISO(singleLeave[0]?.start_date).toFormat('dd / MM / yyyy')}
-                  disabled
-                />
-              </div>
-            </CCol>
+          {singleLeave[0]?.start_date === '' ? (
+            <div className="text-center">
+              <CSpinner color="primary" />
+            </div>
+          ) : (
+            <>
+              <CRow className="row">
+                <CCol className="mb-2">
+                <strong>[P.M- {singleLeave[0]?.display_name}]</strong>
+                </CCol>
+              </CRow>
+              <CRow className="row gy-2 gx-3">
+                <CCol xs>
+                  <div className="mb-3">
+                    <CFormLabel htmlFor="start_date">Start Date</CFormLabel>
+                    <CFormControl
+                      type="text"
+                      value={DateTime.fromISO(singleLeave[0]?.start_date).toFormat('dd / MM / yyyy')}
+                      disabled
+                    />
+                  </div>
+                </CCol>
 
-            <CCol xs>
-              <div className="mb-3">
-                <CFormLabel htmlFor="start_date">End Date</CFormLabel>
-                <CFormControl
-                  type="text"
-                  value={DateTime.fromISO(singleLeave[0]?.end_date).toFormat('dd / MM / yyyy')}
-                  disabled
-                />
-              </div>
-            </CCol>
+                <CCol xs>
+                  <div className="mb-3">
+                    <CFormLabel htmlFor="start_date">End Date</CFormLabel>
+                    <CFormControl
+                      type="text"
+                      value={DateTime.fromISO(singleLeave[0]?.end_date).toFormat('dd / MM / yyyy')}
+                      disabled
+                    />
+                  </div>
+                </CCol>
 
-            <CCol>
-              <div className="mb-3">
-                <CFormLabel htmlFor="dept_name">Department</CFormLabel>
-                <CFormControl type="text" value={singleLeave[0]?.dept_name} disabled />
-              </div>
-            </CCol>
-          </CRow>
+                <CCol>
+                  <div className="mb-3">
+                    <CFormLabel htmlFor="dept_name">Department</CFormLabel>
+                    <CFormControl type="text" value={singleLeave[0]?.dept_name} disabled />
+                  </div>
+                </CCol>
+              </CRow>
 
-          <CRow xs={{ gutterX: 6 }}>
-            <CCol>
-              <div className="mb-3">
-                <CFormLabel htmlFor="reason">Reason of leave</CFormLabel>
-                <CFormControl component="textarea" value={htmlToFormattedText(singleLeave[0]?.reason)} disabled />
-              </div>
-            </CCol>
-          </CRow>
+              <CRow xs={{ gutterX: 6 }}>
+                <CCol>
+                  <div className="mb-3">
+                    <CFormLabel htmlFor="reason">Reason of leave</CFormLabel>
+                    <CFormControl component="textarea" value={htmlToFormattedText(singleLeave[0]?.reason)} disabled />
+                  </div>
+                </CCol>
+              </CRow>
+            </>
+          )}
         </CModalBody>
         <CModalFooter>
           <CButton color="danger" style={{ color: '#fff' }} onClick={viewModalClose}>
