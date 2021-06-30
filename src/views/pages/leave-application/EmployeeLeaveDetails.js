@@ -41,7 +41,14 @@ const EmployeeLeaveDetails = (props) => {
   // role based auth end
   const [visible, setVisible] = useState(false)
   const [editVisible, setEditVisible] = useState(false)
-  const [singleLeave, setSingleLeave] = useState({})
+  const [singleLeave, setSingleLeave] = useState([{
+    'dept_name': '',
+    'display_name': '',
+    'end_date': '',
+    'reason': '',
+    'start_date': '',
+    'status': '',
+  }])
   const [posts, setPosts] = useState()
   const [editvalue, setEditvalues] = useState({})
   const switchClasses = (type) => {
@@ -169,9 +176,16 @@ const EmployeeLeaveDetails = (props) => {
     singleData(id)
   }
 
-  const viewModalClose = (e) => {
-    e.preventDefault()
+  const viewModalClose = () => {
     setVisible(false)
+    setSingleLeave([{
+      'dept_name': '',
+      'display_name': '',
+      'end_date': '',
+      'reason': '',
+      'start_date': '',
+      'status': '',
+    }])
   }
 
   // this is for edit & view get data
@@ -190,9 +204,9 @@ const EmployeeLeaveDetails = (props) => {
   const editSubmit = (e) => {
     e.preventDefault()
     saveEdit({
-      leave_edit_details: {
-        start_date: DateTime.fromISO(editvalue.start_date).toFormat('yyyy-MM-dd'),
-        end_date: DateTime.fromISO(editvalue.end_date).toFormat('yyyy-MM-dd'),
+      leave_edit_date: {
+        start_date: DateTime.fromISO(editvalue.start_date).toFormat('dd / MM / yyyy'),
+        end_date: DateTime.fromISO(editvalue.end_date).toFormat('dd / MM / yyyy'),
       },
       leave_edit: {
         id: editvalue.id
@@ -201,7 +215,7 @@ const EmployeeLeaveDetails = (props) => {
   }
 
   const saveEdit = (editData) => {
-    API.post(`/wp-jwt/v1/date-edit/${editData.leave_edit.id}`, editData.leave_edit_details)
+    API.post(`/wp-jwt/v1/date-edit/${editData.leave_edit.id}`, editData.leave_edit_date)
       .then(() => {
         editDismiss();
       })
@@ -228,61 +242,74 @@ const EmployeeLeaveDetails = (props) => {
     setEditvalues(modifiedData);
   }
 
+const editModalClose = () => {
+  setEditVisible(false)
+}
+
   useEffect(() => {
     getData()
   }, [])
 
   return (
     <>
-      <CModal name="view-modal" visible={visible} onDismiss={() => setVisible(false)}>
+      <CModal name="view-modal" visible={visible} onDismiss={viewModalClose}>
         <CModalHeader onDismiss={viewModalClose}>
           <CModalTitle>View Leave Detail</CModalTitle>
         </CModalHeader>
         <CModalBody>
-          <CRow className="row">
-            <CCol className="mb-2">
-            <strong>[Employee- {singleLeave[0]?.display_name}]</strong>
-            </CCol>
-          </CRow>
-          <CRow className="row gy-2 gx-3">
-            <CCol xs>
-              <div className="mb-3">
-                <CFormLabel htmlFor="start_date">Start Date</CFormLabel>
-                <CFormControl
-                  type="text"
-                  value={DateTime.fromISO(singleLeave[0]?.start_date).toFormat('dd / MM / yyyy')}
-                  disabled
-                />
-              </div>
-            </CCol>
+          {/*  any blank string pass here */}
+          {singleLeave[0].display_name === '' ? (
+            <div className="text-center">
+              <CSpinner color="primary" />
+            </div>
+          ): (
+            <>
+              <CRow className="row">
+                <CCol className="mb-2">
+                <strong>[Employee- {singleLeave[0]?.display_name}]</strong>
+                </CCol>
+              </CRow>
+              <CRow className="row gy-2 gx-3">
+                <CCol xs>
+                  <div className="mb-3">
+                    <CFormLabel htmlFor="start_date">Start Date</CFormLabel>
+                    <CFormControl
+                      type="text"
+                      value={DateTime.fromISO(singleLeave[0]?.start_date).toFormat('dd / MM / yyyy')}
+                      disabled
+                    />
+                  </div>
+                </CCol>
 
-            <CCol xs>
-              <div className="mb-3">
-                <CFormLabel htmlFor="start_date">End Date</CFormLabel>
-                <CFormControl
-                  type="text"
-                  value={DateTime.fromISO(singleLeave[0]?.end_date).toFormat('dd / MM / yyyy')}
-                  disabled
-                />
-              </div>
-            </CCol>
+                <CCol xs>
+                  <div className="mb-3">
+                    <CFormLabel htmlFor="start_date">End Date</CFormLabel>
+                    <CFormControl
+                      type="text"
+                      value={DateTime.fromISO(singleLeave[0]?.end_date).toFormat('dd / MM / yyyy')}
+                      disabled
+                    />
+                  </div>
+                </CCol>
 
-            <CCol>
-              <div className="mb-3">
-                <CFormLabel htmlFor="dept_name">Department</CFormLabel>
-                <CFormControl type="text" value={singleLeave[0]?.dept_name} disabled />
-              </div>
-            </CCol>
-          </CRow>
+                <CCol>
+                  <div className="mb-3">
+                    <CFormLabel htmlFor="dept_name">Department</CFormLabel>
+                    <CFormControl type="text" value={singleLeave[0]?.dept_name} disabled />
+                  </div>
+                </CCol>
+              </CRow>
 
-          <CRow xs={{ gutterX: 6 }}>
-            <CCol>
-              <div className="mb-3">
-                <CFormLabel htmlFor="reason">Reason of leave</CFormLabel>
-                <CFormControl component="textarea" value={htmlToFormattedText(singleLeave[0]?.reason)} disabled />
-              </div>
-            </CCol>
-          </CRow>
+              <CRow xs={{ gutterX: 6 }}>
+              <CCol>
+                <div className="mb-3">
+                  <CFormLabel htmlFor="reason">Reason of leave</CFormLabel>
+                  <CFormControl component="textarea" value={htmlToFormattedText(singleLeave[0]?.reason)} disabled />
+                </div>
+              </CCol>
+            </CRow>
+            </>
+          )}
         </CModalBody>
         <CModalFooter>
           <CButton color="danger" style={{ color: '#fff' }} onClick={viewModalClose}>
@@ -291,7 +318,7 @@ const EmployeeLeaveDetails = (props) => {
         </CModalFooter>
       </CModal>
 
-      <CModal name="edit-modal" visible={editVisible} onDismiss={() => setEditVisible(false)}>
+      <CModal name="edit-modal" visible={editVisible} onDismiss={editModalClose}>
         <CModalHeader onDismiss={editDismiss}>
           <CModalTitle>Edit Leave Detail</CModalTitle>
         </CModalHeader>
@@ -347,7 +374,7 @@ const EmployeeLeaveDetails = (props) => {
             </CRow>
           </CModalBody>
           <CModalFooter>
-            <CButton color="danger" style={{ color: '#fff' }} onClick={() => setEditVisible(false)}>
+            <CButton color="danger" style={{ color: '#fff' }} onClick={editModalClose}>
               Close
             </CButton>
             <CButton type="submit" color="primary">Save</CButton>
