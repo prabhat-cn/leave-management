@@ -179,6 +179,7 @@ const User = () => {
 
   const onSubmit = async (values) => {
     updateUserSubmit(values)
+    // getUpdatedSkill()
     await sleep(500)
     setSubmitted(true)
   }
