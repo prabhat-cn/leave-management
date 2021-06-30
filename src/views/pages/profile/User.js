@@ -144,7 +144,6 @@ const User = () => {
     API.get('/wp-jwt/v1/skill-list')
       .then((resData) => {
         const skillListData = resData.data.data
-        console.log('skillListData', skillListData)
         API.get('/wp-jwt/v1/get-skill')
           .then((res) => {
             const getUpdatedValue = res.data.data
