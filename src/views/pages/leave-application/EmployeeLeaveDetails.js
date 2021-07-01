@@ -21,6 +21,7 @@ import {
   CFormLabel,
   CFormControl,
 } from '@coreui/react'
+import Switch from 'react-switch'
 import API from '../../../api'
 import { ViewIcon, EditIcon } from '../../../constant/icons'
 
@@ -49,6 +50,8 @@ const EmployeeLeaveDetails = (props) => {
       status: '',
     },
   ])
+  const [approveChecked, setApproveChecked] = useState(false)
+  const [rejectChecked, setRejectChecked] = useState(false)
 
   const [posts, setPosts] = useState()
   const [editvalue, setEditvalues] = useState({})
@@ -145,6 +148,8 @@ const EmployeeLeaveDetails = (props) => {
         </CButton>
         &nbsp;&nbsp;
         <CButton
+          height={20}
+          width={48}
           color="success"
           shape="round"
           className="custom-btn"
@@ -152,14 +157,67 @@ const EmployeeLeaveDetails = (props) => {
         >
           <EditIcon />
         </CButton>
+        &nbsp;&nbsp;
+        <Switch
+          height={20}
+          width={48}
+          onChange={(e) => handleApproveChange(e, row.id)}
+          checked={row.status === '1' ? true : false}
+          className="react-switch"
+        />
+        {/* <span>{checked ? 'on' : 'off'}</span> */}
+        &nbsp;&nbsp;
+        <Switch
+          onColor="#e55353"
+          height={20}
+          width={48}
+          onChange={(e) => handleRejectChange(e, row.id)}
+          checked={row.status === '2' ? true : false}
+          className="react-switch custom-switch-class"
+        />
+        {/* <span>{checked ? 'on' : 'off'}</span> */}
       </>
     )
+  }
+
+  const leaveApprove = (id) => {
+    API.post(`/wp-jwt/v1/leave-appication-approve/${id}`)
+      .then((res) => {
+        console.log('leaveApprove', res)
+        getData()
+      })
+      .catch((err) => {
+        console.log(err)
+      })
+  }
+  const handleApproveChange = (val, id) => {
+    console.log(val)
+    console.log(id)
+    leaveApprove(id)
+    setApproveChecked(val)
+  }
+
+  const leaveReject = (id) => {
+    API.post(`/wp-jwt/v1/leave-application-rejected/${id}`)
+      .then((res) => {
+        console.log('leaveReject', res)
+        getData()
+      })
+      .catch((err) => {
+        console.log(err)
+      })
+  }
+  const handleRejectChange = (val, id) => {
+    console.log(val)
+    console.log(id)
+    leaveReject(id)
+    setRejectChecked(val)
   }
 
   const getData = () => {
     API.get('/wp-jwt/v1/applied-leave-details')
       .then((res) => {
-        console.log('getData', res.data)
+        console.log('res', res)
         setPosts(
           res.data.data.map((m, i) => {
             return { ...m, ...{ slNo: i + 1 } }
@@ -471,4 +529,13 @@ const customCss = `
     margin-bottom: 8px;
     padding: 3px 8px;
   }
+
+  .react-switch {
+    // vertical-align: middle;
+    // margin-left: 4px;
+  }
+
+  // .custom-switch-class .react-switch-bg {
+  //   background-color: rgb(214 26 78) !important;
+  // }
 `
