@@ -185,11 +185,6 @@ const LeaveDetails = () => {
   }, [])
 
   const customStyles = {
-    // rows: {
-    //   style: {
-    //     minHeight: '72px', // override the row height
-    //   }
-    // },
     headCells: {
       style: {
         fontWeight: '500',
@@ -228,7 +223,7 @@ const LeaveDetails = () => {
                     <CFormLabel htmlFor="start_date">Start Date</CFormLabel>
                     <CFormControl
                       type="text"
-                      value={DateTime.fromISO(singleLeave[0]?.start_date).toFormat('dd / MM / yyyy')}
+                      value={DateTime.fromISO(singleLeave[0]?.start_date).toFormat('dd-MM-yyyy')}
                       disabled
                     />
                   </div>
@@ -239,7 +234,7 @@ const LeaveDetails = () => {
                     <CFormLabel htmlFor="start_date">End Date</CFormLabel>
                     <CFormControl
                       type="text"
-                      value={DateTime.fromISO(singleLeave[0]?.end_date).toFormat('dd / MM / yyyy')}
+                      value={DateTime.fromISO(singleLeave[0]?.end_date).toFormat('dd-MM-yyyy')}
                       disabled
                     />
                   </div>

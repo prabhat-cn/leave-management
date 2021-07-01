@@ -70,7 +70,7 @@ const EmployeeLeaveDetails = (props) => {
   }
 
   const StatusCell = ({ row }) => (
-    <p className={switchClasses(row?.status * 1)}>
+    <p className={'Status-cell' + ' ' + switchClasses(row?.status * 1)}>
       {row?.status * 1 === 0 && 'Pending'}
       {row?.status * 1 === 1 && 'Approved'}
       {row?.status * 1 === 2 && 'Rejected'}
@@ -79,8 +79,8 @@ const EmployeeLeaveDetails = (props) => {
     </p>
   )
 
-  const StartDate = ({ row }) => DateTime.fromISO(row.start_date).toFormat('dd / MM / yyyy')
-  const EndDate = ({ row }) => DateTime.fromISO(row.end_date).toFormat('dd / MM / yyyy')
+  const StartDate = ({ row }) => DateTime.fromISO(row.start_date).toFormat('dd-MM-yyyy')
+  const EndDate = ({ row }) => DateTime.fromISO(row.end_date).toFormat('dd-MM-yyyy')
 
   const columns = [
     {
@@ -159,6 +159,7 @@ const EmployeeLeaveDetails = (props) => {
   const getData = () => {
     API.get('/wp-jwt/v1/applied-leave-details')
       .then((res) => {
+        console.log('getData', res.data)
         setPosts(
           res.data.data.map((m, i) => {
             return { ...m, ...{ slNo: i + 1 } }
@@ -195,7 +196,7 @@ const EmployeeLeaveDetails = (props) => {
   const singleData = (id) => {
     API.get(`/wp-jwt/v1/applied-leave-details/${id}`)
       .then((res) => {
-        console.log('singleData', res.data.data)
+        console.log('singleData', res.data)
         setSingleLeave(res.data.data)
       })
       .catch((err) => {
@@ -208,8 +209,8 @@ const EmployeeLeaveDetails = (props) => {
     e.preventDefault()
     saveEdit({
       leave_edit_date: {
-        start_date: DateTime.fromISO(editvalue.start_date).toFormat('dd / MM / yyyy'),
-        end_date: DateTime.fromISO(editvalue.end_date).toFormat('dd / MM / yyyy'),
+        start_date: DateTime.fromISO(editvalue.start_date).toFormat('yyyy-MM-dd'),
+        end_date: DateTime.fromISO(editvalue.end_date).toFormat('yyyy-MM-dd'),
       },
       leave_edit: {
         id: editvalue.id,
@@ -253,6 +254,20 @@ const EmployeeLeaveDetails = (props) => {
     getData()
   }, [])
 
+  const customStyles = {
+    headCells: {
+      style: {
+        fontWeight: '500',
+        fontSize: '14px',
+      },
+    },
+    cells: {
+      style: {
+        fontSize: '14px',
+      },
+    },
+  }
+
   return (
     <>
       <CModal name="view-modal" visible={visible} onDismiss={viewModalClose}>
@@ -278,9 +293,7 @@ const EmployeeLeaveDetails = (props) => {
                     <CFormLabel htmlFor="start_date">Start Date</CFormLabel>
                     <CFormControl
                       type="text"
-                      value={DateTime.fromISO(singleLeave[0]?.start_date).toFormat(
-                        'dd / MM / yyyy',
-                      )}
+                      value={DateTime.fromISO(singleLeave[0]?.start_date).toFormat('dd-MM-yyyy')}
                       disabled
                     />
                   </div>
@@ -291,7 +304,7 @@ const EmployeeLeaveDetails = (props) => {
                     <CFormLabel htmlFor="start_date">End Date</CFormLabel>
                     <CFormControl
                       type="text"
-                      value={DateTime.fromISO(singleLeave[0]?.end_date).toFormat('dd / MM / yyyy')}
+                      value={DateTime.fromISO(singleLeave[0]?.end_date).toFormat('dd-MM-yyyy')}
                       disabled
                     />
                   </div>
@@ -420,6 +433,7 @@ const EmployeeLeaveDetails = (props) => {
                           pagination
                           paginationPerPage={5}
                           paginationRowsPerPageOptions={[5, 10, 15, 20, 25, 30]}
+                          customStyles={customStyles}
                         />
                       </>
                     )}
@@ -451,5 +465,10 @@ const customCss = `
   }
   .custom-date {
     width: 160px;
+  }
+  .Status-cell {
+    margin-top: 8px;
+    margin-bottom: 8px;
+    padding: 3px 8px;
   }
 `
