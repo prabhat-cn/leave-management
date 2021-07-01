@@ -88,11 +88,11 @@ const EmployeeLeaveDetails = (props) => {
       selector: 'slNo',
       sortable: true,
     },
-    {
-      name: 'Id',
-      selector: 'id',
-      sortable: true,
-    },
+    // {
+    //   name: 'Id',
+    //   selector: 'id',
+    //   sortable: true,
+    // },
     {
       name: 'Employee Name',
       selector: 'display_name',
