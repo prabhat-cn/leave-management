@@ -183,7 +183,6 @@ const EmployeeLeaveDetails = (props) => {
   const leaveApprove = (id) => {
     API.post(`/wp-jwt/v1/leave-appication-approve/${id}`)
       .then((res) => {
-        console.log('leaveApprove', res)
         getData()
       })
       .catch((err) => {
@@ -191,8 +190,6 @@ const EmployeeLeaveDetails = (props) => {
       })
   }
   const handleApproveChange = (val, id) => {
-    console.log(val)
-    console.log(id)
     leaveApprove(id)
     setApproveChecked(val)
   }
@@ -200,7 +197,6 @@ const EmployeeLeaveDetails = (props) => {
   const leaveReject = (id) => {
     API.post(`/wp-jwt/v1/leave-application-rejected/${id}`)
       .then((res) => {
-        console.log('leaveReject', res)
         getData()
       })
       .catch((err) => {
@@ -208,8 +204,6 @@ const EmployeeLeaveDetails = (props) => {
       })
   }
   const handleRejectChange = (val, id) => {
-    console.log(val)
-    console.log(id)
     leaveReject(id)
     setRejectChecked(val)
   }
