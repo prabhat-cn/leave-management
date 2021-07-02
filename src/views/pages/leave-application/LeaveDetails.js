@@ -3,7 +3,7 @@
 /* eslint-disable prettier/prettier */
 import React, { useState, useEffect } from 'react'
 import { DateTime } from 'luxon'
-import DataTable, { createTheme } from 'react-data-table-component'
+import DataTable from 'react-data-table-component'
 import htmlToFormattedText from "html-to-formatted-text"
 import {
   CContainer,
@@ -25,6 +25,7 @@ import {
 } from '@coreui/react'
 import API from '../../../api'
 import { ViewIcon } from '../../../constant/icons'
+import Chat from './Chat'
 
 const LeaveDetails = () => {
   const [visible, setVisible] = useState(false)
@@ -73,11 +74,11 @@ const LeaveDetails = () => {
       selector: 'slNo',
       sortable: true,
     },
-    {
-      name: 'Id',
-      selector: 'id',
-      sortable: true,
-    },
+    // {
+    //   name: 'Id',
+    //   selector: 'id',
+    //   sortable: true,
+    // },
     {
       name: 'Project Manager',
       selector: 'display_name',
@@ -299,6 +300,8 @@ const LeaveDetails = () => {
           </CCol>
         </CRow>
       </CContainer>
+      {/* Chat ui */}
+      <Chat />
       <style>{customCss}</style>
     </>
   )

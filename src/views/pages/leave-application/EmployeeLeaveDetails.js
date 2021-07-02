@@ -53,7 +53,11 @@ const EmployeeLeaveDetails = (props) => {
   const [approveChecked, setApproveChecked] = useState(false)
   const [rejectChecked, setRejectChecked] = useState(false)
 
-  const [posts, setPosts] = useState()
+  // Search
+  const [search, setSearch] = useState('')
+  const [query, setQuery] = useState('display_name', 'dept_name')
+
+  const [posts, setPosts] = useState('')
   const [editvalue, setEditvalues] = useState({})
   const switchClasses = (type) => {
     switch (type) {
@@ -225,15 +229,44 @@ const EmployeeLeaveDetails = (props) => {
     setRejectChecked(val)
   }
 
+  //  search here
+  const getSearch = (e) => {
+    e.preventDefault()
+    setQuery(search)
+    // to reset after search button click
+    setSearch('')
+  }
+
+  const updateSearch = (evt) => {
+    setSearch(evt.target.value)
+  }
+
   const getData = () => {
     API.get('/wp-jwt/v1/applied-leave-details')
       .then((res) => {
-        console.log('res', res)
-        setPosts(
-          res.data.data.map((m, i) => {
-            return { ...m, ...{ slNo: i + 1 } }
-          }),
-        )
+        // console.log('getData', res)
+        const getAppliedLeaves = res.data.data
+        const filteredData = getAppliedLeaves.filter((searchVal) => {
+          // console.log('searchVal', searchVal)
+          // searchVal.display_name &&
+          //   searchVal.display_name.toLowerCase().includes(search.toLowerCase())
+          // return searchVal
+          if (search === '') {
+            return searchVal
+          } else if (searchVal.display_name.toLowerCase().includes(search.toLowerCase())) {
+            return searchVal
+          } else if (searchVal.dept_name.toLowerCase().includes(search.toLowerCase())) {
+            return searchVal
+          } else if (searchVal.search) {
+            return searchVal
+          }
+        })
+        const margeData = filteredData.map((m, i) => {
+          console.log('margeData', m)
+          return { ...m, ...{ slNo: i + 1 } }
+        })
+
+        setPosts(margeData)
       })
       .catch((err) => {
         console.log(err)
@@ -488,6 +521,44 @@ const EmployeeLeaveDetails = (props) => {
                 <strong>Leave Application Details</strong>
               </CCardHeader>
               <CCardBody className="custom-class">
+                <CRow xs={{ gutterX: 6 }}>
+                  <CCol>
+                    <div className="mb-3">
+                      <CFormLabel></CFormLabel>
+                    </div>
+                  </CCol>
+                  <CCol>
+                    <div className="mb-3">
+                      <CForm className="search-form" onSubmit={getSearch}>
+                        <CFormControl
+                          className="form-control me-sm-2"
+                          placeholder="Search by name/ department"
+                          style={{
+                            height: '35px',
+                            display: 'initial',
+                            padding: '0 5px',
+                            width: '70%',
+                            fontSize: '14px',
+                          }}
+                          type="text"
+                          value={search}
+                          onChange={updateSearch}
+                        />
+                        <CButton
+                          className="btn btn-primary my-2 my-sm-0"
+                          style={{
+                            height: '35px',
+                            padding: '0 5px',
+                            width: '20%',
+                          }}
+                          type="submit"
+                        >
+                          Reset
+                        </CButton>
+                      </CForm>
+                    </div>
+                  </CCol>
+                </CRow>
                 {!posts ? (
                   <CSpinner color="primary" />
                 ) : (
