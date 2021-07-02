@@ -90,6 +90,7 @@ const EmployeeLeaveDetails = (props) => {
       name: 'Sl. No.',
       selector: 'slNo',
       sortable: true,
+      maxWidth: '1px',
     },
     // {
     //   name: 'Id',
@@ -105,6 +106,7 @@ const EmployeeLeaveDetails = (props) => {
       name: 'Department',
       selector: 'dept_name',
       sortable: true,
+      maxWidth: '150px',
     },
     {
       name: 'Start Date',
@@ -112,6 +114,7 @@ const EmployeeLeaveDetails = (props) => {
       // eslint-disable-next-line react/display-name
       cell: (SdRow) => <StartDate row={SdRow} />,
       sortable: true,
+      maxWidth: '150px',
     },
     {
       name: 'End Date',
@@ -119,6 +122,7 @@ const EmployeeLeaveDetails = (props) => {
       // eslint-disable-next-line react/display-name
       cell: (EdRow) => <EndDate row={EdRow} />,
       sortable: true,
+      maxWidth: '150px',
     },
     {
       name: 'Status',
@@ -126,11 +130,17 @@ const EmployeeLeaveDetails = (props) => {
       // eslint-disable-next-line react/display-name
       cell: (row) => <StatusCell row={row} />,
       sortable: true,
+      maxWidth: '150px',
+    },
+    {
+      name: 'View/ Edit',
+      // eslint-disable-next-line react/display-name
+      cell: (row) => <ActionTag row={row} />,
     },
     {
       name: 'Action',
       // eslint-disable-next-line react/display-name
-      cell: (row) => <ActionTag row={row} />,
+      cell: (row) => <ViewEditTag row={row} />,
     },
   ]
 
@@ -157,7 +167,14 @@ const EmployeeLeaveDetails = (props) => {
         >
           <EditIcon />
         </CButton>
-        &nbsp;&nbsp;
+      </>
+    )
+  }
+
+  const ViewEditTag = ({ row }) => {
+    // eslint-disable-next-line no-unused-expressions
+    return (
+      <>
         <Switch
           height={20}
           width={48}
