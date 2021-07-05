@@ -24,7 +24,7 @@ import {
   CFormControl,
 } from '@coreui/react'
 import API from '../../../api'
-import { ViewIcon, NextIcon } from '../../../constant/icons'
+import { ViewIcon, ChatIcon } from '../../../constant/icons'
 import Chat from './Chat'
 
 const LeaveDetails = () => {
@@ -130,14 +130,14 @@ const LeaveDetails = () => {
         >
           <ViewIcon />
         </CButton>
-        {' '}
+        &nbsp;
         <CButton
-          color="info"
+          style={{backgroundColor: '#2db67c', }}
           shape="round"
           className="custom-btn"
           onClick={() => viewChat(row.id)}
         >
-          <NextIcon />
+          <ChatIcon />
         </CButton>
       </>
     )
@@ -192,7 +192,6 @@ const LeaveDetails = () => {
   const singleData = (id) => {
     API.get(`/wp-jwt/v1/apply-leave-details/${id}`)
       .then((res) => {
-        console.log('singleData', res.data.data)
         setSingleLeave(res.data.data)
       })
       .catch((err) => {
@@ -322,7 +321,7 @@ const LeaveDetails = () => {
         </CRow>
       </CContainer>
       {/* Chat ui */}
-      {openChat && <Chat close={closeChat} /> }
+      {openChat && <Chat close={closeChat} openChat={openChat} /> }
       <style>{customCss}</style>
     </>
   )
@@ -337,7 +336,7 @@ const customCss = `
   .custom-btn .custom_icon {
     color: #ffffffd1;
   }
-  button.btn.btn-info.round.custom-btn,
+  button.btn.round.custom-btn,
     button.btn.btn-success.round.custom-btn{
     border-radius: 50px;
     height: 40px;

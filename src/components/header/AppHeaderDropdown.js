@@ -12,6 +12,7 @@ import {
   CDropdownToggle,
 } from '@coreui/react'
 import CIcon from '@coreui/icons-react'
+import { freeSet } from '@coreui/icons'
 import { Link } from 'react-router-dom'
 const AppHeaderDropdown = () => {
   const [user, setUser] = useState({})
@@ -92,7 +93,7 @@ const AppHeaderDropdown = () => {
         </CDropdownItem>
         <CDropdownDivider />
         <CDropdownItem href="#" onClick={(e) => makeLogout(e)}>
-          <CIcon name="cil-lock-locked" className="me-2" />
+          <CIcon content={freeSet.cilPowerStandby} className="me-2" />
           Logout
         </CDropdownItem>
       </CDropdownMenu>

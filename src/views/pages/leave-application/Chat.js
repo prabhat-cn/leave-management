@@ -5,7 +5,7 @@ import React from 'react'
 const Chat = ({close}) => {
   return (
     <>
-      <div className="box box-warning direct-chat direct-chat-warning chat-box" >
+      <div className="box box-warning direct-chat direct-chat-warning chat-box">
         <div className="box-header with-border">
           <h3 className="box-title">Chat Messages</h3>
           <div className="box-tools pull-right">

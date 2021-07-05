@@ -21,6 +21,8 @@ import CreatableSelect from 'react-select/creatable'
 import makeAnimated from 'react-select/animated'
 import { Formik, Form, Field, ErrorMessage } from 'formik'
 import * as Yup from 'yup'
+import FileSaver from 'file-saver'
+import fileDownload from 'js-file-download'
 import API from '../../../api'
 import { profilePending, profileSuccess, profileFail } from '../../../store/reducers/profileReducer'
 
@@ -32,6 +34,7 @@ const User = () => {
 
   const [profileData, setProfileData] = useState([])
   const [updatedSkill, setUpdatedSkill] = useState([])
+  const [resume, setResume] = useState([])
   const [error, setError] = useState('')
   const dispatch = useDispatch()
 
@@ -178,8 +181,73 @@ const User = () => {
     await sleep(500)
     setSubmitted(true)
   }
+
+  // const download = () => {
+  //   API({
+  //     url: '/wp-jwt/v1/get-user-info',
+  //     method: 'GET',
+  //     headers: {
+  //       'Content-Type': 'application/pdf',
+  //     },
+  //     responseType: 'blob',
+  //   })
+  //     // .then((response) => response.blob())
+  //     .then((responseData) => {
+  //       console.log('responseData', responseData)
+  //       const url = window.URL.createObjectURL(new Blob([responseData.data]))
+  //       console.log('url', url)
+  //       const link = document.createElement('a')
+  //       link.href = url
+  //       link.setAttribute('download', 'resume.pdf')
+  //       document.body.appendChild(link)
+  //       link.click()
+  //     })
+  //     .catch((err) => {
+  //       console.log(err)
+  //     })
+  // }
+
+  // const saveFile = () => {
+  //   API.get('/wp-jwt/v1/get-user-info')
+  //     .then((response) => {
+  //       console.log('response', response.data.data)
+  //       FileSaver.saveAs(response.data.data + '/resources/cv.pdf', 'MyCV.pdf')
+  //     })
+  //     .catch((err) => {
+  //       console.log(err)
+  //     })
+  // }
+  const getResume = () => {
+    API.get('/wp-jwt/v1/get-user-info')
+      .then((res) => {
+        console.log('res', res.data.data)
+        const resumeData = res.data.data
+        setResume(
+          resumeData.map((data) => {
+            console.log('data', data)
+            const tempData = {
+              cv: data.download_resume,
+            }
+            return tempData
+          }),
+        )
+      })
+      .catch((err) => {
+        console.log('err', err)
+      })
+  }
+
+  const handleDownload = (url, filename) => {}
+  // const cvuri = decodeURI(
+  //   'http://dev107.developer24x7.com/test_project/wp-content/uploads/2021/07/Compiling_a_Curriculum_Vitae.pdf',
+  // )
+  // document.getElementById('cvdown').addEventListener('click', () => {
+  //   window.open(cvuri)
+  // })
+
   useEffect(() => {
     getUpdatedSkill()
+    getResume()
   }, [])
 
   const animatedComponents = makeAnimated()
@@ -253,7 +321,20 @@ const User = () => {
                   <CCol xs={{ span: 8 }}>
                     <CCard className="mb-4">
                       <CCardHeader>
-                        <strong>User Profile</strong>
+                        <div className="row custom-user-row">
+                          <div className="col-md-6">
+                            <strong>User Profile</strong>
+                          </div>
+                          <div className="col-md-6">
+                            <CButton
+                              onClick={() => {
+                                handleDownload()
+                              }}
+                            >
+                              Download
+                            </CButton>
+                          </div>
+                        </div>
                       </CCardHeader>
                       <CCardBody>
                         <Form id="userProfile" name="userProfile">
