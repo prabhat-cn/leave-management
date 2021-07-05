@@ -21,7 +21,7 @@ import CreatableSelect from 'react-select/creatable'
 import makeAnimated from 'react-select/animated'
 import { Formik, Form, Field, ErrorMessage } from 'formik'
 import * as Yup from 'yup'
-import FileSaver from 'file-saver'
+import { saveAs } from 'file-saver'
 import fileDownload from 'js-file-download'
 import API from '../../../api'
 import { profilePending, profileSuccess, profileFail } from '../../../store/reducers/profileReducer'
@@ -222,28 +222,16 @@ const User = () => {
       .then((res) => {
         console.log('res', res.data.data)
         const resumeData = res.data.data
-        setResume(
-          resumeData.map((data) => {
-            console.log('data', data)
-            const tempData = {
-              cv: data.download_resume,
-            }
-            return tempData
-          }),
-        )
+        setResume(resumeData.download_resume)
       })
       .catch((err) => {
         console.log('err', err)
       })
   }
 
-  const handleDownload = (url, filename) => {}
-  // const cvuri = decodeURI(
-  //   'http://dev107.developer24x7.com/test_project/wp-content/uploads/2021/07/Compiling_a_Curriculum_Vitae.pdf',
-  // )
-  // document.getElementById('cvdown').addEventListener('click', () => {
-  //   window.open(cvuri)
-  // })
+  const handleDownload = () => {
+    saveAs(resume, `${profileData.first_name}-${profileData.last_name}-cv-${+new Date()}.pdf`)
+  }
 
   useEffect(() => {
     getUpdatedSkill()
