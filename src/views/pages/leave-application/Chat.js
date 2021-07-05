@@ -5,7 +5,7 @@ import React from 'react'
 const Chat = ({close}) => {
   return (
     <>
-      <div className="box box-warning direct-chat direct-chat-warning chat-box">
+      <div className="box box-warning direct-chat direct-chat-warning chat-box" >
         <div className="box-header with-border">
           <h3 className="box-title">Chat Messages</h3>
           <div className="box-tools pull-right">
@@ -19,7 +19,7 @@ const Chat = ({close}) => {
               20
             </span>{' '}
 
-            <button type="button" className="btn btn-box-tool" data-widget="remove">
+            <button type="button" className="btn btn-box-tool" data-widget="remove" onClick={() => close()}>
               <i className="fa fa-times"></i>{' '}
             </button>{' '}
           </div>
@@ -102,7 +102,7 @@ const Chat = ({close}) => {
               />{' '}
               <span className="input-group-btn">
                 {' '}
-                <button type="button" className="btn btn-warning btn-flat" onClick={() => close()}>
+                <button type="button" className="btn btn-warning btn-flat">
                   Send
                 </button>{' '}
               </span>{' '}
