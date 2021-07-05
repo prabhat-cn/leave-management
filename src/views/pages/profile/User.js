@@ -207,16 +207,6 @@ const User = () => {
   //     })
   // }
 
-  // const saveFile = () => {
-  //   API.get('/wp-jwt/v1/get-user-info')
-  //     .then((response) => {
-  //       console.log('response', response.data.data)
-  //       FileSaver.saveAs(response.data.data + '/resources/cv.pdf', 'MyCV.pdf')
-  //     })
-  //     .catch((err) => {
-  //       console.log(err)
-  //     })
-  // }
   const getResume = () => {
     API.get('/wp-jwt/v1/get-user-info')
       .then((res) => {
