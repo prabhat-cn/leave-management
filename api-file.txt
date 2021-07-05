@@ -6,7 +6,8 @@ Admin
 User :- adminTestProject
 Password :- QxD)4)aF&hzS1WEF4DT%ucQi
 
-
+"username": "Davidd",
+"password": "Davidd@123"
 
 
 // REGISTER
