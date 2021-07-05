@@ -24,11 +24,12 @@ import {
   CFormControl,
 } from '@coreui/react'
 import API from '../../../api'
-import { ViewIcon } from '../../../constant/icons'
+import { ViewIcon, NextIcon } from '../../../constant/icons'
 import Chat from './Chat'
 
 const LeaveDetails = () => {
   const [visible, setVisible] = useState(false)
+  const [openChat, toggleChat] = useState(false)
   const [singleLeave, setSingleLeave] = useState([{
     'dept_name': '',
     'display_name': '',
@@ -129,6 +130,15 @@ const LeaveDetails = () => {
         >
           <ViewIcon />
         </CButton>
+        {' '}
+        <CButton
+          color="info"
+          shape="round"
+          className="custom-btn"
+          onClick={() => viewChat(row.id)}
+        >
+          <NextIcon />
+        </CButton>
       </>
     )
   }
@@ -152,6 +162,17 @@ const LeaveDetails = () => {
     setVisible(!visible)
     console.log(id)
     singleData(id)
+  }
+
+  //  View
+  const viewChat = (id) => {
+    console.log(id)
+    singleData(id)
+    toggleChat(true);
+  }
+
+  const closeChat = () => {
+    toggleChat(false);
   }
 
   const viewModalClose = () => {
@@ -301,7 +322,7 @@ const LeaveDetails = () => {
         </CRow>
       </CContainer>
       {/* Chat ui */}
-      <Chat />
+      {openChat && <Chat close={closeChat} /> }
       <style>{customCss}</style>
     </>
   )
