@@ -345,6 +345,8 @@ const customCss = `
   .Status-cell {
     margin-top: 8px;
     margin-bottom: 8px;
-    padding: 3px 8px;
+    padding: 5px 0px;
+    max-width: 100px;
+    width: 100%;
   }
 `
