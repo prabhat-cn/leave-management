@@ -17,14 +17,14 @@ import {
   CCardText,
   CCardImage,
 } from '@coreui/react'
+import DatePicker from 'react-date-picker'
 import CreatableSelect from 'react-select/creatable'
 import makeAnimated from 'react-select/animated'
 import { Formik, Form, Field, ErrorMessage } from 'formik'
 import * as Yup from 'yup'
-import { saveAs } from 'file-saver'
-import fileDownload from 'js-file-download'
 import API from '../../../api'
 import { profilePending, profileSuccess, profileFail } from '../../../store/reducers/profileReducer'
+import MultiSelect from 'react-multi-select-component'
 
 const sleep = (ms) => new Promise((r) => setTimeout(r, ms))
 const User = () => {
@@ -34,12 +34,14 @@ const User = () => {
 
   const [profileData, setProfileData] = useState([])
   const [updatedSkill, setUpdatedSkill] = useState([])
-  const [resume, setResume] = useState([])
   const [error, setError] = useState('')
   const dispatch = useDispatch()
 
   const handleChange = (newValue, actionMeta) => {
+    console.group('Value Changed')
+    console.log(newValue)
     // console.log(`action: ${actionMeta.action}`)
+    console.groupEnd()
     // to update data
     handleSelectedSkill(newValue)
   }
@@ -126,6 +128,7 @@ const User = () => {
           // window.location.reload()
         }, 2000)
         const updateUserData = response.data
+        // console.log('updateUserData', updateUserData)
         dispatch(profileSuccess(updateUserData))
 
         if (updateUserData.status === 0) {
@@ -149,11 +152,11 @@ const User = () => {
         const skillListData = resData.data.data
         API.get('/wp-jwt/v1/get-skill')
           .then((res) => {
+            // console.log('res', res.data.data)
             const getUpdatedValue = res.data.data
 
             const selectedSkillValue = skillListData.filter((option) => {
               return getUpdatedValue.some((item) => {
-                // (item.value.label)--> getUpdatedValue  && (option.skill)-->skillListData
                 return item.value.label === option.skill
               })
             })
@@ -165,7 +168,7 @@ const User = () => {
               return tempData
             })
             handleSelectedSkill(skillValues)
-            setUpdatedSkill(getUpdatedValue)
+            setUpdatedSkill(res.data.data)
           })
           .catch((err) => {
             console.log('err', err)
@@ -181,62 +184,6 @@ const User = () => {
     await sleep(500)
     setSubmitted(true)
   }
-
-  // const download = () => {
-  //   API({
-  //     url: '/wp-jwt/v1/get-user-info',
-  //     method: 'GET',
-  //     headers: {
-  //       'Content-Type': 'application/pdf',
-  //     },
-  //     responseType: 'blob',
-  //   })
-  //     // .then((response) => response.blob())
-  //     .then((responseData) => {
-  //       console.log('responseData', responseData)
-  //       const url = window.URL.createObjectURL(new Blob([responseData.data]))
-  //       console.log('url', url)
-  //       const link = document.createElement('a')
-  //       link.href = url
-  //       link.setAttribute('download', 'resume.pdf')
-  //       document.body.appendChild(link)
-  //       link.click()
-  //     })
-  //     .catch((err) => {
-  //       console.log(err)
-  //     })
-  // }
-
-  // const saveFile = () => {
-  //   API.get('/wp-jwt/v1/get-user-info')
-  //     .then((response) => {
-  //       console.log('response', response.data.data)
-  //       FileSaver.saveAs(response.data.data + '/resources/cv.pdf', 'MyCV.pdf')
-  //     })
-  //     .catch((err) => {
-  //       console.log(err)
-  //     })
-  // }
-  const getResume = () => {
-    API.get('/wp-jwt/v1/get-user-info')
-      .then((res) => {
-        console.log('res', res.data.data)
-        const resumeData = res.data.data
-        setResume(resumeData.download_resume)
-      })
-      .catch((err) => {
-        console.log('err', err)
-      })
-  }
-
-  const handleDownload = () => {
-    saveAs(resume, `${profileData.first_name}-${profileData.last_name}-cv-${+new Date()}.pdf`)
-  }
-
-  useEffect(() => {
-    getUpdatedSkill()
-    getResume()
-  }, [])
 
   const animatedComponents = makeAnimated()
   return (
@@ -283,9 +230,11 @@ const User = () => {
             try {
               const skillData = await API.get('/wp-jwt/v1/skill-list')
               const bulkSkillData = skillData.data.data
+              console.log('skillData', bulkSkillData)
               // make the format as the field wise dropdown
               const skillValue = bulkSkillData.map((data, i) => {
                 const tempData = {
+                  id: i + 1,
                   label: data.skill,
                   value: data.skill,
                 }
@@ -301,6 +250,7 @@ const User = () => {
           useEffect(() => {
             getProfileValues()
             getSkillsData()
+            getUpdatedSkill()
           }, [])
           return (
             <>
@@ -309,20 +259,7 @@ const User = () => {
                   <CCol xs={{ span: 8 }}>
                     <CCard className="mb-4">
                       <CCardHeader>
-                        <div className="row custom-user-row">
-                          <div className="col-md-6">
-                            <strong>User Profile</strong>
-                          </div>
-                          <div className="col-md-6">
-                            <CButton
-                              onClick={() => {
-                                handleDownload()
-                              }}
-                            >
-                              Download
-                            </CButton>
-                          </div>
-                        </div>
+                        <strong>User Profile</strong>
                       </CCardHeader>
                       <CCardBody>
                         <Form id="userProfile" name="userProfile">
@@ -745,6 +682,13 @@ const User = () => {
                           </CRow>
                           <div className="mb-3">
                             <CFormLabel htmlFor="skill">Your Skill</CFormLabel>
+                            {/* <Field
+                              component={MultiSelect}
+                              options={skillName}
+                              value={selectedSkill}
+                              onChange={handleChange}
+                              labelledBy="Select"
+                            /> */}
                             <Field
                               component={CreatableSelect}
                               components={animatedComponents}
@@ -763,6 +707,15 @@ const User = () => {
                               <button type="submit" className="btn btn-primary">
                                 Submit
                               </button>
+                              {/* <button
+                                type="submit"
+                                className={
+                                  'btn btn-primary' + ' ' + (!(dirty && isValid) ? 'disabled' : '')
+                                }
+                                disabled={!(dirty && isValid)}
+                              >
+                                Submit
+                              </button> */}
                             </CCol>
                             <CCol lg="3">
                               <CButton

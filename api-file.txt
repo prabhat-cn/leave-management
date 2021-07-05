@@ -1,0 +1,30 @@
+
+URL : -http://dev107.developer24x7.com/test_project/
+
+Admin
+
+User :- adminTestProject
+Password :- QxD)4)aF&hzS1WEF4DT%ucQi
+
+
+
+
+// REGISTER
+http://dev107.developer24x7.com/test_project/wp-json/wp-jwt/v1/create-new-user
+
+// Login
+http://dev107.developer24x7.com/test_project/wp-json/jwt-auth/v1/token
+
+// Forgot_Password
+http://dev107.developer24x7.com/test_project/wp-json/wp-jwt/v1/forgot-password
+
+// update_password
+http://dev107.developer24x7.com/test_project/wp-json/wp-jwt/v1/update-employee-password
+
+// Profile
+http://dev107.developer24x7.com/test_project/wp-json/wp-jwt/v1/profile
+
+// leave-apply-list
+http://dev107.developer24x7.com/test_project/wp-json/wp-jwt/v1/apply-leave-list
+
+https://documenter.postman.com/preview/16058878-a1b0a5fd-2519-4ced-8936-d65fd5909b1a?environment=&versionTag=latest&apiName=CURRENT&version=latest&documentationLayout=classic-double-column&right-sidebar=303030&top-bar=FFFFFF&highlight=EF5B25

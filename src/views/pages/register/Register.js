@@ -1,3 +1,4 @@
+/* eslint-disable jsx-a11y/alt-text */
 import React, { useState } from 'react'
 import { Link } from 'react-router-dom'
 import showPwdImg from '../../../assets/icons/eye-slash-solid.svg'
@@ -18,27 +19,40 @@ import {
   CRow,
 } from '@coreui/react'
 import CIcon from '@coreui/icons-react'
+import { useDispatch } from 'react-redux'
+import API from '../../../api'
+import {
+  registrationPending,
+  registrationSuccess,
+  registrationError,
+} from '../../../store/reducers/userRegReducer'
 
 const sleep = (ms) => new Promise((r) => setTimeout(r, ms))
-const Register = () => {
+const Register = (props) => {
+  const dispatch = useDispatch()
   const [isRevealPwd, setIsRevealPwd] = useState(false)
   const [isRevealCPwd, setIsRevealCPwd] = useState(false)
   const [submitted, setSubmitted] = useState(false)
+  const [error, setError] = useState('')
+  const [user, setUser] = useState()
   const initialValues = {
-    firstname: '',
-    lastname: '',
+    username: '',
+    first_name: '',
+    last_name: '',
     email: '',
     password: '',
     repeatPassword: '',
   }
   const registerSchema = Yup.object().shape({
-    firstname: Yup.string()
+    username: Yup.string().required('Username required'),
+
+    first_name: Yup.string()
       .required('Firstname required')
       .min(3, 'Must be 3 letters')
       .max(20, 'Can be 20 letters or less')
       .matches(/^[A-Za-z]+$/i, 'Firstname should be letter'),
 
-    lastname: Yup.string()
+    last_name: Yup.string()
       .required('Lastname required')
       .min(3, 'Must be 3 letters')
       .max(20, 'Can be 20 letters or less')
@@ -57,18 +71,42 @@ const Register = () => {
       .oneOf([Yup.ref('password'), null], 'Passwords must match')
       .required('Repeat Password is required'),
   })
-  const onSubmit = async (values, submitProps) => {
-    console.log('form-values', JSON.stringify(values, null, 2))
-    console.log('submitProps', submitProps)
+  const registerSubmit = (regData) => {
+    dispatch(registrationPending())
+    API.post('/wp-jwt/v1/create-new-user', regData)
+      .then((response) => {
+        setError('')
+        setSubmitted(true)
+        setTimeout(() => {
+          setSubmitted(false)
+        }, 2000)
+        dispatch(registrationSuccess(response))
+        const userData = response.data
+        console.log('userData', userData)
+        setUser(userData)
+        if (userData.status === 1) {
+          // eslint-disable-next-line react/prop-types
+          props.history.push('/login')
+        }
+      })
+      .catch((error) => {
+        console.log(error.response)
+        setSubmitted(false)
+        dispatch(registrationError(error.response))
+        // if (status === 403) {
+        //   setError(data.message)
+        // }
+      })
+  }
+  const onSubmit = async (data, submitProps) => {
+    registerSubmit(data)
     await sleep(500)
-    setSubmitted(true)
     submitProps.resetForm()
   }
   return (
     <>
       <Formik initialValues={initialValues} validationSchema={registerSchema} onSubmit={onSubmit}>
         {(formik) => {
-          // console.log('formik', formik.values)
           const { errors, touched, isValid, dirty } = formik
 
           return (
@@ -80,63 +118,96 @@ const Register = () => {
                       <CCard className="mx-4">
                         <CCardBody className="p-4">
                           <Form id="register" name="register">
-                            {submitted && (
-                              <CAlert color="success">Success! Account Created Successfully</CAlert>
+                            {user && (
+                              <CAlert color={user.status === 0 ? 'danger' : 'success'}>
+                                {user.status === 0 ? 'Error! ' : 'Success! '} {user.message}
+                              </CAlert>
                             )}
+
+                            {/* {user && (
+                              <CAlert color="success">Success! Register Successfully</CAlert>
+                            )} */}
+                            {/* {error !== '' && <CAlert color="danger">Error! Register failed</CAlert>} */}
                             <h1>Register</h1>
                             <p className="text-medium-emphasis">Create your account</p>
-                            <div className="row g-3">
-                              <div className="col-auto">
+
+                            <CInputGroup className="mb-3 mt-2">
+                              <CInputGroupText>
+                                <CIcon name="cil-user" />
+                              </CInputGroupText>
+                              <Field
+                                type="text"
+                                name="username"
+                                id="username"
+                                placeholder="Enter username"
+                                autoComplete="on"
+                                className={
+                                  'form-control' +
+                                  ' ' +
+                                  (errors.username && touched.username ? 'input-error' : null)
+                                }
+                              />
+                            </CInputGroup>
+                            <ErrorMessage
+                              name="username"
+                              style={{ color: 'red', marginBottom: '4px' }}
+                              component="div"
+                              className="error"
+                            />
+                            <CRow xs={{ gutterX: 6 }}>
+                              <CCol>
                                 <CInputGroup className="mb-3">
                                   <CInputGroupText>
                                     <CIcon name="cil-user" />
                                   </CInputGroupText>
                                   <Field
                                     type="text"
-                                    name="firstname"
-                                    id="firstname"
+                                    name="first_name"
+                                    id="first_name"
                                     placeholder="Firstname"
                                     autoComplete="on"
                                     className={
                                       'form-control' +
                                       ' ' +
-                                      (errors.firstname && touched.firstname ? 'input-error' : null)
+                                      (errors.first_name && touched.first_name
+                                        ? 'input-error'
+                                        : null)
                                     }
                                   />
                                 </CInputGroup>
                                 <ErrorMessage
-                                  name="firstname"
+                                  name="first_name"
                                   style={{ color: 'red', marginBottom: '4px' }}
                                   component="div"
                                   className="error"
                                 />
-                              </div>
-                              <div className="col-auto">
+                              </CCol>
+                              <CCol>
                                 <CInputGroup className="mb-3">
                                   <CInputGroupText>
                                     <CIcon name="cil-user" />
                                   </CInputGroupText>
                                   <Field
                                     type="text"
-                                    name="lastname"
-                                    id="lastname"
+                                    name="last_name"
+                                    id="last_name"
                                     placeholder="Lastname"
                                     autoComplete="on"
                                     className={
                                       'form-control' +
                                       ' ' +
-                                      (errors.lastname && touched.lastname ? 'input-error' : null)
+                                      (errors.last_name && touched.last_name ? 'input-error' : null)
                                     }
                                   />
                                 </CInputGroup>
                                 <ErrorMessage
-                                  name="lastname"
+                                  name="last_name"
                                   style={{ color: 'red', marginBottom: '4px' }}
                                   component="div"
                                   className="error"
                                 />
-                              </div>
-                            </div>
+                              </CCol>
+                            </CRow>
                             <CInputGroup className="mb-3 mt-2">
                               <CInputGroupText>@</CInputGroupText>
                               <Field
@@ -265,7 +336,7 @@ const eyeToggle = `
 .pwd-container {
     position: relative;
   }
-   
+
   .pwd-container img {
     cursor: pointer;
     position: absolute;
@@ -274,7 +345,7 @@ const eyeToggle = `
     top: 8px;
   }
 
-  
+
   input#password:active {
     background: #0000000d;
 }

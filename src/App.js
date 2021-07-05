@@ -1,5 +1,7 @@
+/* eslint-disable react/prop-types */
+/* eslint-disable react/jsx-no-undef */
 import React, { Component } from 'react'
-import { HashRouter, Route, Switch, BrowserRouter as Router } from 'react-router-dom'
+import { HashRouter, Route, Switch, BrowserRouter as Router, Redirect } from 'react-router-dom'
 import './scss/style.scss'
 
 const loading = (
@@ -18,29 +20,112 @@ const ForgetPassword = React.lazy(() => import('./views/pages/forgetpassword/For
 const Page404 = React.lazy(() => import('./views/pages/page404/Page404'))
 const Page500 = React.lazy(() => import('./views/pages/page500/Page500'))
 
+// const PrivateRoute = ({ component: Component, auth, name, ...rest }) => (
+//   <Route
+//     {...rest}
+//     render={(props) =>
+//       auth === true ? <Component {...props} name={name} /> : <Redirect to="/login" />
+//     }
+//   />
+// )
+const EmployeeRoute = ({ component: Component, auth, isEmployee, isProManager, name, ...rest }) => {
+  console.log(isEmployee)
+  return (
+    <>
+      <Route
+        {...rest}
+        render={(props) => {
+          if (auth === false) {
+            return <Redirect to="/login" />
+          }
+
+          // if (auth === true && isEmployee !== true) {
+          //   return <Redirect to="/" />
+          // }
+
+          return <Component {...props} />
+        }}
+      />
+    </>
+  )
+}
+
+const PublicRoute = ({ component: Component, auth, ...rest }) => (
+  <Route
+    {...rest}
+    render={(props) => (auth !== true ? <Component {...props} /> : <Redirect to="/" />)}
+  />
+)
+
 const App = () => {
+  let authState = false
+  let employee = false
+  if (localStorage.getItem('lMuserDataToken') !== null) {
+    // to get string value data  by "JSON.parse"
+    const userData = JSON.parse(localStorage.getItem('lMuserDataToken'))
+    // console.log(userData.user_role)
+    authState = userData ? true : false
+    employee = userData.user_role === 'employee' ? true : false
+  }
+
   return (
     <React.Fragment>
       <Router>
         <React.Suspense fallback={loading}>
           <Switch>
-            <Route exact path="/" name="Login" render={(props) => <Login {...props} />} />
-            <Route exact path="/login" name="Login" render={(props) => <Login {...props} />} />
-            <Route
+            {/* <Route exact path="/" name="Login" component={Login} /> */}
+            {/* Public */}
+            <PublicRoute exact auth={authState} path="/login" name="Login" component={Login} />
+            <PublicRoute
               exact
+              auth={authState}
               path="/register"
               name="Register"
-              render={(props) => <Register {...props} />}
+              component={Register}
             />
-            <Route
+            <PublicRoute
               exact
+              auth={authState}
               path="/forgetpassword"
               name="Forget Password"
-              render={(props) => <ForgetPassword {...props} />}
+              component={ForgetPassword}
             />
-            <Route exact path="/404" name="Page 404" render={(props) => <Page404 {...props} />} />
-            <Route exact path="/500" name="Page 500" render={(props) => <Page500 {...props} />} />
-            <Route path="/" name="Home" render={(props) => <DefaultLayout {...props} />} />
+            {/* Private */}
+            <EmployeeRoute
+              exact
+              auth={authState}
+              isEmployee={employee}
+              path="/404"
+              name="Page 404"
+              component={Page404}
+            />
+            <EmployeeRoute
+              exact
+              auth={authState}
+              isEmployee={employee}
+              path="/500"
+              name="Page 500"
+              component={Page500}
+            />
+            <EmployeeRoute
+              path="/"
+              auth={authState}
+              isEmployee={employee}
+              name="Home"
+              component={DefaultLayout}
+            />
+            <EmployeeRoute
+              path="/admin"
+              auth={authState}
+              isEmployee={employee}
+              name="Home"
+              component={DefaultLayout}
+            />
+            {authState ? (
+              <Redirect exact from="/" to="/admin" />
+            ) : (
+              <Redirect from="/" to="/login" />
+            )}
           </Switch>
         </React.Suspense>
       </Router>

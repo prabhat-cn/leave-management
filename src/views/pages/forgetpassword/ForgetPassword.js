@@ -1,6 +1,8 @@
+/* eslint-disable react/prop-types */
 /* eslint-disable jsx-a11y/alt-text */
 import React, { useState } from 'react'
 import { Link } from 'react-router-dom'
+import { useDispatch } from 'react-redux'
 import showPwdImg from '../../../assets/icons/eye-slash-solid.svg'
 import hidePwdImg from '../../../assets/icons/eye-solid.svg'
 import { Formik, Form, Field, ErrorMessage } from 'formik'
@@ -20,28 +22,79 @@ import {
   CRow,
 } from '@coreui/react'
 import CIcon from '@coreui/icons-react'
+import API from '../../../api'
+import {
+  forgetPassPending,
+  forgetPassSuccess,
+  forgetPassFail,
+} from '../../../store/reducers/forgetPassReducer'
 
 const sleep = (ms) => new Promise((r) => setTimeout(r, ms))
-const ForgetPassword = () => {
+const ForgetPassword = (props) => {
   const [isRevealPwd, setIsRevealPwd] = useState(false)
+  const [isRevealCPwd, setIsRevealCPwd] = useState(false)
   const [submitted, setSubmitted] = useState(false)
+  const [forgetPassUse, setForgetPassUse] = useState()
+  const [error, setError] = useState(false)
+  const dispatch = useDispatch()
   const initialValues = {
-    email: '',
+    user_login: '',
+    new_password: '',
+    confirm_password: '',
   }
 
-  const loginSchema = Yup.object().shape({
-    email: Yup.string().required('Email is required').email('Email is invalid'),
+  const forgetPassSchema = Yup.object().shape({
+    user_login: Yup.string().required('Username required'),
+
+    new_password: Yup.string()
+      .min(8, 'Password must be at least 8 characters')
+      .required('New password is required')
+      .matches(
+        '^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#$%^&*])(?=.{8,})',
+        'One Uppercase, One Lowercase, One Number and one special case Character',
+      ),
+    confirm_password: Yup.string()
+      .oneOf([Yup.ref('new_password'), null], 'Password must match')
+      .required('Repeat Password is required'),
   })
-  const onSubmit = async (values, submitProps) => {
-    console.log('form-values', JSON.stringify(values, null, 2))
-    // console.log('submitProps', submitProps)
+
+  const forgetPassSubmit = (forgetData) => {
+    dispatch(forgetPassPending())
+    API.post('/wp-jwt/v1/forgot-password', forgetData)
+      .then((response) => {
+        setError('')
+        setSubmitted(true)
+        setTimeout(() => {
+          setSubmitted(false)
+        }, 2000)
+        const forgetPassData = response.data
+        // console.log('forgetPassData', forgetPassData)
+        // response is the payload for redux
+        dispatch(forgetPassSuccess(response))
+        setForgetPassUse(forgetPassData)
+        if (forgetPassData.status === 1) {
+          // eslint-disable-next-line react/prop-types
+          props.history.push('/login')
+        }
+
+        // if (status === 403) {
+        //   setError(data.message)
+        // }
+      })
+      .catch((error) => {
+        console.log(error.response)
+        setSubmitted(false)
+        dispatch(forgetPassFail(error.response))
+      })
+  }
+  const onSubmit = async (data, submitProps) => {
+    forgetPassSubmit(data)
     await sleep(500)
-    setSubmitted(true)
     submitProps.resetForm()
   }
   return (
     <>
-      <Formik initialValues={initialValues} validationSchema={loginSchema} onSubmit={onSubmit}>
+      <Formik initialValues={initialValues} validationSchema={forgetPassSchema} onSubmit={onSubmit}>
         {(formik) => {
           // console.log('formik', formik.values)
           const { errors, touched, isValid, dirty } = formik
@@ -56,7 +109,16 @@ const ForgetPassword = () => {
                         <CCard className="p-4">
                           <CCardBody>
                             <Form id="login" name="login">
-                              {submitted && <CAlert color="success">You will get a mail</CAlert>}
+                              {forgetPassUse && (
+                                <CAlert color={forgetPassUse.status === 0 ? 'danger' : 'success'}>
+                                  {forgetPassUse.status === 0 ? 'Error! ' : 'Success! '}
+                                  {forgetPassUse.message}
+                                </CAlert>
+                              )}
+                              {/* {submitted && (
+                                <CAlert color="danger">Error! Failed submission</CAlert>
+                              )} */}
+                              {error && <CAlert color="danger">Error! Failed submission</CAlert>}
                               <h1>Forget Password</h1>
                               <p className="text-medium-emphasis">Verify account</p>
                               <CInputGroup className="mb-2">
@@ -65,21 +127,83 @@ const ForgetPassword = () => {
                                 </CInputGroupText>
                                 <Field
                                   type="text"
-                                  name="email"
-                                  id="email"
-                                  placeholder="Enter email"
+                                  name="user_login"
+                                  id="user_login"
+                                  placeholder="Enter username or email"
                                   autoComplete="on"
                                   className={
                                     'form-control' +
                                     ' ' +
-                                    (errors.email && touched.email ? 'input-error' : null)
+                                    (errors.user_login && touched.user_login ? 'input-error' : null)
                                   }
                                 />
                               </CInputGroup>
                               <ErrorMessage
-                                name="email"
+                                name="user_login"
                                 style={{ color: 'red', marginBottom: '4px' }}
                                 component="div"
+                                className="error"
+                              />
+                              <CInputGroup className="mb-3 mt-2 pwd-container">
+                                <CInputGroupText>
+                                  <CIcon name="cil-lock-locked" />
+                                </CInputGroupText>
+                                <Field
+                                  type={isRevealPwd ? 'text' : 'password'}
+                                  name="new_password"
+                                  id="new_password"
+                                  placeholder="Enter new password"
+                                  autoComplete="on"
+                                  className={
+                                    'form-control' +
+                                    ' ' +
+                                    (errors.new_password && touched.new_password
+                                      ? 'input-error'
+                                      : null)
+                                  }
+                                />
+                                <img
+                                  className="toggle-image"
+                                  title={isRevealPwd ? 'Hide password' : 'Show password'}
+                                  src={isRevealPwd ? hidePwdImg : showPwdImg}
+                                  onClick={() => setIsRevealPwd((prevState) => !prevState)}
+                                />
+                              </CInputGroup>
+                              <ErrorMessage
+                                name="new_password"
+                                style={{ color: 'red', marginBottom: '6px' }}
+                                component="span"
+                                className="error"
+                              />
+                              <CInputGroup className="mb-4 mt-2 pwd-container">
+                                <CInputGroupText>
+                                  <CIcon name="cil-lock-locked" />
+                                </CInputGroupText>
+                                <Field
+                                  type={isRevealCPwd ? 'text' : 'password'}
+                                  name="confirm_password"
+                                  id="confirm_password"
+                                  placeholder="Repeat password"
+                                  autoComplete="on"
+                                  className={
+                                    'form-control' +
+                                    ' ' +
+                                    (errors.confirm_password && touched.confirm_password
+                                      ? 'input-error'
+                                      : null)
+                                  }
+                                />
+                                <img
+                                  className="toggle-image"
+                                  title={isRevealCPwd ? 'Hide password' : 'Show password'}
+                                  src={isRevealCPwd ? hidePwdImg : showPwdImg}
+                                  onClick={() => setIsRevealCPwd((prevState) => !prevState)}
+                                />
+                              </CInputGroup>
+                              <ErrorMessage
+                                name="confirm_password"
+                                style={{ color: 'red', marginBottom: '4px' }}
+                                component="span"
                                 className="error"
                               />
                               <CRow className="mt-3">
@@ -144,7 +268,7 @@ const eyeToggle = `
 .pwd-container {
     position: relative;
   }
-   
+
   .pwd-container img {
     cursor: pointer;
     position: absolute;
@@ -153,7 +277,7 @@ const eyeToggle = `
     top: 8px;
   }
 
-  
+
   input#password:active {
     background: #0000000d;
 }
