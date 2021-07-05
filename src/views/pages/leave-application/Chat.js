@@ -102,7 +102,7 @@ const Chat = ({close}) => {
               />{' '}
               <span className="input-group-btn">
                 {' '}
-                <button type="button" className="btn btn-warning btn-flat">
+                <button type="button" className="btn btn-flat custom_chat_btn">
                   Send
                 </button>{' '}
               </span>{' '}
