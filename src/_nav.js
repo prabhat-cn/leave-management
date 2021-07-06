@@ -150,31 +150,31 @@ const _nav = [
   //     },
   //   ],
   // },
-  // {
-  //   _component: 'CNavGroup',
-  //   anchor: 'Buttons',
-  //   icon: <CIcon name="cil-cursor" customClasses="nav-icon" />,
-  //   items: [
-  //     {
-  //       _component: 'CNavItem',
-  //       as: NavLink,
-  //       anchor: 'Buttons',
-  //       to: '/buttons/buttons',
-  //     },
-  //     {
-  //       _component: 'CNavItem',
-  //       as: NavLink,
-  //       anchor: 'Buttons groups',
-  //       to: '/buttons/button-groups',
-  //     },
-  //     {
-  //       _component: 'CNavItem',
-  //       as: NavLink,
-  //       anchor: 'Dropdowns',
-  //       to: '/buttons/dropdowns',
-  //     },
-  //   ],
-  // },
+  {
+    _component: 'CNavGroup',
+    anchor: 'Buttons',
+    icon: <CIcon name="cil-cursor" customClasses="nav-icon" />,
+    items: [
+      {
+        _component: 'CNavItem',
+        as: NavLink,
+        anchor: 'Buttons',
+        to: '/buttons/buttons',
+      },
+      {
+        _component: 'CNavItem',
+        as: NavLink,
+        anchor: 'Buttons groups',
+        to: '/buttons/button-groups',
+      },
+      {
+        _component: 'CNavItem',
+        as: NavLink,
+        anchor: 'Dropdowns',
+        to: '/buttons/dropdowns',
+      },
+    ],
+  },
   // {
   //   _component: 'CNavGroup',
   //   anchor: 'Forms',

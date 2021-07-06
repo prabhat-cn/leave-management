@@ -20,6 +20,7 @@ import {
   CForm,
   CFormLabel,
   CFormControl,
+  CTooltip,
 } from '@coreui/react'
 import Switch from 'react-switch'
 import API from '../../../api'
@@ -139,16 +140,45 @@ const EmployeeLeaveDetails = (props) => {
     {
       name: 'View/ Edit',
       // eslint-disable-next-line react/display-name
-      cell: (row) => <ActionTag row={row} />,
+      cell: (row) => <ViewEditTag row={row} />,
     },
     {
       name: 'Action',
       // eslint-disable-next-line react/display-name
-      cell: (row) => <ViewEditTag row={row} />,
+      cell: (row) => <ActionTag row={row} />,
     },
   ]
 
   const ActionTag = ({ row }) => {
+    // eslint-disable-next-line no-unused-expressions
+    return (
+      <>
+        <CTooltip content="Download Resume" placement="top">
+          <Switch
+            height={20}
+            width={48}
+            onChange={(e) => handleApproveChange(e, row.id)}
+            checked={row.status === '1' ? true : false}
+            className="react-switch"
+          />
+        </CTooltip>
+        &nbsp;&nbsp;
+        <CTooltip content="Download Resume" placement="top">
+          <Switch
+            onColor="#e55353"
+            height={20}
+            width={48}
+            onChange={(e) => handleRejectChange(e, row.id)}
+            checked={row.status === '2' ? true : false}
+            className="react-switch custom-switch-class"
+          />
+        </CTooltip>
+        {/* <span>{checked ? 'on' : 'off'}</span> */}
+      </>
+    )
+  }
+
+  const ViewEditTag = ({ row }) => {
     // eslint-disable-next-line no-unused-expressions
     return (
       <>
@@ -171,32 +201,6 @@ const EmployeeLeaveDetails = (props) => {
         >
           <EditIcon />
         </CButton>
-      </>
-    )
-  }
-
-  const ViewEditTag = ({ row }) => {
-    // eslint-disable-next-line no-unused-expressions
-    return (
-      <>
-        <Switch
-          height={20}
-          width={48}
-          onChange={(e) => handleApproveChange(e, row.id)}
-          checked={row.status === '1' ? true : false}
-          className="react-switch"
-        />
-        {/* <span>{checked ? 'on' : 'off'}</span> */}
-        &nbsp;&nbsp;
-        <Switch
-          onColor="#e55353"
-          height={20}
-          width={48}
-          onChange={(e) => handleRejectChange(e, row.id)}
-          checked={row.status === '2' ? true : false}
-          className="react-switch custom-switch-class"
-        />
-        {/* <span>{checked ? 'on' : 'off'}</span> */}
       </>
     )
   }
