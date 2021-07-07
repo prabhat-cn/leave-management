@@ -2,7 +2,6 @@
 import React, { useState, useEffect } from 'react'
 import Avatar from 'react-avatar'
 import {
-  CAvatar,
   CBadge,
   CDropdown,
   CDropdownDivider,
@@ -14,6 +13,7 @@ import {
 import CIcon from '@coreui/icons-react'
 import { freeSet } from '@coreui/icons'
 import { Link } from 'react-router-dom'
+import Accounts from './account/Accounts'
 const AppHeaderDropdown = () => {
   const [user, setUser] = useState({})
 
@@ -39,35 +39,8 @@ const AppHeaderDropdown = () => {
         <Avatar className="mr-2" name={user && user.user_nicename} size="45" round={true} />
       </CDropdownToggle>
       <CDropdownMenu className="pt-0" placement="bottom-end">
-        <CDropdownHeader className="bg-light fw-semibold py-2">Account</CDropdownHeader>
-        <CDropdownItem href="#">
-          <CIcon name="cil-bell" className="me-2" />
-          Updates
-          <CBadge color="info" className="ms-2">
-            42
-          </CBadge>
-        </CDropdownItem>
-        <CDropdownItem href="#">
-          <CIcon name="cil-envelope-open" className="me-2" />
-          Messages
-          <CBadge color="success" className="ms-2">
-            42
-          </CBadge>
-        </CDropdownItem>
-        <CDropdownItem href="#">
-          <CIcon name="cil-task" className="me-2" />
-          Tasks
-          <CBadge color="danger" className="ms-2">
-            42
-          </CBadge>
-        </CDropdownItem>
-        <CDropdownItem href="#">
-          <CIcon name="cil-comment-square" className="me-2" />
-          Comments
-          <CBadge color="warning" className="ms-2">
-            42
-          </CBadge>
-        </CDropdownItem>
+        {/* <Accounts /> */}
+
         <CDropdownHeader className="bg-light fw-semibold py-2">Settings</CDropdownHeader>
         <CDropdownItem href="/profile">
           <CIcon name="cil-user" className="me-2" />
@@ -77,6 +50,7 @@ const AppHeaderDropdown = () => {
           <CIcon name="cil-settings" className="me-2" />
           Settings
         </CDropdownItem>
+        {/*         
         <CDropdownItem href="#">
           <CIcon name="cil-credit-card" className="me-2" />
           Payments
@@ -91,6 +65,7 @@ const AppHeaderDropdown = () => {
             42
           </CBadge>
         </CDropdownItem>
+         */}
         <CDropdownDivider />
         <CDropdownItem href="#" onClick={(e) => makeLogout(e)}>
           <CIcon content={freeSet.cilPowerStandby} className="me-2" />

@@ -11,21 +11,21 @@ import API from '../../../api'
 const UserImage = () => {
   const [proImge, setProImge] = useState({})
 
-    const getProImage = () => {
-        API.get('/wp-jwt/v1/get-profile-image')
-          .then((resImage) => {
-            // it is also object
-            console.log('resImage', resImage.data)
-            setProImge(resImage.data.data)
-          })
-          
-          .catch((err) => {
-            console.log('err', err)
-          })
-    }
-    useEffect(() => {
-        getProImage()
-    }, [])
+  const getProImage = () => {
+      API.get('/wp-jwt/v1/get-profile-image')
+        .then((resImage) => {
+          // it is also object
+          console.log('resImage', resImage.data)
+          setProImge(resImage.data.data)
+        })
+        
+        .catch((err) => {
+          console.log('err', err)
+        })
+  }
+  useEffect(() => {
+      getProImage()
+  }, [])
   return (
     <>
       <CCardBody>

@@ -2,7 +2,6 @@
 import React, { useState } from 'react'
 import Message from './Message'
 import Progress from './Progress'
-
 import API from '../../../../api'
 
 const FileUpload = () => {
@@ -20,7 +19,8 @@ const FileUpload = () => {
   const onSubmit = async (e) => {
     e.preventDefault()
     const formData = new FormData()
-    formData.append('file', file)
+    formData.append('profile_picture', file)
+    console.log(...formData)
 
     try {
       const res = await API.post('/wp-jwt/v1/upload-profile-image', formData, {
@@ -58,7 +58,7 @@ const FileUpload = () => {
       {message ? <Message msg={message} /> : null}
       <form onSubmit={onSubmit}>
         <div className="custom-file mb-4">
-          <input type="file" className="custom-file-input" id="customFile" onChange={onChange} />
+          <input type="file" name="profile_picture" id="profile_picture" className="custom-file-input" onChange={onChange} />
           <label className="custom-file-label" htmlFor="customFile">
             {filename}
           </label>
