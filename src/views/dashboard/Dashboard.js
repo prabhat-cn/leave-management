@@ -48,7 +48,7 @@ const Dashboard = (props) => {
 
   return (
     <>
-      <WidgetsDropdown />
+      {/* <WidgetsDropdown /> */}
       <CCard className="mb-4">
         <CCardBody>
           <CRow>
@@ -192,9 +192,9 @@ const Dashboard = (props) => {
         </CCardFooter>
       </CCard>
 
-      <WidgetsBrand withCharts />
+      {/* <WidgetsBrand withCharts /> */}
 
-      <CRow>
+      {/* <CRow>
         <CCol xs>
           <CCard className="mb-4">
             <CCardHeader>Traffic {' & '} Sales</CCardHeader>
@@ -599,6 +599,7 @@ const Dashboard = (props) => {
           </CCard>
         </CCol>
       </CRow>
+     */}
     </>
   )
 }
