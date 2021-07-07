@@ -31,10 +31,14 @@ const Dashboard = (props) => {
   if (localStorage.getItem('lMuserDataToken') !== null) {
     const userData = JSON.parse(localStorage.getItem('lMuserDataToken'))
     if (userData.user_role === 'hr') {
-      if (props) {
-        // eslint-disable-next-line react/prop-types
-        props.history.push('/')
-      }
+      alert('You are the Hr, You have not any access')
+      localStorage.removeItem('lMuserDataToken')
+      window.location.href = '/'
+    }
+    if (userData.user_role === 'administrator') {
+      alert('You are the Admin, You have not any access')
+      localStorage.removeItem('lMuserDataToken')
+      window.location.href = '/'
     }
   }
   // role based auth end
