@@ -69,9 +69,11 @@ const EmployeeLeaveDetails = (props) => {
       case 2:
         return 'btn btn-danger'
       case 3:
-        return 'btn btn-dark'
+        return 'btn btn-light'
       case 4:
         return 'btn btn-secondary'
+      case 5:
+        return 'btn btn-dark'
       default:
         break
     }
@@ -79,11 +81,13 @@ const EmployeeLeaveDetails = (props) => {
 
   const StatusCell = ({ row }) => (
     <p className={'Status-cell' + ' ' + switchClasses(row?.status * 1)}>
+      {/* convert string to integer * 1 or parseInt */}
       {row?.status * 1 === 0 && 'Pending'}
       {row?.status * 1 === 1 && 'Approved'}
       {row?.status * 1 === 2 && 'Rejected'}
       {row?.status * 1 === 3 && 'On Hold'}
       {row?.status * 1 === 4 && 'Modified'}
+      {row?.status * 1 === 5 && 'Cancelled'}
     </p>
   )
 
@@ -153,7 +157,137 @@ const EmployeeLeaveDetails = (props) => {
     // eslint-disable-next-line no-unused-expressions
     return (
       <>
-        <CTooltip content="Download Resume" placement="top">
+        {row.status === '0' && (
+          <>
+            <Switch
+              height={20}
+              width={48}
+              onChange={(e) => handleApproveChange(e, row.id)}
+              checked={row.status === '1' ? true : false}
+              className="react-switch"
+            />
+            &nbsp;&nbsp;
+            <Switch
+              onColor="#e55353"
+              height={20}
+              width={48}
+              onChange={(e) => handleRejectChange(e, row.id)}
+              checked={row.status === '2' ? true : false}
+              className="react-switch custom-switch-class"
+            />
+          </>
+        )}
+
+        {row.status === '1' && (
+          <>
+            <Switch
+              height={20}
+              width={48}
+              onChange={(e) => handleApproveChange(e, row.id)}
+              checked={row.status === '1' ? true : false}
+              className="react-switch"
+            />
+            &nbsp;&nbsp;
+            <Switch
+              onColor="#e55353"
+              height={20}
+              width={48}
+              onChange={(e) => handleRejectChange(e, row.id)}
+              checked={row.status === '2' ? true : false}
+              className="react-switch custom-switch-class"
+              disabled
+            />
+          </>
+        )}
+
+        {row.status === '2' && (
+          <>
+            <Switch
+              height={20}
+              width={48}
+              onChange={(e) => handleApproveChange(e, row.id)}
+              checked={row.status === '1' ? true : false}
+              className="react-switch"
+              disabled
+            />
+            &nbsp;&nbsp;
+            <Switch
+              onColor="#e55353"
+              height={20}
+              width={48}
+              onChange={(e) => handleRejectChange(e, row.id)}
+              checked={row.status === '2' ? true : false}
+              className="react-switch custom-switch-class"
+            />
+          </>
+        )}
+
+        {row.status === '3' && (
+          <>
+            <Switch
+              height={20}
+              width={48}
+              onChange={(e) => handleApproveChange(e, row.id)}
+              checked={row.status === '1' ? true : false}
+              className="react-switch"
+            />
+            &nbsp;&nbsp;
+            <Switch
+              onColor="#e55353"
+              height={20}
+              width={48}
+              onChange={(e) => handleRejectChange(e, row.id)}
+              checked={row.status === '2' ? true : false}
+              className="react-switch custom-switch-class"
+            />
+          </>
+        )}
+
+        {row.status === '4' && (
+          <>
+            <Switch
+              height={20}
+              width={48}
+              onChange={(e) => handleApproveChange(e, row.id)}
+              checked={row.status === '1' ? true : false}
+              className="react-switch"
+            />
+            &nbsp;&nbsp;
+            <Switch
+              onColor="#e55353"
+              height={20}
+              width={48}
+              onChange={(e) => handleRejectChange(e, row.id)}
+              checked={row.status === '2' ? true : false}
+              className="react-switch custom-switch-class"
+            />
+          </>
+        )}
+
+        {row.status === '5' && (
+          <>
+            <Switch
+              height={20}
+              width={48}
+              onChange={(e) => handleApproveChange(e, row.id)}
+              checked={row.status === '1' ? true : false}
+              className="react-switch"
+              disabled
+            />
+            &nbsp;&nbsp;
+            <Switch
+              onColor="#e55353"
+              height={20}
+              width={48}
+              onChange={(e) => handleRejectChange(e, row.id)}
+              checked={row.status === '2' ? true : false}
+              className="react-switch custom-switch-class"
+              disabled
+            />
+          </>
+        )}
+
+        {/* <CTooltip content="Approve" placement="top">
           <Switch
             height={20}
             width={48}
@@ -163,16 +297,34 @@ const EmployeeLeaveDetails = (props) => {
           />
         </CTooltip>
         &nbsp;&nbsp;
-        <CTooltip content="Download Resume" placement="top">
-          <Switch
-            onColor="#e55353"
-            height={20}
-            width={48}
-            onChange={(e) => handleRejectChange(e, row.id)}
-            checked={row.status === '2' ? true : false}
-            className="react-switch custom-switch-class"
-          />
-        </CTooltip>
+        {row.status === '1' ? (
+          <>
+            <CTooltip content="Reject" placement="top">
+              <Switch
+                onColor="#e55353"
+                height={20}
+                width={48}
+                onChange={(e) => handleRejectChange(e, row.id)}
+                checked={row.status === '2' ? true : false}
+                className="react-switch custom-switch-class"
+                disabled
+              />
+            </CTooltip>
+          </>
+        ) : (
+          <>
+            <CTooltip content="Reject" placement="top">
+              <Switch
+                onColor="#e55353"
+                height={20}
+                width={48}
+                onChange={(e) => handleRejectChange(e, row.id)}
+                checked={row.status === '2' ? true : false}
+                className="react-switch custom-switch-class"
+              />
+            </CTooltip>
+          </>
+        )} */}
         {/* <span>{checked ? 'on' : 'off'}</span> */}
       </>
     )

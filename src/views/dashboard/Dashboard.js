@@ -25,7 +25,19 @@ import CIcon from '@coreui/icons-react'
 const WidgetsDropdown = lazy(() => import('../components/widgets/WidgetsDropdown.js'))
 const WidgetsBrand = lazy(() => import('../components/widgets/WidgetsBrand.js'))
 
-const Dashboard = () => {
+const Dashboard = (props) => {
+  // role based auth start
+  console.log(localStorage.getItem('lMuserDataToken'))
+  if (localStorage.getItem('lMuserDataToken') !== null) {
+    const userData = JSON.parse(localStorage.getItem('lMuserDataToken'))
+    if (userData.user_role === 'hr') {
+      if (props) {
+        // eslint-disable-next-line react/prop-types
+        props.history.push('/')
+      }
+    }
+  }
+  // role based auth end
   const random = (min, max) => {
     return Math.floor(Math.random() * (max - min + 1) + min)
   }

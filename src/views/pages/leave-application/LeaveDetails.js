@@ -22,7 +22,9 @@ import {
   CForm,
   CFormLabel,
   CFormControl,
+  CTooltip,
 } from '@coreui/react'
+import Switch from 'react-switch'
 import API from '../../../api'
 import { ViewIcon, ChatIcon } from '../../../constant/icons'
 import Chat from './Chat'
@@ -39,6 +41,7 @@ const LeaveDetails = () => {
     'status': '',
   }])
   const [posts, setPosts] = useState()
+  const [cancelChecked, setCancelChecked] = useState(false)
   const switchClasses = (type) => {
     switch (type) {
       case 0:
@@ -48,21 +51,25 @@ const LeaveDetails = () => {
       case 2:
         return 'btn btn-danger'
       case 3:
-        return 'btn btn-dark'
+        return 'btn btn-light'
       case 4:
         return 'btn btn-secondary'
+      case 5:
+        return 'btn btn-dark'
       default:
         break
     }
   }
 
   const StatusCell = ({ row }) => (
-    <p className={'Status-cell' + ' ' +(switchClasses(row?.status * 1))}>
-      {row?.status * 1 === 0 && 'Pending'}
-      {row?.status * 1 === 1 && 'Approved'}
-      {row?.status * 1 === 2 && 'Rejected'}
-      {row?.status * 1 === 3 && 'On Hold'}
-      {row?.status * 1 === 4 && 'Modified'}
+    // incoming "status" value is string
+    <p className={'Status-cell' + ' ' +(switchClasses(parseInt(row?.status)))}>
+      {parseInt(row?.status) === 0 && 'Pending'}
+      {parseInt(row?.status) === 1 && 'Approved'}
+      {parseInt(row?.status) === 2 && 'Rejected'}
+      {parseInt(row?.status) === 3 && 'On Hold'}
+      {parseInt(row?.status) === 4 && 'Modified'}
+      {parseInt(row?.status) === 5 && 'Cancelled'}
     </p>
   )
 
@@ -112,13 +119,18 @@ const LeaveDetails = () => {
       sortable: true,
     },
     {
+      name: 'View/Chat',
+      // eslint-disable-next-line react/display-name
+      cell: (row) => <ViewChatTag row={row} />,
+    },
+    {
       name: 'Action',
       // eslint-disable-next-line react/display-name
       cell: (row) => <ActionTag row={row} />,
     },
   ]
 
-  const ActionTag = ({ row }) => {
+  const ViewChatTag = ({ row }) => {
     // eslint-disable-next-line no-unused-expressions
     return (
       <>
@@ -141,6 +153,54 @@ const LeaveDetails = () => {
         </CButton>
       </>
     )
+  }
+
+  const ActionTag = ({ row }) => {
+    // eslint-disable-next-line no-unused-expressions
+    return (
+      <>
+      {
+        row.status === '1' ? (
+          <Switch
+            onColor="#e55353"
+            height={20}
+            width={48}
+            onChange={(e) => handleCancelChange(e, row.id)}
+            checked={ row.status === '5' ? true : false }
+            className="react-switch custom-switch-class"
+            disabled
+          />
+        ):(
+          <>
+            <Switch
+              onColor="#e55353"
+              height={20}
+              width={48}
+              onChange={(e) => handleCancelChange(e, row.id)}
+              checked={ row.status === '5' ? true : false }
+              className="react-switch custom-switch-class"
+            />
+        </>
+        )
+      }
+
+      </>
+    )
+  }
+
+  const leaveCancel = (id) => {
+    API.post(`/wp-jwt/v1/leave-application-cancel/${id}`)
+      .then((res) => {
+        getData()
+      })
+      .catch((err) => {
+        console.log(err)
+      })
+  }
+
+  const handleCancelChange = (val, id) => {
+    leaveCancel(id)
+    setCancelChecked(val)
   }
 
   const getData = () => {
