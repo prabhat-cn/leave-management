@@ -5,7 +5,7 @@ import ImageCropper from './imageCropper/ImageCropper'
 
 const ImageUpload = () => {
 
-    const [ imageSelected, setImageSelected ] = useState()
+    const [ imageSelected, setImageSelected ] = useState('')
 
     const uploadImage = (e) => {
         e.preventDefault()
