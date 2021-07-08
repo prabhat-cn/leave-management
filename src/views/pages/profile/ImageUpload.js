@@ -62,10 +62,10 @@ const ImageUpload = () => {
             setImageSelected(e.target.files[0])
           }}
         />
-        {/* <ImageCropper name="profile_picture" id="profile_picture" 
+        <ImageCropper name="profile_picture" id="profile_picture" 
           onChange={(e) => {
             setImageSelected(e.target.files[0])
-          }}/> */}
+          }}/>
         <button type="submit">Upload Image</button>
       </form>
     </>
