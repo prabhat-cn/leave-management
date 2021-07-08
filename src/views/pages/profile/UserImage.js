@@ -6,10 +6,31 @@ import {
     CAvatar,
     CCardTitle,
 } from '@coreui/react'
+import { toast } from 'react-toastify'
 import API from '../../../api'
+import FileUpload from './file-upload/FileUpload'
+import ImageUpload from './ImageUpload'
 
 const UserImage = () => {
   const [proImge, setProImge] = useState({})
+  const [userData, setUserData] = useState({})
+
+  // const userInfo = () => {
+  //   const userValue = JSON.parse(localStorage.getItem('lMuserDataToken'))
+  //   console.log('userInfo', userValue);
+  //   setUserData(userValue)
+  // }
+
+  const getProfileValues = async () => {
+    try {
+      const proData = await API.get('/wp-jwt/v1/get-user-info')
+      const bulkData = proData.data.data
+      console.log('bulkData', bulkData);
+      setUserData(bulkData)
+    } catch (err) {
+      console.log(err.message)
+    }
+  }
 
   const getProImage = () => {
       API.get('/wp-jwt/v1/get-profile-image')
@@ -25,6 +46,7 @@ const UserImage = () => {
   }
   useEffect(() => {
       getProImage()
+      getProfileValues()
   }, [])
   return (
     <>
@@ -36,17 +58,19 @@ const UserImage = () => {
             </div>
           <div className="mb-3 text-center">
             <CCardTitle>
-              <h3>Alec Thompson</h3>
+              <h3>{userData.first_name} {userData.last_name}</h3>
             </CCardTitle>
             <CCardTitle>
-              <h5>Software Engineer</h5>
+              <h5>{userData.designation}</h5>
             </CCardTitle>
             <CCardTitle>
-              <h6>Capital Numbers Infotech</h6>
+              <h5>{userData.department}</h5>
             </CCardTitle>
           </div>
         </CForm>
       </CCardBody>
+      {/* <FileUpload /> */}
+      <ImageUpload />
     </>
   )
 }

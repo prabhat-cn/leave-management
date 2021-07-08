@@ -25,7 +25,7 @@ const AppHeaderDropdown = () => {
   // Data show after login
   useEffect(() => {
     const loggedInUser = localStorage.getItem('lMuserDataToken')
-    console.log('loggedInUser', loggedInUser)
+    // console.log('loggedInUser', loggedInUser)
     if (loggedInUser) {
       const foundUser = JSON.parse(loggedInUser)
       // console.log('foundUser', foundUser)
@@ -46,11 +46,11 @@ const AppHeaderDropdown = () => {
           <CIcon name="cil-user" className="me-2" />
           Profile
         </CDropdownItem>
+        {/* 
         <CDropdownItem href="/settings">
           <CIcon name="cil-settings" className="me-2" />
           Settings
-        </CDropdownItem>
-        {/*         
+        </CDropdownItem>        
         <CDropdownItem href="#">
           <CIcon name="cil-credit-card" className="me-2" />
           Payments

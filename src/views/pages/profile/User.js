@@ -27,8 +27,6 @@ import { PdfIcon } from '../../../constant/icons/index'
 import API from '../../../api'
 import { profilePending, profileSuccess, profileFail } from '../../../store/reducers/profileReducer'
 import UserImage from './UserImage'
-import FileUpload from './file-upload/FileUpload'
-import ImageUpload from './ImageUpload'
 
 const sleep = (ms) => new Promise((r) => setTimeout(r, ms))
 const User = () => {
@@ -778,8 +776,6 @@ const User = () => {
                     <CCard className="mb-4">
                       {/*  user image */}
                       <UserImage />
-                      {/* <FileUpload /> */}
-                      <ImageUpload />
                     </CCard>
                   </CCol>
                 </CRow>

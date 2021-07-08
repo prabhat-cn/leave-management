@@ -12,7 +12,7 @@ const WidgetsBrand = lazy(() => import('../components/widgets/WidgetsBrand.js'))
 
 const Dashboard = (props) => {
   // role based auth start
-  console.log(localStorage.getItem('lMuserDataToken'))
+  // console.log(localStorage.getItem('lMuserDataToken'))
   if (localStorage.getItem('lMuserDataToken') !== null) {
     const userData = JSON.parse(localStorage.getItem('lMuserDataToken'))
     if (userData.user_role === 'hr') {

@@ -1,12 +1,14 @@
 /* eslint-disable prettier/prettier */
-import React, { useState } from 'react'
+import React, { useState,useEffect } from 'react'
 import API from '../../../api'
-import ImageCropper from './imageCropper/ImageCropper'
-import { toast } from 'react-toastify'
+import ImageCropper from '../profile/imageCropper/ImageCropper'
+import { CAlert } from '@coreui/react'
 
 const ImageUpload = () => {
   const [imageSelected, setImageSelected] = useState(null)
   const [imageBaseSelected, setImageBaseSelected] = useState(null)
+  const [message, setMessage] = useState(false)
+  const [error, setError] = useState(false)
 
   const uploadImage = (e) => {
     e.preventDefault()
@@ -17,11 +19,16 @@ const ImageUpload = () => {
     API.post('/wp-jwt/v1/upload-profile-image', formData)
       .then((response) => {
         if(response.data.status === 404){
-            return toast.error('Failed! File Upload')
+          setMessage(false)
+          setError(true)
         } else {
+          setMessage(true)
           document.querySelector('#userImage img').setAttribute('src', imageBaseSelected)
-          return toast.success('Success! File Uploaded')
         }
+        setTimeout(() => {
+          setMessage(false)
+          setError(false)
+        }, 4000)
 
       })
       .catch((err) => {
@@ -37,7 +44,8 @@ const ImageUpload = () => {
 
   return (
     <>
-      <br/>
+      {message ? <CAlert color="success">Success! File Uploaded!</CAlert> : null}
+      {error ? <CAlert color="danger">Failed! File Upload!</CAlert> : null}<br/>
         {/* <input
           type="file"
           name="profile_picture"

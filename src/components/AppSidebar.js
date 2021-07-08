@@ -73,7 +73,7 @@ const AppSidebar = () => {
       <CSidebarBrand className="d-none d-md-flex" to="/">
         <p>
           &nbsp;&nbsp;
-          <img src="/leave-management-system-fav1.png" width="10%" /> Leave Management System
+          <img src="/logo.png" width="10%" /> Leave Management System
         </p>
         {/* <CIcon className="sidebar-brand-full" name="logo-negative" height={35} />
         <CIcon className="sidebar-brand-narrow" name="sygnet" height={35} /> */}
