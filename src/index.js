@@ -12,7 +12,7 @@ import { Provider } from 'react-redux'
 
 // import store from './store/reducers/store'
 import storeOps from './store/store'
-// import storeSide from './store/store1'
+import storeSide from './store/store1'
 React.icons = icons
 
 ReactDOM.render(
@@ -21,9 +21,11 @@ ReactDOM.render(
   //     <App />
   //   </Provider>
   // </Provider>
-  <Provider store={storeOps}>
-    <App />
-  </Provider>,
+  <>
+    <Provider store={storeOps}>
+      <App />
+    </Provider>
+  </>,
   document.getElementById('root'),
 )
 
