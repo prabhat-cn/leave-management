@@ -27,7 +27,7 @@ function generateDownload(canvas, crop) {
   )
 }
 
-const ImageCropper = () => {
+const ImageCropper = (props) => {
   const [upImg, setUpImg] = useState()
   const imgRef = useRef(null)
   const previewCanvasRef = useRef(null)
@@ -47,8 +47,26 @@ const ImageCropper = () => {
   }
 
   const onLoad = useCallback((img) => {
+    // console.log(img.getAttribute('src'))
+
+    base64file(img.getAttribute('src'))
     imgRef.current = img
   }, [])
+
+  const base64file = (imageData) => {
+    var arr = imageData.split(','),
+            mime = arr[0].match(/:(.*?);/)[1],
+            bstr = atob(arr[1]),
+            n = bstr.length,
+            u8arr = new Uint8Array(n);
+
+        while(n--){
+            u8arr[n] = bstr.charCodeAt(n);
+        }
+
+    // eslint-disable-next-line react/prop-types
+    props.afterCrop(new File([u8arr], 'profile_picture', {type:mime}), imageData)
+  }
 
   useEffect(() => {
     if (!completedCrop || !previewCanvasRef.current || !imgRef.current) {
@@ -105,13 +123,13 @@ const ImageCropper = () => {
           }}
         />
       </div>
-      <button
+      {/* <button
         type="button"
         disabled={!completedCrop?.width || !completedCrop?.height}
         onClick={() => generateDownload(previewCanvasRef.current, completedCrop)}
       >
         Download cropped image
-      </button>
+      </button> */}
     </div>
   )
 }

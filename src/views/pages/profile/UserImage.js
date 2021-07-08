@@ -18,7 +18,7 @@ const UserImage = () => {
           console.log('resImage', resImage.data)
           setProImge(resImage.data.data)
         })
-        
+
         .catch((err) => {
           console.log('err', err)
         })
@@ -32,7 +32,7 @@ const UserImage = () => {
         <CForm name="profile-image" id="profile-image">
             <div className="col mb-3 text-center av-img">
                 {/* <CAvatar src="avatars/5.jpg" className="av-imgs" color="secondary" size="xl" /> */}
-                <CAvatar src={proImge.url} className="av-imgs" color="secondary" size="xl" />
+                <CAvatar src={proImge.url} className="av-imgs" color="secondary" id="userImage" size="xl" />
             </div>
           <div className="mb-3 text-center">
             <CCardTitle>

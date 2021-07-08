@@ -778,7 +778,7 @@ const User = () => {
                     <CCard className="mb-4">
                       {/*  user image */}
                       <UserImage />
-                      <FileUpload />
+                      {/* <FileUpload /> */}
                       <ImageUpload />
                     </CCard>
                   </CCol>
