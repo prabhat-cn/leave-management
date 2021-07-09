@@ -353,7 +353,6 @@ const EmployeeLeaveDetails = (props) => {
   }
 
   const ViewEditTag = ({ row }) => {
-    // eslint-disable-next-line no-unused-expressions
     return (
       <>
         <CButton
@@ -365,16 +364,34 @@ const EmployeeLeaveDetails = (props) => {
           <ViewIcon />
         </CButton>
         &nbsp;&nbsp;
-        <CButton
-          height={20}
-          width={48}
-          color="success"
-          shape="round"
-          className="custom-btn"
-          onClick={() => editLeave(row)}
-        >
-          <EditIcon />
-        </CButton>
+        {row.status === '1' || row.status === '2' || row.status === '5' ? (
+          <>
+            <CButton
+              height={20}
+              width={48}
+              color="success"
+              shape="round"
+              className="custom-btn"
+              onClick={() => editLeave(row)}
+              disabled
+            >
+              <EditIcon />
+            </CButton>
+          </>
+        ) : (
+          <>
+            <CButton
+              height={20}
+              width={48}
+              color="success"
+              shape="round"
+              className="custom-btn"
+              onClick={() => editLeave(row)}
+            >
+              <EditIcon />
+            </CButton>
+          </>
+        )}
       </>
     )
   }
