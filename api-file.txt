@@ -17,8 +17,11 @@ Password :- QxD)4)aF&hzS1WEF4DT%ucQi
 HR :- hr12
 Password :- QxD)4)aF&hzS1WEF4DT%ucQi
 
-"username": "Davidd",
+"PM": "Davidd",
 "password": "Davidd@123"
+
+"Emp": "rahulcn@gmail.com",
+"password": "Source2@"
 
 
 // REGISTER
