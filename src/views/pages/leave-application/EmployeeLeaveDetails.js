@@ -1,5 +1,6 @@
 /* eslint-disable react/prop-types */
 import React, { useState, useEffect } from 'react'
+import { toast } from 'react-toastify'
 import { Link } from 'react-router-dom'
 import { DateTime } from 'luxon'
 import DataTable from 'react-data-table-component'
@@ -519,6 +520,7 @@ const EmployeeLeaveDetails = (props) => {
     API.post(`/wp-jwt/v1/date-edit/${editData.leave_edit.id}`, editData.leave_edit_date)
       .then(() => {
         editDismiss()
+        toast.success('Success! Leave modified')
       })
       .catch((err) => {
         console.log(err)
