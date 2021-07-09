@@ -44,6 +44,7 @@ const LeaveDetails = () => {
   ])
   const [posts, setPosts] = useState()
   const [cancelChecked, setCancelChecked] = useState(false)
+  const [chatData, setChatData] = useState([])
   const switchClasses = (type) => {
     switch (type) {
       case 0:
@@ -84,11 +85,11 @@ const LeaveDetails = () => {
       selector: 'slNo',
       sortable: true,
     },
-    // {
-    //   name: 'Id',
-    //   selector: 'id',
-    //   sortable: true,
-    // },
+    {
+      name: 'Id',
+      selector: 'id',
+      sortable: true,
+    },
     {
       name: 'Project Manager',
       selector: 'display_name',
@@ -131,31 +132,6 @@ const LeaveDetails = () => {
       cell: (row) => <ActionTag row={row} />,
     },
   ]
-
-  const ViewChatTag = ({ row }) => {
-    // eslint-disable-next-line no-unused-expressions
-    return (
-      <>
-        <CButton
-          color="info"
-          shape="round"
-          className="custom-btn"
-          onClick={() => viewDetail(row.id)}
-        >
-          <ViewIcon />
-        </CButton>
-        &nbsp;
-        <CButton
-          style={{ backgroundColor: '#2db67c' }}
-          shape="round"
-          className="custom-btn"
-          onClick={() => viewChat(row.id)}
-        >
-          <ChatIcon />
-        </CButton>
-      </>
-    )
-  }
 
   const ActionTag = ({ row }) => {
     // eslint-disable-next-line no-unused-expressions
@@ -291,6 +267,7 @@ const LeaveDetails = () => {
   const getData = () => {
     API.get('/wp-jwt/v1/apply-leave-details')
       .then((res) => {
+        console.log('getData', res)
         setPosts(
           res.data.data.map((m, i) => {
             return { ...m, ...{ slNo: i + 1 } }
@@ -300,6 +277,31 @@ const LeaveDetails = () => {
       .catch((err) => {
         console.log(err)
       })
+  }
+
+  const ViewChatTag = ({ row }) => {
+    // eslint-disable-next-line no-unused-expressions
+    return (
+      <>
+        <CButton
+          color="info"
+          shape="round"
+          className="custom-btn"
+          onClick={() => viewDetail(row.id)}
+        >
+          <ViewIcon />
+        </CButton>
+        &nbsp;
+        <CButton
+          style={{ backgroundColor: '#2db67c' }}
+          shape="round"
+          className="custom-btn"
+          onClick={() => viewChat(row.id)}
+        >
+          <ChatIcon />
+        </CButton>
+      </>
+    )
   }
 
   //  View
@@ -313,7 +315,19 @@ const LeaveDetails = () => {
   const viewChat = (id) => {
     console.log(id)
     singleData(id)
+    getChat(id)
     toggleChat(true)
+  }
+
+  const getChat = (id) => {
+    API.get(`/wp-jwt/v1/get-comment/${id}`)
+      .then((response) => {
+        console.log('getChat', response.data.data)
+        setChatData(response.data.data)
+      })
+      .catch((err) => {
+        console.log(err)
+      })
   }
 
   const closeChat = () => {
@@ -470,7 +484,7 @@ const LeaveDetails = () => {
         </CRow>
       </CContainer>
       {/* Chat ui */}
-      {openChat && <Chat close={closeChat} openChat={openChat} />}
+      {openChat && <Chat close={closeChat} openChat={openChat} chatData={chatData} />}
       <style>{customCss}</style>
     </>
   )

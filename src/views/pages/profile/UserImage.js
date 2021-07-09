@@ -15,11 +15,6 @@ const UserImage = () => {
   const [proImge, setProImge] = useState({})
   const [userData, setUserData] = useState({})
 
-  // const userInfo = () => {
-  //   const userValue = JSON.parse(localStorage.getItem('lMuserDataToken'))
-  //   console.log('userInfo', userValue);
-  //   setUserData(userValue)
-  // }
 
   const getProfileValues = async () => {
     try {
