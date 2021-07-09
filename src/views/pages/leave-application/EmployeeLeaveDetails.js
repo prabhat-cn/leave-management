@@ -1,8 +1,10 @@
 /* eslint-disable react/prop-types */
 import React, { useState, useEffect } from 'react'
+import { Link } from 'react-router-dom'
 import { DateTime } from 'luxon'
 import DataTable from 'react-data-table-component'
 import htmlToFormattedText from 'html-to-formatted-text'
+import ReactTooltip from 'react-tooltip'
 import {
   CContainer,
   CRow,
@@ -159,147 +161,54 @@ const EmployeeLeaveDetails = (props) => {
       <>
         {row.status === '0' && (
           <>
-            <Switch
-              height={20}
-              width={48}
-              onChange={(e) => handleApproveChange(e, row.id)}
-              checked={row.status === '1' ? true : false}
-              className="react-switch"
-            />
+            <ReactTooltip id="pendingTip1" type="info">
+              <span>Approve Leave</span>
+            </ReactTooltip>
+            <Link data-tip data-for="pendingTip1">
+              <Switch
+                height={20}
+                width={48}
+                onChange={(e) => handleApproveChange(e, row.id)}
+                checked={row.status === '1' ? true : false}
+                className="react-switch"
+              />
+            </Link>
             &nbsp;&nbsp;
-            <Switch
-              onColor="#e55353"
-              height={20}
-              width={48}
-              onChange={(e) => handleRejectChange(e, row.id)}
-              checked={row.status === '2' ? true : false}
-              className="react-switch custom-switch-class"
-            />
+            <ReactTooltip id="pendingTip2" type="info">
+              <span>Reject Leave</span>
+            </ReactTooltip>
+            <Link data-tip data-for="pendingTip2">
+              <Switch
+                onColor="#e55353"
+                height={20}
+                width={48}
+                onChange={(e) => handleRejectChange(e, row.id)}
+                checked={row.status === '2' ? true : false}
+                className="react-switch custom-switch-class"
+              />
+            </Link>
           </>
         )}
 
         {row.status === '1' && (
           <>
-            <Switch
-              height={20}
-              width={48}
-              onChange={(e) => handleApproveChange(e, row.id)}
-              checked={row.status === '1' ? true : false}
-              className="react-switch"
-            />
+            <ReactTooltip id="approveTip1" type="info">
+              <span>Leave Approved</span>
+            </ReactTooltip>
+            <Link data-tip data-for="approveTip1">
+              <Switch
+                height={20}
+                width={48}
+                onChange={(e) => handleApproveChange(e, row.id)}
+                checked={row.status === '1' ? true : false}
+                className="react-switch"
+              />
+            </Link>
             &nbsp;&nbsp;
-            <Switch
-              onColor="#e55353"
-              height={20}
-              width={48}
-              onChange={(e) => handleRejectChange(e, row.id)}
-              checked={row.status === '2' ? true : false}
-              className="react-switch custom-switch-class"
-              disabled
-            />
-          </>
-        )}
-
-        {row.status === '2' && (
-          <>
-            <Switch
-              height={20}
-              width={48}
-              onChange={(e) => handleApproveChange(e, row.id)}
-              checked={row.status === '1' ? true : false}
-              className="react-switch"
-              disabled
-            />
-            &nbsp;&nbsp;
-            <Switch
-              onColor="#e55353"
-              height={20}
-              width={48}
-              onChange={(e) => handleRejectChange(e, row.id)}
-              checked={row.status === '2' ? true : false}
-              className="react-switch custom-switch-class"
-            />
-          </>
-        )}
-
-        {row.status === '3' && (
-          <>
-            <Switch
-              height={20}
-              width={48}
-              onChange={(e) => handleApproveChange(e, row.id)}
-              checked={row.status === '1' ? true : false}
-              className="react-switch"
-            />
-            &nbsp;&nbsp;
-            <Switch
-              onColor="#e55353"
-              height={20}
-              width={48}
-              onChange={(e) => handleRejectChange(e, row.id)}
-              checked={row.status === '2' ? true : false}
-              className="react-switch custom-switch-class"
-            />
-          </>
-        )}
-
-        {row.status === '4' && (
-          <>
-            <Switch
-              height={20}
-              width={48}
-              onChange={(e) => handleApproveChange(e, row.id)}
-              checked={row.status === '1' ? true : false}
-              className="react-switch"
-            />
-            &nbsp;&nbsp;
-            <Switch
-              onColor="#e55353"
-              height={20}
-              width={48}
-              onChange={(e) => handleRejectChange(e, row.id)}
-              checked={row.status === '2' ? true : false}
-              className="react-switch custom-switch-class"
-            />
-          </>
-        )}
-
-        {row.status === '5' && (
-          <>
-            <Switch
-              height={20}
-              width={48}
-              onChange={(e) => handleApproveChange(e, row.id)}
-              checked={row.status === '1' ? true : false}
-              className="react-switch"
-              disabled
-            />
-            &nbsp;&nbsp;
-            <Switch
-              onColor="#e55353"
-              height={20}
-              width={48}
-              onChange={(e) => handleRejectChange(e, row.id)}
-              checked={row.status === '2' ? true : false}
-              className="react-switch custom-switch-class"
-              disabled
-            />
-          </>
-        )}
-
-        {/* <CTooltip content="Approve" placement="top">
-          <Switch
-            height={20}
-            width={48}
-            onChange={(e) => handleApproveChange(e, row.id)}
-            checked={row.status === '1' ? true : false}
-            className="react-switch"
-          />
-        </CTooltip>
-        &nbsp;&nbsp;
-        {row.status === '1' ? (
-          <>
-            <CTooltip content="Reject" placement="top">
+            <ReactTooltip id="approveTip2" type="info">
+              <span>Not Applicable</span>
+            </ReactTooltip>
+            <Link data-tip data-for="approveTip2">
               <Switch
                 onColor="#e55353"
                 height={20}
@@ -309,11 +218,30 @@ const EmployeeLeaveDetails = (props) => {
                 className="react-switch custom-switch-class"
                 disabled
               />
-            </CTooltip>
+            </Link>
           </>
-        ) : (
+        )}
+
+        {row.status === '2' && (
           <>
-            <CTooltip content="Reject" placement="top">
+            <ReactTooltip id="rejectTip1" type="info">
+              <span>Not Applicable</span>
+            </ReactTooltip>
+            <Link data-tip data-for="rejectTip1">
+              <Switch
+                height={20}
+                width={48}
+                onChange={(e) => handleApproveChange(e, row.id)}
+                checked={row.status === '1' ? true : false}
+                className="react-switch"
+                disabled
+              />
+            </Link>
+            &nbsp;&nbsp;
+            <ReactTooltip id="rejectTip2" type="info">
+              <span>Leave Rejected</span>
+            </ReactTooltip>
+            <Link data-tip data-for="rejectTip2">
               <Switch
                 onColor="#e55353"
                 height={20}
@@ -322,10 +250,104 @@ const EmployeeLeaveDetails = (props) => {
                 checked={row.status === '2' ? true : false}
                 className="react-switch custom-switch-class"
               />
-            </CTooltip>
+            </Link>
           </>
-        )} */}
-        {/* <span>{checked ? 'on' : 'off'}</span> */}
+        )}
+
+        {row.status === '3' && (
+          <>
+            <ReactTooltip id="onHoldTip1" type="info">
+              <span>Leave Approve</span>
+            </ReactTooltip>
+            <Link data-tip data-for="onHoldTip1">
+              <Switch
+                height={20}
+                width={48}
+                onChange={(e) => handleApproveChange(e, row.id)}
+                checked={row.status === '1' ? true : false}
+                className="react-switch"
+              />
+            </Link>
+            &nbsp;&nbsp;
+            <ReactTooltip id="onHoldTip2" type="info">
+              <span>Leave Reject</span>
+            </ReactTooltip>
+            <Link data-tip data-for="onHoldTip2">
+              <Switch
+                onColor="#e55353"
+                height={20}
+                width={48}
+                onChange={(e) => handleRejectChange(e, row.id)}
+                checked={row.status === '2' ? true : false}
+                className="react-switch custom-switch-class"
+              />
+            </Link>
+          </>
+        )}
+
+        {row.status === '4' && (
+          <>
+            <ReactTooltip id="modifiedTip1" type="info">
+              <span>Leave Approve</span>
+            </ReactTooltip>
+            <Link data-tip data-for="modifiedTip1">
+              <Switch
+                height={20}
+                width={48}
+                onChange={(e) => handleApproveChange(e, row.id)}
+                checked={row.status === '1' ? true : false}
+                className="react-switch"
+              />
+            </Link>
+            &nbsp;&nbsp;
+            <ReactTooltip id="modifiedTip2" type="info">
+              <span>Leave Reject</span>
+            </ReactTooltip>
+            <Link data-tip data-for="modifiedTip2">
+              <Switch
+                onColor="#e55353"
+                height={20}
+                width={48}
+                onChange={(e) => handleRejectChange(e, row.id)}
+                checked={row.status === '2' ? true : false}
+                className="react-switch custom-switch-class"
+              />
+            </Link>
+          </>
+        )}
+
+        {row.status === '5' && (
+          <>
+            <ReactTooltip id="cancelTip1" type="info">
+              <span>Not Applicable</span>
+            </ReactTooltip>
+            <Link data-tip data-for="cancelTip1">
+              <Switch
+                height={20}
+                width={48}
+                onChange={(e) => handleApproveChange(e, row.id)}
+                checked={row.status === '1' ? true : false}
+                className="react-switch"
+                disabled
+              />
+            </Link>
+            &nbsp;&nbsp;
+            <ReactTooltip id="cancelTip2" type="info">
+              <span>Not Applicable</span>
+            </ReactTooltip>
+            <Link data-tip data-for="cancelTip2">
+              <Switch
+                onColor="#e55353"
+                height={20}
+                width={48}
+                onChange={(e) => handleRejectChange(e, row.id)}
+                checked={row.status === '2' ? true : false}
+                className="react-switch custom-switch-class"
+                disabled
+              />
+            </Link>
+          </>
+        )}
       </>
     )
   }
