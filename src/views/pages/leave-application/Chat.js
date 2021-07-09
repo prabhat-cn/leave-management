@@ -1,14 +1,30 @@
 /* eslint-disable react/prop-types */
 import React, { useState, useEffect, Fragment } from 'react'
 import { useParams } from 'react-router-dom'
+import { DateTime } from 'luxon'
+import Avatar from 'react-avatar'
 import API from '../../../api'
 
 const Chat = ({ close, chatData }) => {
+  const [comment, setComment] = useState('')
+
   const [UserData, setUserData] = useState({})
   const userInfo = () => {
     const userValue = JSON.parse(localStorage.getItem('lMuserDataToken'))
     console.log('userValue', userValue)
     setUserData(userValue)
+  }
+
+  const handleSubmit = (id) => {
+    id.preventDefault()
+    console.log('handleSubmit')
+    API.post(`/wp-jwt/v1/comment/${id}`)
+      .then((submitRes) => {
+        console.log('submitRes', submitRes)
+      })
+      .catch((err) => {
+        console.log(err)
+      })
   }
   useEffect(() => {
     userInfo()
@@ -50,10 +66,12 @@ const Chat = ({ close, chatData }) => {
                         <span className="direct-chat-name pull-left">{chatValue.display_name}</span>
                         <span className="direct-chat-timestamp pull-right">{chatValue.date}</span>
                       </div>
-                      <img
+                      <Avatar
                         className="direct-chat-img"
-                        src="https://img.icons8.com/color/36/000000/administrator-male.png"
-                        alt="message user image"
+                        name={chatValue.display_name}
+                        value="86%"
+                        size="40"
+                        round={true}
                       />
                       <div className="direct-chat-text">{chatValue.chat}</div>
                     </div>
@@ -68,10 +86,12 @@ const Chat = ({ close, chatData }) => {
                         </span>
                         <span className="direct-chat-timestamp pull-left">{chatValue.date}</span>
                       </div>
-                      <img
+                      <Avatar
                         className="direct-chat-img"
-                        src="https://img.icons8.com/office/36/000000/person-female.png"
-                        alt="message user image"
+                        name={chatValue.display_name}
+                        value="86%"
+                        size="40"
+                        round={true}
                       />
                       <div className="direct-chat-text">{chatValue.chat}</div>
                     </div>
@@ -83,16 +103,21 @@ const Chat = ({ close, chatData }) => {
         </div>
         {/* Chat Body End */}
         <div className="box-footer">
-          <form action="#" method="post">
+          <form onSubmit={handleSubmit}>
             <div className="input-group">
               <input
                 type="text"
-                name="message"
+                name="comment"
+                id="comment"
+                value={comment}
+                onChange={(e) => {
+                  setComment(e.target.value)
+                }}
                 placeholder="Type Message ..."
                 className="form-control"
               />
               <span className="input-group-btn">
-                <button type="button" className="btn btn-flat custom_chat_btn">
+                <button type="submit" className="btn btn-flat custom_chat_btn">
                   Send
                 </button>
               </span>
