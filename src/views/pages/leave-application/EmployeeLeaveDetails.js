@@ -441,7 +441,7 @@ const EmployeeLeaveDetails = (props) => {
     API.get('/wp-jwt/v1/applied-leave-details')
       .then((res) => {
         // console.log('getData', res)
-        const getAppliedLeaves = res.data.data
+        const getAppliedLeaves = res.data.data.reverse()
         const filteredData = getAppliedLeaves.filter((searchVal) => {
           // console.log('searchVal', searchVal)
           // searchVal.display_name &&

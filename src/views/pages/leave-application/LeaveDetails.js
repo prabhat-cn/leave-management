@@ -268,8 +268,9 @@ const LeaveDetails = () => {
     API.get('/wp-jwt/v1/apply-leave-details')
       .then((res) => {
         console.log('getData', res)
+        const listData = res.data.data.reverse()
         setPosts(
-          res.data.data.map((m, i) => {
+          listData.map((m, i) => {
             return { ...m, ...{ slNo: i + 1 } }
           }),
         )
