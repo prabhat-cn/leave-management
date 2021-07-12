@@ -4,7 +4,7 @@ import { useParams } from 'react-router-dom'
 import { DateTime } from 'luxon'
 import Avatar from 'react-avatar'
 import API from '../../../api'
-
+import { CSpinner } from '@coreui/react'
 const Chat = ({ close, chatData }) => {
   const [comment, setComment] = useState('')
 
@@ -59,42 +59,61 @@ const Chat = ({ close, chatData }) => {
           <div className="direct-chat-messages">
             {chatData.map((chatValue, i) => (
               <Fragment key={i}>
-                {chatValue.user_id === '55' && (
+                {!chatValue ? (
+                  // <CSpinner color="primary" />
+                  <h1>Loading...</h1>
+                ) : (
                   <>
-                    <div className="direct-chat-msg">
-                      <div className="direct-chat-info clearfix">
-                        <span className="direct-chat-name pull-left">{chatValue.display_name}</span>
-                        <span className="direct-chat-timestamp pull-right">{chatValue.date}</span>
-                      </div>
-                      <Avatar
-                        className="direct-chat-img"
-                        name={chatValue.display_name}
-                        value="86%"
-                        size="40"
-                        round={true}
-                      />
-                      <div className="direct-chat-text">{chatValue.chat}</div>
-                    </div>
-                  </>
-                )}
-                {chatValue.user_id === '50' && (
-                  <>
-                    <div className="direct-chat-msg right">
-                      <div className="direct-chat-info clearfix">
-                        <span className="direct-chat-name pull-right">
-                          {chatValue.display_name}
-                        </span>
-                        <span className="direct-chat-timestamp pull-left">{chatValue.date}</span>
-                      </div>
-                      <Avatar
-                        className="direct-chat-img"
-                        name={chatValue.display_name}
-                        value="86%"
-                        size="40"
-                        round={true}
-                      />
-                      <div className="direct-chat-text">{chatValue.chat}</div>
-                    </div>
+                    {chatValue.length === 0 ? (
+                      <h3 className="d-flex justify-content-center">No leave found!</h3>
+                    ) : (
+                      <>
+                        {chatValue.role === 'project_manager' && (
+                          <>
+                            <div className="direct-chat-msg">
+                              <div className="direct-chat-info clearfix">
+                                <span className="direct-chat-name pull-left">
+                                  {chatValue.display_name}
+                                </span>
+                                <span className="direct-chat-timestamp pull-right">
+                                  {chatValue.date}
+                                </span>
+                              </div>
+                              <Avatar
+                                className="direct-chat-img"
+                                name={chatValue.display_name}
+                                value="86%"
+                                size="40"
+                                round={true}
+                              />
+                              <div className="direct-chat-text">{chatValue.chat}</div>
+                            </div>
+                          </>
+                        )}
+                        {chatValue.role === 'employee' && (
+                          <>
+                            <div className="direct-chat-msg right">
+                              <div className="direct-chat-info clearfix">
+                                <span className="direct-chat-name pull-right">
+                                  {chatValue.display_name}
+                                </span>
+                                <span className="direct-chat-timestamp pull-left">
+                                  {chatValue.date}
+                                </span>
+                              </div>
+                              <Avatar
+                                className="direct-chat-img"
+                                name={chatValue.display_name}
+                                value="86%"
+                                size="40"
+                                round={true}
+                              />
+                              <div className="direct-chat-text">{chatValue.chat}</div>
+                            </div>
+                          </>
+                        )}
+                      </>
+                    )}
                   </>
                 )}
               </Fragment>
