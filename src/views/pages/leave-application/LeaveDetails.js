@@ -44,7 +44,13 @@ const LeaveDetails = () => {
   ])
   const [posts, setPosts] = useState()
   const [cancelChecked, setCancelChecked] = useState(false)
-  const [chatData, setChatData] = useState([])
+  const [chatData, setChatData] = useState([
+    {
+      display_name: '',
+      date: '',
+      chat: '',
+    },
+  ])
   const switchClasses = (type) => {
     switch (type) {
       case 0:
@@ -333,6 +339,14 @@ const LeaveDetails = () => {
 
   const closeChat = () => {
     toggleChat(false)
+    // after close modal pass blank string
+    setChatData([
+      {
+        display_name: '',
+        date: '',
+        chat: '',
+      },
+    ])
   }
 
   const viewModalClose = () => {

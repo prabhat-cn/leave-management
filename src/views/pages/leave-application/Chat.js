@@ -57,67 +57,119 @@ const Chat = ({ close, chatData }) => {
         {/* Chat Body Start */}
         <div className="box-body">
           <div className="direct-chat-messages">
-            {chatData.map((chatValue, i) => (
-              <Fragment key={i}>
-                {!chatValue ? (
-                  // <CSpinner color="primary" />
-                  <h1>Loading...</h1>
+            {!chatData ? (
+              <>
+                <h3 className="d-flex justify-content-center">No chat found!</h3>
+              </>
+            ) : (
+              <>
+                {chatData && chatData.length === 0 ? (
+                  <div className="text-center">
+                    <CSpinner color="primary" />
+                  </div>
                 ) : (
                   <>
-                    {chatValue.length === 0 ? (
-                      <h3 className="d-flex justify-content-center">No leave found!</h3>
-                    ) : (
-                      <>
-                        {chatValue.role === 'project_manager' && (
-                          <>
-                            <div className="direct-chat-msg">
-                              <div className="direct-chat-info clearfix">
-                                <span className="direct-chat-name pull-left">
-                                  {chatValue.display_name}
-                                </span>
-                                <span className="direct-chat-timestamp pull-right">
-                                  {chatValue.date}
-                                </span>
+                    {chatData.map((chatValue, i) => (
+                      <Fragment key={i}>
+                        <>
+                          {chatValue.role === 'project_manager' && (
+                            <>
+                              <div className="direct-chat-msg">
+                                <div className="direct-chat-info clearfix">
+                                  <span className="direct-chat-name pull-left">
+                                    {chatValue.display_name}
+                                  </span>
+                                  <span className="direct-chat-timestamp pull-right">
+                                    {chatValue.date}
+                                  </span>
+                                </div>
+                                <Avatar
+                                  className="direct-chat-img"
+                                  name={chatValue.display_name}
+                                  value="86%"
+                                  size="40"
+                                  round={true}
+                                />
+                                <div className="direct-chat-text">{chatValue.chat}</div>
                               </div>
-                              <Avatar
-                                className="direct-chat-img"
-                                name={chatValue.display_name}
-                                value="86%"
-                                size="40"
-                                round={true}
-                              />
-                              <div className="direct-chat-text">{chatValue.chat}</div>
-                            </div>
-                          </>
-                        )}
-                        {chatValue.role === 'employee' && (
-                          <>
-                            <div className="direct-chat-msg right">
-                              <div className="direct-chat-info clearfix">
-                                <span className="direct-chat-name pull-right">
-                                  {chatValue.display_name}
-                                </span>
-                                <span className="direct-chat-timestamp pull-left">
-                                  {chatValue.date}
-                                </span>
+                            </>
+                          )}
+                          {chatValue.role === 'employee' && (
+                            <>
+                              <div className="direct-chat-msg right">
+                                <div className="direct-chat-info clearfix">
+                                  <span className="direct-chat-name pull-right">
+                                    {chatValue.display_name}
+                                  </span>
+                                  <span className="direct-chat-timestamp pull-left">
+                                    {chatValue.date}
+                                  </span>
+                                </div>
+                                <Avatar
+                                  className="direct-chat-img"
+                                  name={chatValue.display_name}
+                                  value="86%"
+                                  size="40"
+                                  round={true}
+                                />
+                                <div className="direct-chat-text">{chatValue.chat}</div>
                               </div>
-                              <Avatar
-                                className="direct-chat-img"
-                                name={chatValue.display_name}
-                                value="86%"
-                                size="40"
-                                round={true}
-                              />
-                              <div className="direct-chat-text">{chatValue.chat}</div>
-                            </div>
-                          </>
-                        )}
-                      </>
-                    )}
+                            </>
+                          )}
+                        </>
+                      </Fragment>
+                    ))}
                   </>
                 )}
+              </>
+            )}
+
+            {/* {chatData.map((chatValue, i) => (
+              <Fragment key={i}>
+                <>
+                  {chatValue.role === 'project_manager' && (
+                    <>
+                      <div className="direct-chat-msg">
+                        <div className="direct-chat-info clearfix">
+                          <span className="direct-chat-name pull-left">
+                            {chatValue.display_name}
+                          </span>
+                          <span className="direct-chat-timestamp pull-right">{chatValue.date}</span>
+                        </div>
+                        <Avatar
+                          className="direct-chat-img"
+                          name={chatValue.display_name}
+                          value="86%"
+                          size="40"
+                          round={true}
+                        />
+                        <div className="direct-chat-text">{chatValue.chat}</div>
+                      </div>
+                    </>
+                  )}
+                  {chatValue.role === 'employee' && (
+                    <>
+                      <div className="direct-chat-msg right">
+                        <div className="direct-chat-info clearfix">
+                          <span className="direct-chat-name pull-right">
+                            {chatValue.display_name}
+                          </span>
+                          <span className="direct-chat-timestamp pull-left">{chatValue.date}</span>
+                        </div>
+                        <Avatar
+                          className="direct-chat-img"
+                          name={chatValue.display_name}
+                          value="86%"
+                          size="40"
+                          round={true}
+                        />
+                        <div className="direct-chat-text">{chatValue.chat}</div>
+                      </div>
+                    </>
+                  )}
+                </>
               </Fragment>
-            ))}
+            ))} */}
           </div>
         </div>
         {/* Chat Body End */}
