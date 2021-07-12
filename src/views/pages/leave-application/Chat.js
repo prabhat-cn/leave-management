@@ -1,26 +1,33 @@
 /* eslint-disable react/prop-types */
 import React, { useState, useEffect, Fragment } from 'react'
-import { useParams } from 'react-router-dom'
+import { useHistory, useParams } from 'react-router-dom'
 import { DateTime } from 'luxon'
 import Avatar from 'react-avatar'
 import API from '../../../api'
 import { CSpinner } from '@coreui/react'
 const Chat = ({ close, chatData }) => {
-  const [comment, setComment] = useState('')
-
+  const [disable, setDisable] = useState(false)
   const [UserData, setUserData] = useState({})
+  const [chatComment, setChatComment] = useState({
+    comment: '',
+  })
+
+  const { comment } = chatComment
+  const onInputChange = (e) => {
+    setChatComment({ ...chatComment, [e.target.name]: e.target.value })
+  }
   const userInfo = () => {
     const userValue = JSON.parse(localStorage.getItem('lMuserDataToken'))
     console.log('userValue', userValue)
     setUserData(userValue)
   }
 
-  const handleSubmit = (id) => {
+  const chatSubmit = (id, submitProps) => {
     id.preventDefault()
-    console.log('handleSubmit')
-    API.post(`/wp-jwt/v1/comment/${id}`)
+    API.post(`/wp-jwt/v1/comment/${id}`, chatComment)
       .then((submitRes) => {
         console.log('submitRes', submitRes)
+        submitProps.reset()
       })
       .catch((err) => {
         console.log(err)
@@ -123,72 +130,29 @@ const Chat = ({ close, chatData }) => {
                 )}
               </>
             )}
-
-            {/* {chatData.map((chatValue, i) => (
-              <Fragment key={i}>
-                <>
-                  {chatValue.role === 'project_manager' && (
-                    <>
-                      <div className="direct-chat-msg">
-                        <div className="direct-chat-info clearfix">
-                          <span className="direct-chat-name pull-left">
-                            {chatValue.display_name}
-                          </span>
-                          <span className="direct-chat-timestamp pull-right">{chatValue.date}</span>
-                        </div>
-                        <Avatar
-                          className="direct-chat-img"
-                          name={chatValue.display_name}
-                          value="86%"
-                          size="40"
-                          round={true}
-                        />
-                        <div className="direct-chat-text">{chatValue.chat}</div>
-                      </div>
-                    </>
-                  )}
-                  {chatValue.role === 'employee' && (
-                    <>
-                      <div className="direct-chat-msg right">
-                        <div className="direct-chat-info clearfix">
-                          <span className="direct-chat-name pull-right">
-                            {chatValue.display_name}
-                          </span>
-                          <span className="direct-chat-timestamp pull-left">{chatValue.date}</span>
-                        </div>
-                        <Avatar
-                          className="direct-chat-img"
-                          name={chatValue.display_name}
-                          value="86%"
-                          size="40"
-                          round={true}
-                        />
-                        <div className="direct-chat-text">{chatValue.chat}</div>
-                      </div>
-                    </>
-                  )}
-                </>
-              </Fragment>
-            ))} */}
           </div>
         </div>
         {/* Chat Body End */}
         <div className="box-footer">
-          <form onSubmit={handleSubmit}>
+          <form onSubmit={chatSubmit}>
             <div className="input-group">
               <input
                 type="text"
                 name="comment"
                 id="comment"
                 value={comment}
-                onChange={(e) => {
-                  setComment(e.target.value)
-                }}
+                onChange={(e) => onInputChange(e)}
                 placeholder="Type Message ..."
                 className="form-control"
               />
               <span className="input-group-btn">
-                <button type="submit" className="btn btn-flat custom_chat_btn">
+                <button
+                  type="submit"
+                  className={
+                    'btn btn-success px-4 custom_chat_btn' + ' ' + (!comment ? 'disabled' : '')
+                  }
+                  onClick={() => setDisable(true)}
+                >
                   Send
                 </button>
               </span>
