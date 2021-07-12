@@ -24,10 +24,11 @@ const Chat = ({ close, chatData }) => {
 
   const chatSubmit = (id, submitProps) => {
     id.preventDefault()
+    var resetField = document.getElementById('comment')
+    resetField.value = ''
     API.post(`/wp-jwt/v1/comment/${id}`, chatComment)
       .then((submitRes) => {
         console.log('submitRes', submitRes)
-        submitProps.reset()
       })
       .catch((err) => {
         console.log(err)
@@ -134,7 +135,7 @@ const Chat = ({ close, chatData }) => {
         </div>
         {/* Chat Body End */}
         <div className="box-footer">
-          <form onSubmit={chatSubmit}>
+          <form>
             <div className="input-group">
               <input
                 type="text"
@@ -147,11 +148,10 @@ const Chat = ({ close, chatData }) => {
               />
               <span className="input-group-btn">
                 <button
-                  type="submit"
                   className={
                     'btn btn-success px-4 custom_chat_btn' + ' ' + (!comment ? 'disabled' : '')
                   }
-                  onClick={() => setDisable(true)}
+                  onClick={chatSubmit}
                 >
                   Send
                 </button>
