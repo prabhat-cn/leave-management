@@ -16,13 +16,13 @@ import { DocsCallout, Example } from 'src/reusable'
 const Settings = () => {
   return (
     <CRow>
-      <CCol xs={12}>
+      {/* <CCol xs={12}>
         <DocsCallout name="Form Control" href="forms/form-control" />
-      </CCol>
+      </CCol> */}
       <CCol xs={12}>
         <CCard className="mb-4">
           <CCardHeader>
-            <strong>React Form Control</strong>
+            <strong>Settings</strong>
           </CCardHeader>
           <CCardBody>
             <h1>Settings</h1>

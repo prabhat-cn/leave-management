@@ -1,8 +1,11 @@
 /* eslint-disable react/prop-types */
 import React, { useState, useEffect } from 'react'
+import { toast } from 'react-toastify'
+import { Link } from 'react-router-dom'
 import { DateTime } from 'luxon'
 import DataTable from 'react-data-table-component'
 import htmlToFormattedText from 'html-to-formatted-text'
+import ReactTooltip from 'react-tooltip'
 import {
   CContainer,
   CRow,
@@ -20,6 +23,7 @@ import {
   CForm,
   CFormLabel,
   CFormControl,
+  CTooltip,
 } from '@coreui/react'
 import Switch from 'react-switch'
 import API from '../../../api'
@@ -68,9 +72,11 @@ const EmployeeLeaveDetails = (props) => {
       case 2:
         return 'btn btn-danger'
       case 3:
-        return 'btn btn-dark'
+        return 'btn btn-light'
       case 4:
         return 'btn btn-secondary'
+      case 5:
+        return 'btn btn-dark'
       default:
         break
     }
@@ -78,11 +84,13 @@ const EmployeeLeaveDetails = (props) => {
 
   const StatusCell = ({ row }) => (
     <p className={'Status-cell' + ' ' + switchClasses(row?.status * 1)}>
+      {/* convert string to integer * 1 or parseInt */}
       {row?.status * 1 === 0 && 'Pending'}
       {row?.status * 1 === 1 && 'Approved'}
       {row?.status * 1 === 2 && 'Rejected'}
       {row?.status * 1 === 3 && 'On Hold'}
       {row?.status * 1 === 4 && 'Modified'}
+      {row?.status * 1 === 5 && 'Cancelled'}
     </p>
   )
 
@@ -139,17 +147,213 @@ const EmployeeLeaveDetails = (props) => {
     {
       name: 'View/ Edit',
       // eslint-disable-next-line react/display-name
-      cell: (row) => <ActionTag row={row} />,
+      cell: (row) => <ViewEditTag row={row} />,
     },
     {
       name: 'Action',
       // eslint-disable-next-line react/display-name
-      cell: (row) => <ViewEditTag row={row} />,
+      cell: (row) => <ActionTag row={row} />,
     },
   ]
 
   const ActionTag = ({ row }) => {
     // eslint-disable-next-line no-unused-expressions
+    return (
+      <>
+        {row.status === '0' && (
+          <>
+            <ReactTooltip id="pendingTip1" type="info">
+              <span>Approve Leave</span>
+            </ReactTooltip>
+            <Link data-tip data-for="pendingTip1">
+              <Switch
+                height={20}
+                width={48}
+                onChange={(e) => handleApproveChange(e, row.id)}
+                checked={row.status === '1' ? true : false}
+                className="react-switch"
+              />
+            </Link>
+            &nbsp;&nbsp;
+            <ReactTooltip id="pendingTip2" type="info">
+              <span>Reject Leave</span>
+            </ReactTooltip>
+            <Link data-tip data-for="pendingTip2">
+              <Switch
+                onColor="#e55353"
+                height={20}
+                width={48}
+                onChange={(e) => handleRejectChange(e, row.id)}
+                checked={row.status === '2' ? true : false}
+                className="react-switch custom-switch-class"
+              />
+            </Link>
+          </>
+        )}
+
+        {row.status === '1' && (
+          <>
+            <ReactTooltip id="approveTip1" type="info">
+              <span>Leave Approved</span>
+            </ReactTooltip>
+            <Link data-tip data-for="approveTip1">
+              <Switch
+                height={20}
+                width={48}
+                onChange={(e) => handleApproveChange(e, row.id)}
+                checked={row.status === '1' ? true : false}
+                className="react-switch"
+              />
+            </Link>
+            &nbsp;&nbsp;
+            <ReactTooltip id="approveTip2" type="info">
+              <span>Not Applicable</span>
+            </ReactTooltip>
+            <Link data-tip data-for="approveTip2">
+              <Switch
+                onColor="#e55353"
+                height={20}
+                width={48}
+                onChange={(e) => handleRejectChange(e, row.id)}
+                checked={row.status === '2' ? true : false}
+                className="react-switch custom-switch-class"
+                disabled
+              />
+            </Link>
+          </>
+        )}
+
+        {row.status === '2' && (
+          <>
+            <ReactTooltip id="rejectTip1" type="info">
+              <span>Not Applicable</span>
+            </ReactTooltip>
+            <Link data-tip data-for="rejectTip1">
+              <Switch
+                height={20}
+                width={48}
+                onChange={(e) => handleApproveChange(e, row.id)}
+                checked={row.status === '1' ? true : false}
+                className="react-switch"
+                disabled
+              />
+            </Link>
+            &nbsp;&nbsp;
+            <ReactTooltip id="rejectTip2" type="info">
+              <span>Leave Rejected</span>
+            </ReactTooltip>
+            <Link data-tip data-for="rejectTip2">
+              <Switch
+                onColor="#e55353"
+                height={20}
+                width={48}
+                onChange={(e) => handleRejectChange(e, row.id)}
+                checked={row.status === '2' ? true : false}
+                className="react-switch custom-switch-class"
+              />
+            </Link>
+          </>
+        )}
+
+        {row.status === '3' && (
+          <>
+            <ReactTooltip id="onHoldTip1" type="info">
+              <span>Leave Approve</span>
+            </ReactTooltip>
+            <Link data-tip data-for="onHoldTip1">
+              <Switch
+                height={20}
+                width={48}
+                onChange={(e) => handleApproveChange(e, row.id)}
+                checked={row.status === '1' ? true : false}
+                className="react-switch"
+              />
+            </Link>
+            &nbsp;&nbsp;
+            <ReactTooltip id="onHoldTip2" type="info">
+              <span>Leave Reject</span>
+            </ReactTooltip>
+            <Link data-tip data-for="onHoldTip2">
+              <Switch
+                onColor="#e55353"
+                height={20}
+                width={48}
+                onChange={(e) => handleRejectChange(e, row.id)}
+                checked={row.status === '2' ? true : false}
+                className="react-switch custom-switch-class"
+              />
+            </Link>
+          </>
+        )}
+
+        {row.status === '4' && (
+          <>
+            <ReactTooltip id="modifiedTip1" type="info">
+              <span>Leave Approve</span>
+            </ReactTooltip>
+            <Link data-tip data-for="modifiedTip1">
+              <Switch
+                height={20}
+                width={48}
+                onChange={(e) => handleApproveChange(e, row.id)}
+                checked={row.status === '1' ? true : false}
+                className="react-switch"
+              />
+            </Link>
+            &nbsp;&nbsp;
+            <ReactTooltip id="modifiedTip2" type="info">
+              <span>Leave Reject</span>
+            </ReactTooltip>
+            <Link data-tip data-for="modifiedTip2">
+              <Switch
+                onColor="#e55353"
+                height={20}
+                width={48}
+                onChange={(e) => handleRejectChange(e, row.id)}
+                checked={row.status === '2' ? true : false}
+                className="react-switch custom-switch-class"
+              />
+            </Link>
+          </>
+        )}
+
+        {row.status === '5' && (
+          <>
+            <ReactTooltip id="cancelTip1" type="info">
+              <span>Not Applicable</span>
+            </ReactTooltip>
+            <Link data-tip data-for="cancelTip1">
+              <Switch
+                height={20}
+                width={48}
+                onChange={(e) => handleApproveChange(e, row.id)}
+                checked={row.status === '1' ? true : false}
+                className="react-switch"
+                disabled
+              />
+            </Link>
+            &nbsp;&nbsp;
+            <ReactTooltip id="cancelTip2" type="info">
+              <span>Not Applicable</span>
+            </ReactTooltip>
+            <Link data-tip data-for="cancelTip2">
+              <Switch
+                onColor="#e55353"
+                height={20}
+                width={48}
+                onChange={(e) => handleRejectChange(e, row.id)}
+                checked={row.status === '2' ? true : false}
+                className="react-switch custom-switch-class"
+                disabled
+              />
+            </Link>
+          </>
+        )}
+      </>
+    )
+  }
+
+  const ViewEditTag = ({ row }) => {
     return (
       <>
         <CButton
@@ -161,42 +365,34 @@ const EmployeeLeaveDetails = (props) => {
           <ViewIcon />
         </CButton>
         &nbsp;&nbsp;
-        <CButton
-          height={20}
-          width={48}
-          color="success"
-          shape="round"
-          className="custom-btn"
-          onClick={() => editLeave(row)}
-        >
-          <EditIcon />
-        </CButton>
-      </>
-    )
-  }
-
-  const ViewEditTag = ({ row }) => {
-    // eslint-disable-next-line no-unused-expressions
-    return (
-      <>
-        <Switch
-          height={20}
-          width={48}
-          onChange={(e) => handleApproveChange(e, row.id)}
-          checked={row.status === '1' ? true : false}
-          className="react-switch"
-        />
-        {/* <span>{checked ? 'on' : 'off'}</span> */}
-        &nbsp;&nbsp;
-        <Switch
-          onColor="#e55353"
-          height={20}
-          width={48}
-          onChange={(e) => handleRejectChange(e, row.id)}
-          checked={row.status === '2' ? true : false}
-          className="react-switch custom-switch-class"
-        />
-        {/* <span>{checked ? 'on' : 'off'}</span> */}
+        {row.status === '1' || row.status === '2' || row.status === '5' ? (
+          <>
+            <CButton
+              height={20}
+              width={48}
+              color="success"
+              shape="round"
+              className="custom-btn"
+              onClick={() => editLeave(row)}
+              disabled
+            >
+              <EditIcon />
+            </CButton>
+          </>
+        ) : (
+          <>
+            <CButton
+              height={20}
+              width={48}
+              color="success"
+              shape="round"
+              className="custom-btn"
+              onClick={() => editLeave(row)}
+            >
+              <EditIcon />
+            </CButton>
+          </>
+        )}
       </>
     )
   }
@@ -245,7 +441,7 @@ const EmployeeLeaveDetails = (props) => {
     API.get('/wp-jwt/v1/applied-leave-details')
       .then((res) => {
         // console.log('getData', res)
-        const getAppliedLeaves = res.data.data
+        const getAppliedLeaves = res.data.data.reverse()
         const filteredData = getAppliedLeaves.filter((searchVal) => {
           // console.log('searchVal', searchVal)
           // searchVal.display_name &&
@@ -324,6 +520,7 @@ const EmployeeLeaveDetails = (props) => {
     API.post(`/wp-jwt/v1/date-edit/${editData.leave_edit.id}`, editData.leave_edit_date)
       .then(() => {
         editDismiss()
+        toast.success('Success! Leave modified')
       })
       .catch((err) => {
         console.log(err)

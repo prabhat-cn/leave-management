@@ -1,6 +1,7 @@
 /* eslint-disable prettier/prettier */
 import React, { useState, useEffect } from 'react'
 import { Redirect } from 'react-router-dom'
+import { toast } from 'react-toastify'
 import { useDispatch } from 'react-redux'
 import {
   CButton,
@@ -33,8 +34,8 @@ import API from '../../../api'
 import { leavePending, leaveSuccess, leaveFail } from '../../../store/reducers/leaveReducer'
 
 const LeaveApplication = (props) => {
-  // role based auth start
-  console.log(localStorage.getItem('lMuserDataToken'))
+  // // role based auth start
+  // console.log(localStorage.getItem('lMuserDataToken'))
   if (localStorage.getItem('lMuserDataToken') !== null) {
     const userData = JSON.parse(localStorage.getItem('lMuserDataToken'))
     if (userData.user_role === 'project_manager') {
@@ -69,7 +70,6 @@ const LeaveApplication = (props) => {
     try {
       const superiors = await API.get('/wp-jwt/v1/employee-projectmanager-relation')
       const superiorData = superiors.data.data
-      console.log('superiors', superiorData)
       setSuperior(superiorData)
     } catch (err) {
       console.log(err.message)
@@ -80,7 +80,6 @@ const LeaveApplication = (props) => {
     try {
       const earnedLeave = await API.get('/wp-jwt/v1/employee-leave-list')
       const earnedLeaveData = earnedLeave.data.data
-      console.log('earnedLeaveData', earnedLeaveData)
       setEmpLeave(earnedLeaveData)
     } catch (err) {
       console.log(err.message)
@@ -96,21 +95,26 @@ const LeaveApplication = (props) => {
     formState: { errors, isSubmitting, isValid },
   } = useForm()
 
+
+
   const leaveApplicationSubmit = (addData) => {
+  
     dispatch(leavePending())
     API.post('/wp-jwt/v1/apply-leave', addData)
       .then((response) => {
-        setError('')
-        setSubmitted(true)
-        setTimeout(() => {
-          setSubmitted(false)
-        }, 2000)
+        // setError('')
+        // setSubmitted(true)
+        // setTimeout(() => {
+        //   setSubmitted(false)
+        // }, 2000)
         const leaveData = response.data
         console.log('leaveData', leaveData)
         dispatch(leaveSuccess(leaveData))
+        toast.success('Success! Leave applied')
 
         if (leaveData.status === 0) {
-          setError(leaveData.message)
+          // setError(leaveData.message)
+          return toast.error(leaveData.message)
         }
       })
       .catch((error) => {
@@ -119,7 +123,11 @@ const LeaveApplication = (props) => {
         setSubmitted(false)
         dispatch(leaveFail(error.response))
         if (status === 403) {
-          setError(data.message)
+          // setError(data.message)
+          return toast.error('Error! Leave apply failed')
+        }
+        if (status === 404) {
+          return toast.error('Error! Invalid source url')
         }
       })
   }
@@ -132,7 +140,7 @@ const LeaveApplication = (props) => {
     leaveApplicationSubmit(modifyData)
     reset()
   }
-  console.log(watch('example'))
+  // console.log(watch('example'))
 
   // eslint-disable-next-line react-hooks/rules-of-hooks
   useEffect(() => {
@@ -226,8 +234,8 @@ const LeaveApplication = (props) => {
                   name="leaveApplication"
                   onSubmit={handleSubmit(onSubmit)}
                 >
-                  {submitted && <CAlert color="success">Success! Leave applied</CAlert>}
-                  {error !== '' && <CAlert color="danger">Error! Application failed</CAlert>}
+                  {/* {submitted && <CAlert color="success">Success! Leave applied</CAlert>}
+                  {error !== '' && <CAlert color="danger">Error! Leave apply failed</CAlert>} */}
 
                   <CRow xs={{ gutterX: 6 }}>
                     <CCol>

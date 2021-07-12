@@ -23,8 +23,10 @@ import { Formik, Form, Field, ErrorMessage } from 'formik'
 import * as Yup from 'yup'
 import { saveAs } from 'file-saver'
 import fileDownload from 'js-file-download'
+import { PdfIcon } from '../../../constant/icons/index'
 import API from '../../../api'
 import { profilePending, profileSuccess, profileFail } from '../../../store/reducers/profileReducer'
+import UserImage from './UserImage'
 
 const sleep = (ms) => new Promise((r) => setTimeout(r, ms))
 const User = () => {
@@ -206,21 +208,10 @@ const User = () => {
   //       console.log(err)
   //     })
   // }
-
-  // const saveFile = () => {
-  //   API.get('/wp-jwt/v1/get-user-info')
-  //     .then((response) => {
-  //       console.log('response', response.data.data)
-  //       FileSaver.saveAs(response.data.data + '/resources/cv.pdf', 'MyCV.pdf')
-  //     })
-  //     .catch((err) => {
-  //       console.log(err)
-  //     })
-  // }
   const getResume = () => {
     API.get('/wp-jwt/v1/get-user-info')
       .then((res) => {
-        console.log('res', res.data.data)
+        // it is also object
         const resumeData = res.data.data
         setResume(resumeData.download_resume)
       })
@@ -315,11 +306,14 @@ const User = () => {
                           </div>
                           <div className="col-md-6">
                             <CButton
+                              color="danger"
+                              alt="Download Resume"
+                              style={{ float: 'right', color: 'white' }}
                               onClick={() => {
                                 handleDownload()
                               }}
                             >
-                              Download
+                              <PdfIcon /> Download Resume
                             </CButton>
                           </div>
                         </div>
@@ -780,29 +774,8 @@ const User = () => {
                   </CCol>
                   <CCol xs={{ span: 4 }}>
                     <CCard className="mb-4">
-                      <CCardBody>
-                        <div className="col mb-3 text-center av-img">
-                          <CAvatar
-                            src="avatars/5.jpg"
-                            className="av-imgs"
-                            color="secondary"
-                            size="xl"
-                          />
-                        </div>
-                        <CForm>
-                          <div className="mb-3 text-center">
-                            <CCardTitle>
-                              <h3>Alec Thompson</h3>
-                            </CCardTitle>
-                            <CCardTitle>
-                              <h5>Software Engineer</h5>
-                            </CCardTitle>
-                            <CCardTitle>
-                              <h6>Capital Numbers Infotech</h6>
-                            </CCardTitle>
-                          </div>
-                        </CForm>
-                      </CCardBody>
+                      {/*  user image */}
+                      <UserImage />
                     </CCard>
                   </CCol>
                 </CRow>

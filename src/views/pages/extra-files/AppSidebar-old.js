@@ -10,16 +10,20 @@ import {
   CCreateNavItem,
 } from '@coreui/react'
 
+import CIcon from '@coreui/icons-react'
+
 import SimpleBar from 'simplebar-react'
 import 'simplebar/dist/simplebar.min.css'
 
 // sidebar nav config
-import navigation from '../_nav'
+import navigation from '../../../_nav'
 
 const AppSidebar = () => {
   const dispatch = useDispatch()
   const unfoldable = useSelector((state) => state.sidebarUnfoldable)
   const sidebarShow = useSelector((state) => state.sidebarShow)
+
+  const [slideOpen, setSlideOpen] = useState(false)
 
   // sidebar Block by user Role start
   let navArray = navigation
@@ -61,27 +65,31 @@ const AppSidebar = () => {
     <CSidebar
       position="fixed"
       selfHiding="md"
-      unfoldable={unfoldable}
-      show={sidebarShow}
-      onShow={() => console.log('show')}
-      onHide={() => {
-        dispatch({ type: 'set', sidebarShow: false })
-      }}
+      // unfoldable={unfoldable}
+      // show={sidebarShow}
+      // onShow={() => console.log('show')}
+      // onHide={() => {
+      //   dispatch({ type: 'set', sidebarShow: false })
+      // }}
     >
       <CSidebarBrand className="d-none d-md-flex" to="/">
         <p>
           &nbsp;&nbsp;
           <img src="/logo.png" width="10%" /> Leave Management System
         </p>
+        {/* <CIcon className="sidebar-brand-full" name="logo-negative" height={35} />
+        <CIcon className="sidebar-brand-narrow" name="sygnet" height={35} /> */}
       </CSidebarBrand>
       <CSidebarNav>
         <SimpleBar>
+          <CCreateNavItem items={navigation} />
           <CCreateNavItem items={result} />
         </SimpleBar>
       </CSidebarNav>
       <CSidebarToggler
         className="d-none d-lg-flex"
-        onClick={() => dispatch({ type: 'set', sidebarUnfoldable: !unfoldable })}
+        // onClick={() => dispatch({ type: 'set', sidebarUnfoldable: !unfoldable })}
+        onClick={() => setSlideOpen(false)}
       />
     </CSidebar>
   )

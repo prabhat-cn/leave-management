@@ -1,4 +1,12 @@
 
+https://coreui.io/react/docs/4.0/components/buttons
+http://localhost:3006/icons/coreui-icons
+http://localhost:3006/charts
+
+
+
+
+
 URL : -http://dev107.developer24x7.com/test_project/
 
 Admin
@@ -6,7 +14,14 @@ Admin
 User :- adminTestProject
 Password :- QxD)4)aF&hzS1WEF4DT%ucQi
 
+HR :- hr12
+Password :- QxD)4)aF&hzS1WEF4DT%ucQi
 
+"PM": "Davidd",
+"password": "Davidd@123"
+
+"Emp": "rahulcn@gmail.com",
+"password": "Source2@"
 
 
 // REGISTER

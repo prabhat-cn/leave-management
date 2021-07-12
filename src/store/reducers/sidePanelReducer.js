@@ -1,11 +1,13 @@
 // import { createStore } from 'redux'
 import { createSlice } from '@reduxjs/toolkit'
 
+const initialState = {
+  sidebarShow: false,
+}
+
 const sidePanelReducer = createSlice({
   name: 'sidePanelReducer',
-  initialState: {
-    sidebarShow: false,
-  },
+  initialState,
 
   // normal actions create here
   reducers: {

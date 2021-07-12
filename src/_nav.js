@@ -230,42 +230,42 @@ const _nav = [
   //     },
   //   ],
   // },
-  {
-    _component: 'CNavItem',
-    as: NavLink,
-    anchor: 'Charts',
-    to: '/charts',
-    icon: <CIcon name="cil-chart-pie" customClasses="nav-icon" />,
-  },
-  {
-    _component: 'CNavGroup',
-    anchor: 'Icons',
-    icon: <CIcon name="cil-star" customClasses="nav-icon" />,
-    items: [
-      {
-        _component: 'CNavItem',
-        as: NavLink,
-        anchor: 'CoreUI Free',
-        to: '/icons/coreui-icons',
-        badge: {
-          color: 'success',
-          text: 'NEW',
-        },
-      },
-      {
-        _component: 'CNavItem',
-        as: NavLink,
-        anchor: 'CoreUI Flags',
-        to: '/icons/flags',
-      },
-      {
-        _component: 'CNavItem',
-        as: NavLink,
-        anchor: 'CoreUI Brands',
-        to: '/icons/brands',
-      },
-    ],
-  },
+  // {
+  //   _component: 'CNavItem',
+  //   as: NavLink,
+  //   anchor: 'Charts',
+  //   to: '/charts',
+  //   icon: <CIcon name="cil-chart-pie" customClasses="nav-icon" />,
+  // },
+  // {
+  //   _component: 'CNavGroup',
+  //   anchor: 'Icons',
+  //   icon: <CIcon name="cil-star" customClasses="nav-icon" />,
+  //   items: [
+  //     {
+  //       _component: 'CNavItem',
+  //       as: NavLink,
+  //       anchor: 'CoreUI Free',
+  //       to: '/icons/coreui-icons',
+  //       badge: {
+  //         color: 'success',
+  //         text: 'NEW',
+  //       },
+  //     },
+  //     {
+  //       _component: 'CNavItem',
+  //       as: NavLink,
+  //       anchor: 'CoreUI Flags',
+  //       to: '/icons/flags',
+  //     },
+  //     {
+  //       _component: 'CNavItem',
+  //       as: NavLink,
+  //       anchor: 'CoreUI Brands',
+  //       to: '/icons/brands',
+  //     },
+  //   ],
+  // },
   // {
   //   _component: 'CNavGroup',
   //   anchor: 'Notifications',

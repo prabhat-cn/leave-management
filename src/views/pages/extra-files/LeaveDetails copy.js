@@ -1,10 +1,10 @@
+/* eslint-disable prettier/prettier */
 /* eslint-disable react/prop-types */
+/* eslint-disable prettier/prettier */
 import React, { useState, useEffect } from 'react'
-import { Link } from 'react-router-dom'
 import { DateTime } from 'luxon'
 import DataTable from 'react-data-table-component'
-import htmlToFormattedText from 'html-to-formatted-text'
-import ReactTooltip from 'react-tooltip'
+import htmlToFormattedText from "html-to-formatted-text"
 import {
   CContainer,
   CRow,
@@ -27,24 +27,21 @@ import {
 import Switch from 'react-switch'
 import API from '../../../api'
 import { ViewIcon, ChatIcon } from '../../../constant/icons'
-import Chat from './Chat'
+import Chat from '../leave-application/Chat'
 
 const LeaveDetails = () => {
   const [visible, setVisible] = useState(false)
   const [openChat, toggleChat] = useState(false)
-  const [singleLeave, setSingleLeave] = useState([
-    {
-      dept_name: '',
-      display_name: '',
-      end_date: '',
-      reason: '',
-      start_date: '',
-      status: '',
-    },
-  ])
+  const [singleLeave, setSingleLeave] = useState([{
+    'dept_name': '',
+    'display_name': '',
+    'end_date': '',
+    'reason': '',
+    'start_date': '',
+    'status': '',
+  }])
   const [posts, setPosts] = useState()
   const [cancelChecked, setCancelChecked] = useState(false)
-  const [chatData, setChatData] = useState([])
   const switchClasses = (type) => {
     switch (type) {
       case 0:
@@ -66,7 +63,7 @@ const LeaveDetails = () => {
 
   const StatusCell = ({ row }) => (
     // incoming "status" value is string
-    <p className={'Status-cell' + ' ' + switchClasses(parseInt(row?.status))}>
+    <p className={'Status-cell' + ' ' +(switchClasses(parseInt(row?.status)))}>
       {parseInt(row?.status) === 0 && 'Pending'}
       {parseInt(row?.status) === 1 && 'Approved'}
       {parseInt(row?.status) === 2 && 'Rejected'}
@@ -85,11 +82,11 @@ const LeaveDetails = () => {
       selector: 'slNo',
       sortable: true,
     },
-    {
-      name: 'Id',
-      selector: 'id',
-      sortable: true,
-    },
+    // {
+    //   name: 'Id',
+    //   selector: 'id',
+    //   sortable: true,
+    // },
     {
       name: 'Project Manager',
       selector: 'display_name',
@@ -133,118 +130,60 @@ const LeaveDetails = () => {
     },
   ]
 
+  const ViewChatTag = ({ row }) => {
+    // eslint-disable-next-line no-unused-expressions
+    return (
+      <>
+        <CButton
+          color="info"
+          shape="round"
+          className="custom-btn"
+          onClick={() => viewDetail(row.id)}
+        >
+          <ViewIcon />
+        </CButton>
+        &nbsp;
+        <CButton
+          style={{backgroundColor: '#2db67c', }}
+          shape="round"
+          className="custom-btn"
+          onClick={() => viewChat(row.id)}
+        >
+          <ChatIcon />
+        </CButton>
+      </>
+    )
+  }
+
   const ActionTag = ({ row }) => {
     // eslint-disable-next-line no-unused-expressions
     return (
       <>
-        {row.status === '0' && (
+      {
+        row.status === '1' ? (
+          <Switch
+            onColor="#e55353"
+            height={20}
+            width={48}
+            onChange={(e) => handleCancelChange(e, row.id)}
+            checked={ row.status === '5' ? true : false }
+            className="react-switch custom-switch-class"
+            disabled
+          />
+        ):(
           <>
-            <ReactTooltip id="pendingTip" type="info">
-              <span>Cancel Apply</span>
-            </ReactTooltip>
-            <Link data-tip data-for="pendingTip">
-              <Switch
-                onColor="#e55353"
-                height={20}
-                width={48}
-                onChange={(e) => handleCancelChange(e, row.id)}
-                checked={row.status === '5' ? true : false}
-                className="react-switch custom-switch-class"
-              />
-            </Link>
-          </>
-        )}
+            <Switch
+              onColor="#e55353"
+              height={20}
+              width={48}
+              onChange={(e) => handleCancelChange(e, row.id)}
+              checked={ row.status === '5' ? true : false }
+              className="react-switch custom-switch-class"
+            />
+        </>
+        )
+      }
 
-        {row.status === '1' && (
-          <>
-            <ReactTooltip id="approveTip" type="info">
-              <span>Not Applicable</span>
-            </ReactTooltip>
-            <Link data-tip data-for="approveTip">
-              <Switch
-                onColor="#e55353"
-                height={20}
-                width={48}
-                onChange={(e) => handleCancelChange(e, row.id)}
-                checked={row.status === '5' ? true : false}
-                className="react-switch custom-switch-class"
-                disabled
-              />
-            </Link>
-          </>
-        )}
-        {row.status === '2' && (
-          <>
-            <ReactTooltip id="rejectTip" type="info">
-              <span>Not Applicable</span>
-            </ReactTooltip>
-            <Link data-tip data-for="rejectTip">
-              <Switch
-                onColor="#e55353"
-                height={20}
-                width={48}
-                onChange={(e) => handleCancelChange(e, row.id)}
-                checked={row.status === '5' ? true : false}
-                className="react-switch custom-switch-class"
-                disabled
-              />
-            </Link>
-          </>
-        )}
-
-        {row.status === '3' && (
-          <>
-            <ReactTooltip id="onHoldTip" type="info">
-              <span>Cancel Leave</span>
-            </ReactTooltip>
-            <Link data-tip data-for="onHoldTip">
-              <Switch
-                onColor="#e55353"
-                height={20}
-                width={48}
-                onChange={(e) => handleCancelChange(e, row.id)}
-                checked={row.status === '5' ? true : false}
-                className="react-switch custom-switch-class"
-              />
-            </Link>
-          </>
-        )}
-
-        {row.status === '4' && (
-          <>
-            <ReactTooltip id="modifiedTip" type="info">
-              <span>Cancel Leave</span>
-            </ReactTooltip>
-            <Link data-tip data-for="modifiedTip">
-              <Switch
-                onColor="#e55353"
-                height={20}
-                width={48}
-                onChange={(e) => handleCancelChange(e, row.id)}
-                checked={row.status === '5' ? true : false}
-                className="react-switch custom-switch-class"
-              />
-            </Link>
-          </>
-        )}
-
-        {row.status === '5' && (
-          <>
-            <ReactTooltip id="cancelTip" type="info">
-              <span>Canceled</span>
-            </ReactTooltip>
-            <Link data-tip data-for="cancelTip">
-              <Switch
-                onColor="#e55353"
-                height={20}
-                width={48}
-                onChange={(e) => handleCancelChange(e, row.id)}
-                checked={row.status === '5' ? true : false}
-                className="react-switch custom-switch-class"
-              />
-            </Link>
-          </>
-        )}
       </>
     )
   }
@@ -267,10 +206,8 @@ const LeaveDetails = () => {
   const getData = () => {
     API.get('/wp-jwt/v1/apply-leave-details')
       .then((res) => {
-        console.log('getData', res)
-        const listData = res.data.data.reverse()
         setPosts(
-          listData.map((m, i) => {
+          res.data.data.map((m, i) => {
             return { ...m, ...{ slNo: i + 1 } }
           }),
         )
@@ -278,31 +215,6 @@ const LeaveDetails = () => {
       .catch((err) => {
         console.log(err)
       })
-  }
-
-  const ViewChatTag = ({ row }) => {
-    // eslint-disable-next-line no-unused-expressions
-    return (
-      <>
-        <CButton
-          color="info"
-          shape="round"
-          className="custom-btn"
-          onClick={() => viewDetail(row.id)}
-        >
-          <ViewIcon />
-        </CButton>
-        &nbsp;
-        <CButton
-          style={{ backgroundColor: '#2db67c' }}
-          shape="round"
-          className="custom-btn"
-          onClick={() => viewChat(row.id)}
-        >
-          <ChatIcon />
-        </CButton>
-      </>
-    )
   }
 
   //  View
@@ -316,38 +228,24 @@ const LeaveDetails = () => {
   const viewChat = (id) => {
     console.log(id)
     singleData(id)
-    getChat(id)
-    toggleChat(true)
-  }
-
-  const getChat = (id) => {
-    API.get(`/wp-jwt/v1/get-comment/${id}`)
-      .then((response) => {
-        console.log('getChat', response.data.data)
-        setChatData(response.data.data)
-      })
-      .catch((err) => {
-        console.log(err)
-      })
+    toggleChat(true);
   }
 
   const closeChat = () => {
-    toggleChat(false)
+    toggleChat(false);
   }
 
   const viewModalClose = () => {
     setVisible(false)
     // after close modal pass blank string
-    setSingleLeave([
-      {
-        dept_name: '',
-        display_name: '',
-        end_date: '',
-        reason: '',
-        start_date: '',
-        status: '',
-      },
-    ])
+    setSingleLeave([{
+      'dept_name': '',
+      'display_name': '',
+      'end_date': '',
+      'reason': '',
+      'start_date': '',
+      'status': '',
+    }])
   }
 
   // this is for edit & view get data
@@ -361,6 +259,8 @@ const LeaveDetails = () => {
       })
   }
 
+
+
   useEffect(() => {
     getData()
   }, [])
@@ -369,15 +269,15 @@ const LeaveDetails = () => {
     headCells: {
       style: {
         fontWeight: '500',
-        fontSize: '14px',
+        fontSize: '14px'
       },
     },
     cells: {
       style: {
-        fontSize: '14px',
+        fontSize: '14px'
       },
     },
-  }
+  };
 
   return (
     <>
@@ -395,7 +295,7 @@ const LeaveDetails = () => {
             <>
               <CRow className="row">
                 <CCol className="mb-2">
-                  <strong>[P.M- {singleLeave[0]?.display_name}]</strong>
+                <strong>[P.M- {singleLeave[0]?.display_name}]</strong>
                 </CCol>
               </CRow>
               <CRow className="row gy-2 gx-3">
@@ -433,11 +333,7 @@ const LeaveDetails = () => {
                 <CCol>
                   <div className="mb-3">
                     <CFormLabel htmlFor="reason">Reason of leave</CFormLabel>
-                    <CFormControl
-                      component="textarea"
-                      value={htmlToFormattedText(singleLeave[0]?.reason)}
-                      disabled
-                    />
+                    <CFormControl component="textarea" value={htmlToFormattedText(singleLeave[0]?.reason)} disabled />
                   </div>
                 </CCol>
               </CRow>
@@ -485,7 +381,7 @@ const LeaveDetails = () => {
         </CRow>
       </CContainer>
       {/* Chat ui */}
-      {openChat && <Chat close={closeChat} openChat={openChat} chatData={chatData} />}
+      {openChat && <Chat close={closeChat} openChat={openChat} /> }
       <style>{customCss}</style>
     </>
   )
