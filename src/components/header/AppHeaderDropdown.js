@@ -21,8 +21,8 @@ const AppHeaderDropdown = () => {
   const makeLogout = (e) => {
     e.preventDefault()
     localStorage.removeItem('lMuserDataToken')
+    toast.warn('Success! Logout Successfully')
     window.location.reload()
-    toast.success('Success! Logout Successfully')
   }
   // Data show after login
   useEffect(() => {
