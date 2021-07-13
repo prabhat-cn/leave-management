@@ -1,17 +1,13 @@
 /* eslint-disable react/prop-types */
-import React, { useState, Fragment } from 'react'
+import React, { useState, useEffect, Fragment } from 'react'
+import { useHistory, useParams } from 'react-router-dom'
 import { DateTime } from 'luxon'
 import Avatar from 'react-avatar'
-import API from '../../../api'
+import API from 'src/api'
 import { CSpinner } from '@coreui/react'
-import { useSelector, useDispatch } from 'react-redux'
-import { getChats } from 'src/store/actions/chatActions'
 
 const Chat = ({ close, chatData }) => {
-  const { chats, loader } = useSelector((state) => state.chats)
-  // console.log('chats', chats)
-  const dispatch = useDispatch()
-
+  const [UserData, setUserData] = useState({})
   const [chatComment, setChatComment] = useState({
     comment: '',
   })
@@ -20,20 +16,29 @@ const Chat = ({ close, chatData }) => {
   const onInputChange = (e) => {
     setChatComment({ ...chatComment, [e.target.name]: e.target.value })
   }
+  // const userInfo = () => {
+  //   const userValue = JSON.parse(localStorage.getItem('lMuserDataToken'))
+  //   console.log('userValue', userValue)
+  //   setUserData(userValue)
+  // }
 
   const chatSubmit = (e) => {
+    // console.log('id', id)
     e.preventDefault()
     var resetField = document.getElementById('comment')
     resetField.value = ''
     API.post(`/wp-jwt/v1/comment/${sessionStorage.getItem('singleChat')}`, chatComment)
       .then((submitRes) => {
         console.log('submitRes', submitRes)
-        dispatch(getChats(sessionStorage.getItem('singleChat')))
       })
       .catch((err) => {
         console.log(err)
       })
   }
+
+  // useEffect(() => {
+  //   userInfo()
+  // }, [])
 
   return (
     <>
@@ -63,19 +68,19 @@ const Chat = ({ close, chatData }) => {
         {/* Chat Body Start */}
         <div className="box-body">
           <div className="direct-chat-messages">
-            {!chats ? (
+            {!chatData ? (
               <>
                 <h3 className="d-flex justify-content-center">No chat found!</h3>
               </>
             ) : (
               <>
-                {chats && chats.length === 0 ? (
+                {chatData && chatData.length === 0 ? (
                   <div className="text-center">
                     <CSpinner color="primary" />
                   </div>
                 ) : (
                   <>
-                    {chats.map((chatValue, i) => (
+                    {chatData.map((chatValue, i) => (
                       <Fragment key={i}>
                         <>
                           {chatValue.role === 'project_manager' && (
@@ -140,6 +145,7 @@ const Chat = ({ close, chatData }) => {
                 name="comment"
                 id="comment"
                 autoComplete="off"
+                value={comment}
                 onChange={(e) => onInputChange(e)}
                 placeholder="Type Message ..."
                 className="form-control"

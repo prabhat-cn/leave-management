@@ -25,15 +25,11 @@ import {
   CTooltip,
 } from '@coreui/react'
 import Switch from 'react-switch'
-import API from '../../../api'
-import { ViewIcon, ChatIcon } from '../../../constant/icons'
-import Chat from './Chat'
-import { useDispatch } from 'react-redux'
-import { getChats } from 'src/store/actions/chatActions'
+import API from 'src/api'
+import { ViewIcon, ChatIcon } from '../../../../constant/icons'
+import Chat from '../Chat'
 
 const LeaveDetails = () => {
-  const dispatch = useDispatch()
-
   const [visible, setVisible] = useState(false)
   const [openChat, toggleChat] = useState(false)
   const [singleLeave, setSingleLeave] = useState([
@@ -333,16 +329,14 @@ const LeaveDetails = () => {
   }
 
   const getChat = (id) => {
-    dispatch(getChats(id))
-
-    // API.get(`/wp-jwt/v1/get-comment/${id}`)
-    //   .then((response) => {
-    //     console.log('getChat', response.data.data)
-    //     setChatData(response.data.data)
-    //   })
-    //   .catch((err) => {
-    //     console.log(err)
-    //   })
+    API.get(`/wp-jwt/v1/get-comment/${id}`)
+      .then((response) => {
+        console.log('getChat', response.data.data)
+        setChatData(response.data.data)
+      })
+      .catch((err) => {
+        console.log(err)
+      })
   }
 
   const closeChat = () => {
