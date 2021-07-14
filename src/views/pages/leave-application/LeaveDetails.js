@@ -98,11 +98,11 @@ const LeaveDetails = () => {
       sortable: true,
       maxWidth: '1px',
     },
-    // {
-    //   name: 'Id',
-    //   selector: 'id',
-    //   sortable: true,
-    // },
+    {
+      name: 'Id',
+      selector: 'id',
+      sortable: true,
+    },
     {
       name: 'Project Manager',
       selector: 'display_name',

@@ -2,7 +2,7 @@
 import React, { useState, Fragment } from 'react'
 import { DateTime } from 'luxon'
 import Avatar from 'react-avatar'
-import API from '../../../api'
+import API from 'src/api'
 import { CSpinner } from '@coreui/react'
 import { useSelector, useDispatch } from 'react-redux'
 import { getChats } from 'src/store/actions/chatActions'

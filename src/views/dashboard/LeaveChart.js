@@ -1,11 +1,22 @@
 import React, { useState, useEffect } from 'react'
 import { CCard, CCardBody, CCol, CCardHeader, CRow } from '@coreui/react'
-import { CChartPie, CChartRadar } from '@coreui/react-chartjs'
+import { CChartPie } from '@coreui/react-chartjs'
+import { CSpinner } from '@coreui/react'
 import API from 'src/api'
+import { UserDetails } from './UserDetails'
 
 const LeaveChart = () => {
   const [leavesChat, setLeavesChat] = useState({})
-  const [casualLeave, setCasualLeave] = useState([])
+  const [allLeave, setAllLeave] = useState([])
+  const [userData, setUserData] = useState([])
+
+  const localUserData = () => {
+    const localUser = localStorage.getItem('lMuserDataToken')
+    if (localUser) {
+      const foundUser = JSON.parse(localUser)
+      setUserData(foundUser)
+    }
+  }
 
   const getAllLeaves = async () => {
     let casualLeaves = []
@@ -13,6 +24,8 @@ const LeaveChart = () => {
     let sickLeaves = []
     API.get('/wp-jwt/v1/employee-leave-list')
       .then((leaveRes) => {
+        console.log('leaveRes', leaveRes)
+        setAllLeave(leaveRes.data.data)
         for (const dataObj of leaveRes.data.data) {
           casualLeaves.push(parseInt(dataObj.casual_leave))
           earnLeaves.push(parseInt(dataObj.earn_leave))
@@ -35,6 +48,7 @@ const LeaveChart = () => {
     // console.log('Leaves', casualLeaves, earnLeaves, sickLeaves)
   }
   useEffect(() => {
+    localUserData()
     getAllLeaves()
   }, [])
 
@@ -44,52 +58,37 @@ const LeaveChart = () => {
         <CCard className="mb-4">
           <CCardHeader>Leave Count Chart</CCardHeader>
           <CCardBody>
-            <CCardBody>
-              <CChartPie data={leavesChat} />
-            </CCardBody>
+            {!allLeave ? (
+              <div className="text-center">
+                <CSpinner color="primary" />
+              </div>
+            ) : (
+              <>
+                {allLeave.length === 0 ? (
+                  <h3 className="d-flex justify-content-center">No leave found!</h3>
+                ) : (
+                  <>
+                    <CChartPie data={leavesChat} />
+                  </>
+                )}
+              </>
+            )}
           </CCardBody>
         </CCard>
       </CCol>
       <CCol xs={6}>
         <CCard className="mb-4">
-          <CCardHeader>User Details</CCardHeader>
-          <CCardBody>
-            <CChartRadar
-              data={{
-                labels: [
-                  'Eating',
-                  'Drinking',
-                  'Sleeping',
-                  'Designing',
-                  'Coding',
-                  'Cycling',
-                  'Running',
-                ],
-                datasets: [
-                  {
-                    label: 'My First dataset',
-                    backgroundColor: 'rgba(220, 220, 220, 0.2)',
-                    borderColor: 'rgba(220, 220, 220, 1)',
-                    pointBackgroundColor: 'rgba(220, 220, 220, 1)',
-                    pointBorderColor: '#fff',
-                    pointHighlightFill: '#fff',
-                    pointHighlightStroke: 'rgba(220, 220, 220, 1)',
-                    data: [65, 59, 90, 81, 56, 55, 40],
-                  },
-                  {
-                    label: 'My Second dataset',
-                    backgroundColor: 'rgba(151, 187, 205, 0.2)',
-                    borderColor: 'rgba(151, 187, 205, 1)',
-                    pointBackgroundColor: 'rgba(151, 187, 205, 1)',
-                    pointBorderColor: '#fff',
-                    pointHighlightFill: '#fff',
-                    pointHighlightStroke: 'rgba(151, 187, 205, 1)',
-                    data: [28, 48, 40, 19, 96, 27, 100],
-                  },
-                ],
-              }}
-            />
-          </CCardBody>
+          {userData.user_role === 'employee' && (
+            <>
+              <CCardHeader>User Details of Employee</CCardHeader>
+            </>
+          )}
+          {userData.user_role === 'project_manager' && (
+            <>
+              <CCardHeader>User Details of Project Manager</CCardHeader>
+            </>
+          )}
+          <UserDetails />
         </CCard>
       </CCol>
     </CRow>
