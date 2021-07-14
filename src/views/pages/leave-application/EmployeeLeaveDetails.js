@@ -120,12 +120,12 @@ const EmployeeLeaveDetails = (props) => {
       name: 'Id',
       selector: 'id',
       sortable: true,
+      maxWidth: '1px',
     },
     {
       name: 'Employee Name',
       selector: 'display_name',
       sortable: true,
-      maxWidth: '1px',
     },
     {
       name: 'Department',
@@ -447,7 +447,7 @@ const EmployeeLeaveDetails = (props) => {
     setRejectChecked(val)
   }
 
-  //  search here
+  //  search ops here
   const getSearch = (e) => {
     e.preventDefault()
     setQuery(search)
@@ -457,6 +457,28 @@ const EmployeeLeaveDetails = (props) => {
 
   const updateSearch = (evt) => {
     setSearch(evt.target.value)
+    console.log(evt.target.value)
+    if (evt.target.value === '') {
+      setPosts(posts)
+    } else {
+      const filteredData1 = posts.filter((obj) => {
+        // if (evt.target.value === '') {
+        //   return obj
+        // } else if (obj.display_name.toLowerCase().includes(evt.target.value.toLowerCase())) {
+        //   return obj
+        // } else if (obj.dept_name.toLowerCase().includes(evt.target.value.toLowerCase())) {
+        //   return obj
+        // } else {
+        //   return obj
+        // }
+        // console.log(obj)
+
+        return obj.dept_name.toLowerCase().includes(evt.target.value.toLowerCase())
+      })
+      setPosts(filteredData1)
+    }
+
+    // console.log(filteredData1)
   }
 
   const getData = () => {
@@ -465,7 +487,7 @@ const EmployeeLeaveDetails = (props) => {
         // console.log('getData', res)
         const getAppliedLeaves = res.data.data.reverse()
         const filteredData = getAppliedLeaves.filter((searchVal) => {
-          // console.log('searchVal', searchVal)
+          console.log('searchVal', searchVal)
           // searchVal.display_name &&
           //   searchVal.display_name.toLowerCase().includes(search.toLowerCase())
           // return searchVal
@@ -480,7 +502,7 @@ const EmployeeLeaveDetails = (props) => {
           }
         })
         const margeData = filteredData.map((m, i) => {
-          console.log('margeData', m)
+          // console.log('margeData', m)
           return { ...m, ...{ slNo: i + 1 } }
         })
 

@@ -102,6 +102,7 @@ const LeaveDetails = () => {
       name: 'Id',
       selector: 'id',
       sortable: true,
+      maxWidth: '1px',
     },
     {
       name: 'Project Manager',
