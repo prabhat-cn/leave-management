@@ -8,21 +8,44 @@ import API from 'src/api'
 
 const LeaveGraph = () => {
 
-  const [allLeaves, setAllLeaves] = useState([])
+  const [ leavesChat, setLeavesChat ] = useState({})
+  const [casualLeave, setCasualLeave] = useState([])
+  const [earnLeave, setEarnLeave] = useState([])
+  const [sickLeave, setSickLeave] = useState([])
 
-  const random = (min, max) => {
-    return Math.floor(Math.random() * (max - min + 1) + min)
-  }
+
+  // const random = (min, max) => {
+  //   return Math.floor(Math.random() * (max - min + 1) + min)
+  // }
 
   const getAllLeaves = async () => {
-    try {
-      const leaveList = await API.get('/wp-jwt/v1/employee-leave-list')
-      const leaveData = leaveList.data.data
-      console.log('leaveData', leaveData)
-      setAllLeaves(leaveData)
-    } catch (err) {
-      console.log(err.message)
-    }
+    let casualLeaves = [];
+    let earnLeaves = [];
+    let sickLeaves = [];
+    API.get('/wp-jwt/v1/employee-leave-list')
+    .then((leaveRes) => {
+      console.log('leaveRes', leaveRes);
+      for(const dataObj of leaveRes.data.data){
+        casualLeaves.push(parseInt(dataObj.casual_leave));
+        earnLeaves.push(parseInt(dataObj.earn_leave));
+        sickLeaves.push(parseInt(dataObj.sick_leave));
+      }
+      setLeavesChat({
+        labels: casualLeaves,
+        datasets: [
+          {
+            label: "level of thiccness",
+            data: earnLeaves, sickLeaves,
+            backgroundColor: ["rgba(75, 192, 192, 0.6)"],
+            borderWidth: 4
+          }
+        ]
+      });
+
+    }).catch((err) => {
+      console.log(err);
+    })
+    console.log('Leaves', casualLeaves, earnLeaves, sickLeaves);
   }
   useEffect(() => {
     getAllLeaves()
@@ -41,7 +64,7 @@ const LeaveGraph = () => {
             <CButton color="primary" className="float-end">
               <CIcon name="cil-cloud-download" />
             </CButton>
-            <CButtonGroup className="float-end me-3">
+            {/* <CButtonGroup className="float-end me-3">
               {['Day', 'Month', 'Year'].map((value) => (
                 <CButton
                   color="outline-secondary"
@@ -52,58 +75,12 @@ const LeaveGraph = () => {
                   {value}
                 </CButton>
               ))}
-            </CButtonGroup>
+            </CButtonGroup> */}
           </CCol>
         </CRow>
         <CChartLine
           style={{ height: '300px', marginTop: '40px' }}
-          data={{
-            labels: ['January', 'February', 'March', 'April', 'May', 'June', 'July'],
-            datasets: [
-              {
-                label: 'My First dataset',
-                backgroundColor: hexToRgba(getStyle('--cui-info'), 10),
-                borderColor: getStyle('--cui-info'),
-                pointHoverBackgroundColor: getStyle('--cui-info'),
-                borderWidth: 2,
-                data: [
-                  random(50, 200),
-                  random(50, 200),
-                  random(50, 200),
-                  random(50, 200),
-                  random(50, 200),
-                  random(50, 200),
-                  random(50, 200),
-                ],
-                fill: true,
-              },
-              {
-                label: 'My Second dataset',
-                backgroundColor: 'transparent',
-                borderColor: getStyle('--cui-success'),
-                pointHoverBackgroundColor: getStyle('--cui-success'),
-                borderWidth: 2,
-                data: [
-                  random(50, 200),
-                  random(50, 200),
-                  random(50, 200),
-                  random(50, 200),
-                  random(50, 200),
-                  random(50, 200),
-                  random(50, 200),
-                ],
-              },
-              {
-                label: 'My Third dataset',
-                backgroundColor: 'transparent',
-                borderColor: getStyle('--cui-danger'),
-                pointHoverBackgroundColor: getStyle('--cui-danger'),
-                borderWidth: 1,
-                borderDash: [8, 5],
-                data: [65, 65, 65, 65, 65, 65, 65],
-              },
-            ],
-          }}
+          data={leavesChat}
           options={{
             maintainAspectRatio: false,
             plugins: {

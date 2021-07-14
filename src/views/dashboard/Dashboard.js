@@ -1,9 +1,9 @@
 import React, { lazy } from 'react'
 
 import { CCard } from '@coreui/react'
-import UserViews from './extra-widgets/UserViews.js'
-import BarsCell from './extra-widgets/BarsCell.js'
-import LeaveGraph from './LeaveGraph.js'
+import UserViews from './extra-widgets/UserViews'
+import BarsCell from './extra-widgets/BarsCell'
+import LeaveChart from './LeaveChart'
 
 const WidgetsDropdown = lazy(() => import('../components/widgets/WidgetsDropdown.js'))
 const WidgetsBrand = lazy(() => import('../components/widgets/WidgetsBrand.js'))
@@ -30,7 +30,7 @@ const Dashboard = (props) => {
     <>
       {/* <WidgetsDropdown /> */}
       <CCard className="mb-4">
-        <LeaveGraph />
+        <LeaveChart />
         {/* <UserViews /> */}
       </CCard>
 
