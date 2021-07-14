@@ -8,7 +8,7 @@ import { useSelector, useDispatch } from 'react-redux'
 import { getChats } from 'src/store/actions/chatActions'
 
 const Chat = ({ close, chatData }) => {
-  const { chats, loader } = useSelector((state) => state.chats)
+  const { chats, loader } = useSelector((state) => state.chatsValue)
   // console.log('chats', chats)
   const dispatch = useDispatch()
 
@@ -22,6 +22,9 @@ const Chat = ({ close, chatData }) => {
   }
 
   const chatSubmit = (e) => {
+    document
+      .querySelector('.direct-chat-messages')
+      .scrollTo(0, document.querySelector('.direct-chat-messages').scrollHeight)
     e.preventDefault()
     var resetField = document.getElementById('comment')
     resetField.value = ''
@@ -29,11 +32,16 @@ const Chat = ({ close, chatData }) => {
       .then((submitRes) => {
         console.log('submitRes', submitRes)
         dispatch(getChats(sessionStorage.getItem('singleChat')))
+        document
+          .querySelector('.direct-chat-messages')
+          .scrollTo(0, document.querySelector('.direct-chat-messages').scrollHeight)
       })
       .catch((err) => {
         console.log(err)
       })
   }
+
+  // document.querySelector('.direct-chat-messages').scrollTo(0, document.querySelector('.direct-chat-messages').scrollHeight)
 
   return (
     <>

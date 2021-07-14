@@ -14,29 +14,22 @@ const chatReducer = createSlice({
 
         loader: false,
         errors: {},
+        chatData: {
+            display_name: '',
+            date: '',
+            chat: '',
+        },
     },
 
     // normal actions create here 
     reducers: {
-        // actions here
-        // state = initialState
-        addChat: (state, action) => {
-            // console.log('action', action);
-            // add and copy
-            state.chats = [...state.chats, action.payload];
-        },
-
-        // for user filter
-        filteredChat: (state, action) => {
-            // filter
-            // state.chats = state.chats.filter(
-            //     (user) => user.name.toLowerCase().includes(action.payload)
-            // );
-            // if no user found with chats
-            state.chats = state.chatsContainer.filter(
-                (user) => user.name.toLowerCase().includes(action.payload)
-            );
-
+        // for chats clear
+        clearChat: (state) => {
+            state.chatData = {
+            display_name: "",
+            date: "",
+            chat: "",
+            };
         },
     },
 
@@ -65,7 +58,7 @@ const chatReducer = createSlice({
     },
 });
 
-export const {addChat, filteredChat} = chatReducer.actions;
+export const { clearChat } = chatReducer.actions;
 
 
 export default chatReducer.reducer

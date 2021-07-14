@@ -18,7 +18,7 @@ export default configureStore({
     updatePassword: updatePassReducer,
     profile: profileReducer,
     leave: leaveReducer,
-    chats: chatReducer,
+    chatsValue: chatReducer,
   },
   middleware: [...getDefaultMiddleware(), ]
 })
