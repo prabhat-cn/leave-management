@@ -7,7 +7,7 @@ import {
     CCardTitle,
 } from '@coreui/react'
 import { toast } from 'react-toastify'
-import API from '../../../api'
+import API from 'src/api'
 import FileUpload from './file-upload/FileUpload'
 import ImageUpload from './ImageUpload'
 

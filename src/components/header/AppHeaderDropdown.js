@@ -12,6 +12,7 @@ import {
 } from '@coreui/react'
 import CIcon from '@coreui/icons-react'
 import { freeSet } from '@coreui/icons'
+import { toast } from 'react-toastify'
 import { Link } from 'react-router-dom'
 import Accounts from './account/Accounts'
 const AppHeaderDropdown = () => {
@@ -20,6 +21,7 @@ const AppHeaderDropdown = () => {
   const makeLogout = (e) => {
     e.preventDefault()
     localStorage.removeItem('lMuserDataToken')
+    toast.warn('Success! Logout Successfully')
     window.location.reload()
   }
   // Data show after login

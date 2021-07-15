@@ -27,9 +27,13 @@ import {
 } from '@coreui/react'
 import Switch from 'react-switch'
 import API from '../../../api'
-import { ViewIcon, EditIcon } from '../../../constant/icons'
+import { ViewIcon, EditIcon, ChatIcon } from '../../../constant/icons'
+import Chat from './Chat'
+import { useDispatch } from 'react-redux'
+import { getChats } from 'src/store/actions/chatActions'
 
 const EmployeeLeaveDetails = (props) => {
+  const dispatch = useDispatch()
   // role based auth start
   if (localStorage.getItem('lMuserDataToken') !== null) {
     const userData = JSON.parse(localStorage.getItem('lMuserDataToken'))
@@ -43,6 +47,14 @@ const EmployeeLeaveDetails = (props) => {
   // role based auth end
 
   const [visible, setVisible] = useState(false)
+  const [openChat, toggleChat] = useState(false)
+  const [chatData, setChatData] = useState([
+    {
+      display_name: '',
+      date: '',
+      chat: '',
+    },
+  ])
   const [editVisible, setEditVisible] = useState(false)
   const [singleLeave, setSingleLeave] = useState([
     {
@@ -104,11 +116,12 @@ const EmployeeLeaveDetails = (props) => {
       sortable: true,
       maxWidth: '1px',
     },
-    // {
-    //   name: 'Id',
-    //   selector: 'id',
-    //   sortable: true,
-    // },
+    {
+      name: 'Id',
+      selector: 'id',
+      sortable: true,
+      maxWidth: '1px',
+    },
     {
       name: 'Employee Name',
       selector: 'display_name',
@@ -393,6 +406,15 @@ const EmployeeLeaveDetails = (props) => {
             </CButton>
           </>
         )}
+        &nbsp;
+        <CButton
+          style={{ backgroundColor: '#2db67c' }}
+          shape="round"
+          className="custom-btn"
+          onClick={() => viewChat(row.id)}
+        >
+          <ChatIcon />
+        </CButton>
       </>
     )
   }
@@ -425,7 +447,7 @@ const EmployeeLeaveDetails = (props) => {
     setRejectChecked(val)
   }
 
-  //  search here
+  //  search ops here
   const getSearch = (e) => {
     e.preventDefault()
     setQuery(search)
@@ -435,6 +457,28 @@ const EmployeeLeaveDetails = (props) => {
 
   const updateSearch = (evt) => {
     setSearch(evt.target.value)
+    console.log(evt.target.value)
+    if (evt.target.value === '') {
+      setPosts(posts)
+    } else {
+      const filteredData1 = posts.filter((obj) => {
+        // if (evt.target.value === '') {
+        //   return obj
+        // } else if (obj.display_name.toLowerCase().includes(evt.target.value.toLowerCase())) {
+        //   return obj
+        // } else if (obj.dept_name.toLowerCase().includes(evt.target.value.toLowerCase())) {
+        //   return obj
+        // } else {
+        //   return obj
+        // }
+        // console.log(obj)
+
+        return obj.dept_name.toLowerCase().includes(evt.target.value.toLowerCase())
+      })
+      setPosts(filteredData1)
+    }
+
+    // console.log(filteredData1)
   }
 
   const getData = () => {
@@ -443,7 +487,7 @@ const EmployeeLeaveDetails = (props) => {
         // console.log('getData', res)
         const getAppliedLeaves = res.data.data.reverse()
         const filteredData = getAppliedLeaves.filter((searchVal) => {
-          // console.log('searchVal', searchVal)
+          console.log('searchVal', searchVal)
           // searchVal.display_name &&
           //   searchVal.display_name.toLowerCase().includes(search.toLowerCase())
           // return searchVal
@@ -458,7 +502,7 @@ const EmployeeLeaveDetails = (props) => {
           }
         })
         const margeData = filteredData.map((m, i) => {
-          console.log('margeData', m)
+          // console.log('margeData', m)
           return { ...m, ...{ slNo: i + 1 } }
         })
 
@@ -486,6 +530,39 @@ const EmployeeLeaveDetails = (props) => {
         reason: '',
         start_date: '',
         status: '',
+      },
+    ])
+  }
+
+  // Chat
+  const viewChat = (id) => {
+    // console.log('viewChat', id)
+    singleData(id)
+    sessionStorage.setItem('singleChat', id)
+    getChat(id)
+    toggleChat(true)
+  }
+
+  const getChat = (id) => {
+    dispatch(getChats(id))
+    // API.get(`/wp-jwt/v1/get-comment/${id}`)
+    //   .then((response) => {
+    //     console.log('getChat', response.data.data)
+    //     setChatData(response.data.data)
+    //   })
+    //   .catch((err) => {
+    //     console.log(err)
+    //   })
+  }
+
+  const closeChat = () => {
+    toggleChat(false)
+    // after close modal pass blank string
+    setChatData([
+      {
+        display_name: '',
+        date: '',
+        chat: '',
       },
     ])
   }
@@ -781,6 +858,8 @@ const EmployeeLeaveDetails = (props) => {
           </CCol>
         </CRow>
       </CContainer>
+      {/* Chat ui */}
+      {openChat && <Chat close={closeChat} openChat={openChat} chatData={chatData} />}
       <style>{customCss}</style>
     </>
   )
@@ -795,7 +874,7 @@ const customCss = `
   .custom-btn .custom_icon {
     color: #ffffffd1;
   }
-  button.btn.btn-info.round.custom-btn,
+  button.btn.round.custom-btn,
     button.btn.btn-success.round.custom-btn{
     border-radius: 50px;
     height: 40px;

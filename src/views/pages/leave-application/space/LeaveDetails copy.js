@@ -25,16 +25,11 @@ import {
   CTooltip,
 } from '@coreui/react'
 import Switch from 'react-switch'
-import API from '../../../api'
-import { ViewIcon, ChatIcon } from '../../../constant/icons'
-import Chat from './Chat'
-import { useDispatch } from 'react-redux'
-import { getChats } from 'src/store/actions/chatActions'
-import { clearChat } from 'src/store/reducers/chatReducer'
+import API from 'src/api'
+import { ViewIcon, ChatIcon } from '../../../../constant/icons'
+import Chat from '../Chat'
 
 const LeaveDetails = () => {
-  const dispatch = useDispatch()
-
   const [visible, setVisible] = useState(false)
   const [openChat, toggleChat] = useState(false)
   const [singleLeave, setSingleLeave] = useState([
@@ -96,13 +91,11 @@ const LeaveDetails = () => {
       name: 'Sl. No.',
       selector: 'slNo',
       sortable: true,
-      maxWidth: '1px',
     },
     {
       name: 'Id',
       selector: 'id',
       sortable: true,
-      maxWidth: '1px',
     },
     {
       name: 'Project Manager',
@@ -144,7 +137,6 @@ const LeaveDetails = () => {
       name: 'Action',
       // eslint-disable-next-line react/display-name
       cell: (row) => <ActionTag row={row} />,
-      maxWidth: '1px',
     },
   ]
 
@@ -331,40 +323,32 @@ const LeaveDetails = () => {
   const viewChat = (id) => {
     // console.log('viewChat', id)
     singleData(id)
-    // Chat id taken in session
     sessionStorage.setItem('singleChat', id)
-    console.log('viewChat', sessionStorage.getItem('singleChat'))
-    getChat(sessionStorage.getItem('singleChat'))
+    getChat(id)
     toggleChat(true)
   }
 
   const getChat = (id) => {
-    dispatch(getChats(id))
-
-    // API.get(`/wp-jwt/v1/get-comment/${id}`)
-    //   .then((response) => {
-    //     console.log('getChat', response.data.data)
-    //     setChatData(response.data.data)
-    //     dispatch(getChats(id))
-    //   })
-    //   .catch((err) => {
-    //     console.log(err)
-    //   })
+    API.get(`/wp-jwt/v1/get-comment/${id}`)
+      .then((response) => {
+        console.log('getChat', response.data.data)
+        setChatData(response.data.data)
+      })
+      .catch((err) => {
+        console.log(err)
+      })
   }
 
   const closeChat = () => {
-    console.log('closeChat', sessionStorage.getItem('singleChat'))
     toggleChat(false)
-    dispatch(clearChat(sessionStorage.getItem('singleChat')))
     // after close modal pass blank string
-    // dispatch(clearChat(id))
-    // setChatData([
-    //   {
-    //     display_name: '',
-    //     date: '',
-    //     chat: '',
-    //   },
-    // ])
+    setChatData([
+      {
+        display_name: '',
+        date: '',
+        chat: '',
+      },
+    ])
   }
 
   const viewModalClose = () => {
@@ -395,7 +379,6 @@ const LeaveDetails = () => {
 
   useEffect(() => {
     getData()
-    dispatch(clearChat(sessionStorage.getItem('singleChat')))
   }, [])
 
   const customStyles = {

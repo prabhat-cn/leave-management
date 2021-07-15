@@ -2,6 +2,7 @@
 /* eslint-disable jsx-a11y/alt-text */
 import React, { useState } from 'react'
 import { Link } from 'react-router-dom'
+import { toast } from 'react-toastify'
 import showPwdImg from '../../../assets/icons/eye-slash-solid.svg'
 import hidePwdImg from '../../../assets/icons/eye-solid.svg'
 import { Formik, Form, Field, ErrorMessage } from 'formik'
@@ -28,8 +29,6 @@ import { loginPending, loginSuccess, loginFail } from '../../../store/reducers/l
 const sleep = (ms) => new Promise((r) => setTimeout(r, ms))
 const Login = (props) => {
   const [isRevealPwd, setIsRevealPwd] = useState(false)
-  const [submitted, setSubmitted] = useState(false)
-  const [error, setError] = useState('')
   const [user, setUser] = useState()
   const dispatch = useDispatch()
   const initialValues = {
@@ -68,15 +67,10 @@ const Login = (props) => {
     dispatch(loginPending())
     API.post('/jwt-auth/v1/token', loginData)
       .then((response) => {
-        setError('')
-        setSubmitted(true)
-        setTimeout(() => {
-          setSubmitted(false)
-        }, 2000)
         const userData = response.data
         dispatch(loginSuccess())
+        toast.success('Success! Login Successfully')
         setUser(userData)
-        console.log(userData)
         localStorage.setItem('lMuserDataToken', JSON.stringify(userData))
         // after geting token
         userRole()
@@ -85,10 +79,12 @@ const Login = (props) => {
       .catch((err) => {
         console.log(err.response)
         const { status, data } = err.response
-        setSubmitted(false)
-        dispatch(loginFail(error.message))
+        dispatch(loginFail(err.message))
         if (status === 403) {
-          setError(data.message)
+          return toast.error('Error! Login failed')
+        }
+        if (status === 404) {
+          return toast.error('Error! Login failed')
         }
       })
   }
@@ -115,10 +111,6 @@ const Login = (props) => {
                         <CCard className="p-4">
                           <CCardBody>
                             <Form id="login" name="login">
-                              {submitted && (
-                                <CAlert color="success">Success! Login Successfully</CAlert>
-                              )}
-                              {error !== '' && <CAlert color="danger">Error! Login failed</CAlert>}
                               <h1>Login</h1>
                               <p className="text-medium-emphasis">Sign In to your account</p>
                               <CInputGroup className="mb-2">
