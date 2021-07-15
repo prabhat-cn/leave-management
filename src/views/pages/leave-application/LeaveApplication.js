@@ -170,10 +170,10 @@ const LeaveApplication = (props) => {
               <CCardBody>
                 {/* Card start */}
                 {!empLeave ? (
-                  <CSpinner color="primary" />
+                  <h3 className="d-flex justify-content-center">No leave found!</h3>
                 ) : (
                   <>
-                    {empLeave && empLeave.length === 0 ? (
+                    {empLeave.length === 0 ? (
                       <p className="d-flex justify-content-center">
                         <CSpinner color="primary" />
                       </p>

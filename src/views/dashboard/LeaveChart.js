@@ -59,13 +59,13 @@ const LeaveChart = () => {
           <CCardHeader>Leave Count Chart</CCardHeader>
           <CCardBody>
             {!allLeave ? (
-              <div className="text-center">
-                <CSpinner color="primary" />
-              </div>
+              <h3 className="d-flex justify-content-center">No leave found!</h3>
             ) : (
               <>
                 {allLeave.length === 0 ? (
-                  <h3 className="d-flex justify-content-center">No leave found!</h3>
+                  <div className="text-center">
+                    <CSpinner color="primary" />
+                  </div>
                 ) : (
                   <>
                     <CChartPie data={leavesChat} />
