@@ -31,6 +31,7 @@ import Chat from './Chat'
 import { useDispatch } from 'react-redux'
 import { getChats } from 'src/store/actions/chatActions'
 import { clearChat } from 'src/store/reducers/chatReducer'
+import { Fragment } from 'react'
 
 const LeaveDetails = () => {
   const dispatch = useDispatch()
@@ -610,7 +611,11 @@ const LeaveDetails = () => {
         </CRow>
       </CContainer>
       {/* Chat ui */}
-      {openChat && <Chat close={closeChat} openChat={openChat} chatData={chatData} />}
+      {openChat && (
+        <div id="main-chat-class">
+          <Chat id="main-chat-class" close={closeChat} openChat={openChat} chatData={chatData} />
+        </div>
+      )}
       <style>{customCss}</style>
     </>
   )

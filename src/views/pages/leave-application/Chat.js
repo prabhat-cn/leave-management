@@ -23,8 +23,8 @@ const Chat = ({ close, chatData }) => {
 
   const chatSubmit = (e) => {
     document
-      .querySelector('.direct-chat-messages')
-      .scrollTo(0, document.querySelector('.direct-chat-messages').scrollHeight)
+      .querySelector('#direct-chat-messages')
+      .scrollTo(0, document.querySelector('#direct-chat-messages').scrollHeight)
     e.preventDefault()
     var resetField = document.getElementById('comment')
     resetField.value = ''
@@ -33,8 +33,8 @@ const Chat = ({ close, chatData }) => {
         console.log('submitRes', submitRes)
         dispatch(getChats(sessionStorage.getItem('singleChat')))
         document
-          .querySelector('.direct-chat-messages')
-          .scrollTo(0, document.querySelector('.direct-chat-messages').scrollHeight)
+          .querySelector('#direct-chat-messages')
+          .scrollTo(0, document.querySelector('#direct-chat-messages').scrollHeight)
       })
       .catch((err) => {
         console.log(err)
@@ -70,7 +70,7 @@ const Chat = ({ close, chatData }) => {
         </div>
         {/* Chat Body Start */}
         <div className="box-body">
-          <div className="direct-chat-messages">
+          <div className="direct-chat-messages" id="direct-chat-messages">
             {!chats ? (
               <>
                 <h3 className="d-flex justify-content-center">No chat found!</h3>
