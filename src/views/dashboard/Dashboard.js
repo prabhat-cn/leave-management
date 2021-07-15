@@ -29,10 +29,10 @@ const Dashboard = (props) => {
   return (
     <>
       {/* <WidgetsDropdown /> */}
-      <CCard className="mb-4">
-        <LeaveChart />
-        {/* <UserViews /> */}
-      </CCard>
+      {/* <CCard className="mb-4">
+        <UserViews />
+      </CCard> */}
+      <LeaveChart />
 
       {/* <WidgetsBrand withCharts /> */}
 
