@@ -77,7 +77,7 @@ const Chat = ({ close, chatData }) => {
               </>
             ) : (
               <>
-                {chats && chats.length === 0 ? (
+                {chats.length === 0 ? (
                   <div className="text-center">
                     <CSpinner color="primary" />
                   </div>
