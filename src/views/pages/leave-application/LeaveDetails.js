@@ -31,12 +31,18 @@ import Chat from './Chat'
 import { useDispatch } from 'react-redux'
 import { getChats } from 'src/store/actions/chatActions'
 import { clearChat } from 'src/store/reducers/chatReducer'
+import { Fragment } from 'react'
 
 const LeaveDetails = () => {
   const dispatch = useDispatch()
 
   const [visible, setVisible] = useState(false)
   const [openChat, toggleChat] = useState(false)
+
+  // Search
+  const [search, setSearch] = useState('')
+  const [query, setQuery] = useState('display_name', 'dept_name')
+
   const [singleLeave, setSingleLeave] = useState([
     {
       dept_name: '',
@@ -98,12 +104,12 @@ const LeaveDetails = () => {
       sortable: true,
       maxWidth: '1px',
     },
-    {
-      name: 'Id',
-      selector: 'id',
-      sortable: true,
-      maxWidth: '1px',
-    },
+    // {
+    //   name: 'Id',
+    //   selector: 'id',
+    //   sortable: true,
+    //   maxWidth: '1px',
+    // },
     {
       name: 'Project Manager',
       selector: 'display_name',
@@ -279,21 +285,70 @@ const LeaveDetails = () => {
     setCancelChecked(val)
   }
 
+  //  search ops here
+  const getSearch = (e) => {
+    e.preventDefault()
+    setQuery(search)
+    // to reset after search button click
+    setSearch('')
+  }
+
+  const updateSearch = (evt) => {
+    setSearch(evt.target.value)
+
+    if (evt.target.value === '') {
+      setPosts(posts)
+    } else {
+      const afterFilteredData = posts.filter((obj) => {
+        // if (evt.target.value === '') {
+        //   return obj
+        // } else if (obj.display_name.toLowerCase().includes(evt.target.value.toLowerCase())) {
+        //   return obj
+        // } else if (obj.dept_name.toLowerCase().includes(evt.target.value.toLowerCase())) {
+        //   return obj
+        // } else {
+        //   return obj
+        // }
+        // console.log(obj)
+        return obj.display_name.toLowerCase().includes(evt.target.value.toLowerCase())
+      })
+
+      console.log('afterFilteredData', afterFilteredData)
+      setPosts(afterFilteredData)
+    }
+  }
+
   const getData = () => {
     API.get('/wp-jwt/v1/apply-leave-details')
       .then((res) => {
         console.log('getData', res)
         const listData = res.data.data.reverse()
-        setPosts(
-          listData.map((m, i) => {
-            return { ...m, ...{ slNo: i + 1 } }
-          }),
-        )
+        const filteredData = listData.filter((searchVal) => {
+          console.log('searchVal', searchVal)
+          // searchVal.display_name &&
+          //   searchVal.display_name.toLowerCase().includes(search.toLowerCase())
+          // return searchVal
+          if (search === '') {
+            return searchVal
+          } else if (searchVal.display_name.toLowerCase().includes(search.toLowerCase())) {
+            return searchVal
+          } else if (searchVal.dept_name.toLowerCase().includes(search.toLowerCase())) {
+            return searchVal
+          } else if (searchVal.search) {
+            return searchVal
+          }
+        })
+        const margeData = filteredData.map((m, i) => {
+          return { ...m, ...{ slNo: i + 1 } }
+        })
+        setPosts(margeData)
       })
       .catch((err) => {
         console.log(err)
       })
   }
+
+  //  search ops here end
 
   const ViewChatTag = ({ row }) => {
     // eslint-disable-next-line no-unused-expressions
@@ -492,6 +547,44 @@ const LeaveDetails = () => {
                 <strong>Leave Application Details</strong>
               </CCardHeader>
               <CCardBody className="custom-class">
+                <CRow xs={{ gutterX: 6 }}>
+                  <CCol>
+                    <div className="mb-3">
+                      <CFormLabel></CFormLabel>
+                    </div>
+                  </CCol>
+                  <CCol>
+                    <div className="mb-3">
+                      <CForm className="search-form" onSubmit={getSearch}>
+                        <CFormControl
+                          className="form-control me-sm-2"
+                          placeholder="Search by name/ department"
+                          style={{
+                            height: '35px',
+                            display: 'initial',
+                            padding: '0 5px',
+                            width: '70%',
+                            fontSize: '14px',
+                          }}
+                          type="text"
+                          value={search}
+                          onChange={updateSearch}
+                        />
+                        <CButton
+                          className="btn btn-primary my-2 my-sm-0"
+                          style={{
+                            height: '35px',
+                            padding: '0 5px',
+                            width: '20%',
+                          }}
+                          type="submit"
+                        >
+                          Reset
+                        </CButton>
+                      </CForm>
+                    </div>
+                  </CCol>
+                </CRow>
                 {!posts ? (
                   <CSpinner color="primary" />
                 ) : (
@@ -518,7 +611,11 @@ const LeaveDetails = () => {
         </CRow>
       </CContainer>
       {/* Chat ui */}
-      {openChat && <Chat close={closeChat} openChat={openChat} chatData={chatData} />}
+      {openChat && (
+        <div id="main-chat-class">
+          <Chat id="main-chat-class" close={closeChat} openChat={openChat} chatData={chatData} />
+        </div>
+      )}
       <style>{customCss}</style>
     </>
   )

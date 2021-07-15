@@ -116,12 +116,12 @@ const EmployeeLeaveDetails = (props) => {
       sortable: true,
       maxWidth: '1px',
     },
-    {
-      name: 'Id',
-      selector: 'id',
-      sortable: true,
-      maxWidth: '1px',
-    },
+    // {
+    //   name: 'Id',
+    //   selector: 'id',
+    //   sortable: true,
+    //   maxWidth: '1px',
+    // },
     {
       name: 'Employee Name',
       selector: 'display_name',
@@ -461,7 +461,7 @@ const EmployeeLeaveDetails = (props) => {
     if (evt.target.value === '') {
       setPosts(posts)
     } else {
-      const filteredData1 = posts.filter((obj) => {
+      const afterFilteredData = posts.filter((obj) => {
         // if (evt.target.value === '') {
         //   return obj
         // } else if (obj.display_name.toLowerCase().includes(evt.target.value.toLowerCase())) {
@@ -475,10 +475,10 @@ const EmployeeLeaveDetails = (props) => {
 
         return obj.dept_name.toLowerCase().includes(evt.target.value.toLowerCase())
       })
-      setPosts(filteredData1)
-    }
 
-    // console.log(filteredData1)
+      console.log('afterFilteredData', afterFilteredData)
+      setPosts(afterFilteredData)
+    }
   }
 
   const getData = () => {
