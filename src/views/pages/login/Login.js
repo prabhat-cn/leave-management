@@ -27,6 +27,15 @@ import { useDispatch } from 'react-redux'
 import { loginPending, loginSuccess, loginFail } from '../../../store/reducers/loginReducer'
 
 const sleep = (ms) => new Promise((r) => setTimeout(r, ms))
+
+// export const Login1 = ({age_ve___: age, birthdate_mp___ === '23', ...rest}) => {
+//   return (
+//     <div>
+
+//     </div>
+//   )
+// }
+
 const Login = (props) => {
   const [isRevealPwd, setIsRevealPwd] = useState(false)
   const [user, setUser] = useState()

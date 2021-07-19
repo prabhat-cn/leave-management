@@ -30,7 +30,7 @@ const Page500 = React.lazy(() => import('./views/pages/page500/Page500'))
 //   />
 // )
 const EmployeeRoute = ({ component: Component, auth, isEmployee, isProManager, name, ...rest }) => {
-  console.log(isEmployee)
+  // console.log(isEmployee)
   return (
     <>
       <Route
@@ -117,14 +117,14 @@ const App = () => {
               component={DefaultLayout}
             />
             <EmployeeRoute
-              path="/admin"
+              path="/dashboard"
               auth={authState}
               isEmployee={employee}
               name="Home"
               component={DefaultLayout}
             />
             {authState ? (
-              <Redirect exact from="/" to="/admin" />
+              <Redirect exact from="/" to="/dashboard" />
             ) : (
               <Redirect from="/" to="/login" />
             )}
