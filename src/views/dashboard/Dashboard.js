@@ -1,4 +1,6 @@
+/* eslint-disable prettier/prettier */
 import React, { lazy } from 'react'
+import { Redirect } from 'react-router-dom'
 
 import { CCard } from '@coreui/react'
 import UserViews from './extra-widgets/UserViews'
@@ -23,8 +25,15 @@ const Dashboard = (props) => {
       localStorage.removeItem('lMuserDataToken')
       window.location.href = '/'
     }
+    // if (!userData.token) {
+    //   alert('Token mismatch')
+    //   localStorage.removeItem('lMuserDataToken')
+    //   window.location.reload()
+    //   window.location.href = '/'
+    // }
   }
   // role based auth end
+
 
   return (
     <>

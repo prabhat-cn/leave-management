@@ -1,6 +1,5 @@
 /* eslint-disable prettier/prettier */
 import React, { useState, useEffect } from 'react'
-import { Redirect } from 'react-router-dom'
 import { toast } from 'react-toastify'
 import { useDispatch } from 'react-redux'
 import {
@@ -10,7 +9,6 @@ import {
   CCardHeader,
   CCol,
   CForm,
-  CAlert,
   CFormControl,
   CFormLabel,
   CRow,

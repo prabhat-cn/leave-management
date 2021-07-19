@@ -1,5 +1,4 @@
 /* eslint-disable react/prop-types */
-/* eslint-disable react/jsx-no-undef */
 import React, { Component } from 'react'
 import { ToastContainer } from 'react-toastify'
 import { HashRouter, Route, Switch, BrowserRouter as Router, Redirect } from 'react-router-dom'
