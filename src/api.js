@@ -29,7 +29,7 @@ API.interceptors.response.use((config) => {
 }, (err) => {
   // console.log('err', err.response, err.data, err.message)
   // console.log('err', err.response.data.code)
-  if( err.response.data.code === 'jwt_auth_invalid_token' && err.response.status === 403 ){
+  if( err.response.data.code === 'jwt_auth_invalid_token' || err.response.status === 403 ){
     toast.error('Error! Token Missmatched')
     localStorage.removeItem('lMuserDataToken')
     window.location.reload()
