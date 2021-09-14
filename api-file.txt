@@ -4,7 +4,7 @@ http://localhost:3006/icons/coreui-icons
 http://localhost:3006/charts
 
 
-
+postman-> https://documenter.getpostman.com/view/16058878/Tzm3odJx
 
 
 URL : -http://dev107.developer24x7.com/test_project/
