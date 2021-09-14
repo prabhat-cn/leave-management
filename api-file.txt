@@ -4,6 +4,9 @@ http://localhost:3006/icons/coreui-icons
 http://localhost:3006/charts
 
 
+// set up terminal
+https://code.visualstudio.com/docs/editor/integrated-terminal
+
 postman-> https://documenter.getpostman.com/view/16058878/Tzm3odJx
 
 
